@@ -3,12 +3,22 @@
  * 요청 파라미터 처리 및 응답 반환 담당
  */
 import { Request, Response } from 'express';
-import { getTestData } from '../services/test.service.js';
+import { createTestData, getTestData } from '../services/test.service.js';
 
-export const getTest = (req: Request, res: Response) => {
+export const getTest = async (req: Request, res: Response) => {
   try {
-    const data = getTestData();
+    const data = await getTestData();
     res.json({ success: true, data });
+  } catch (error: any) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const postTest = async (req: Request, res: Response) => {
+  try {
+    const { name, email } = req.body;
+    const result = await createTestData(name, email);
+    res.status(200).json({ success: true, data: result });
   } catch (error: any) {
     res.status(500).json({ success: false, message: error.message });
   }

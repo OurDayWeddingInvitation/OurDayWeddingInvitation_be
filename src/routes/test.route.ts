@@ -3,11 +3,12 @@
  * /api/test 엔드포인트 등록
  */
 import { Router } from 'express';
-import { getTest } from '../controllers/test.controller.js';
+import { getTest, postTest } from '../controllers/test.controller.js';
 
 const router = Router();
 
 // GET /api/test
 router.get('/', getTest);
+router.post('/', postTest);
 
 export default router;
