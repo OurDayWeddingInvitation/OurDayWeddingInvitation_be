@@ -1,3 +1,4 @@
+import "dotenv/config"; // .env 파일에서 환경변수를 로드하기위해 추가
 import { defineConfig, env } from "prisma/config";
 
 export default defineConfig({

@@ -1,0 +1,716 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "test": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "integer"
+        },
+        "creatDt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "lastLoginDt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "userSoc": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UserSoc"
+          }
+        },
+        "wedd": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Wedd"
+          }
+        }
+      }
+    },
+    "UserSoc": {
+      "type": "object",
+      "properties": {
+        "socId": {
+          "type": "integer"
+        },
+        "prvdrNm": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "prvdrUserId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "accessTkn": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "refreshTkn": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "idTkn": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tknExprDt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "scope": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "creatDt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updtDt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "user": {
+          "$ref": "#/definitions/User"
+        }
+      }
+    },
+    "Wedd": {
+      "type": "object",
+      "properties": {
+        "weddId": {
+          "type": "integer"
+        },
+        "weddTtl": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "weddSlug": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "creatDt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updtDt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "user": {
+          "$ref": "#/definitions/User"
+        },
+        "weddDtl": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/WeddDtl"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "weddSectOrdr": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/WeddSectOrdr"
+          }
+        }
+      }
+    },
+    "WeddDtl": {
+      "type": "object",
+      "properties": {
+        "mainPosterStyl": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "shrTtl": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "infoGrmLastNm": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "infoGrmFirstNm": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "infoBrdLastNm": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "infoBrdFirstNm": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "infoNmOrdrSe": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "infoWeddDe": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "infoWeddTm": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "infoHallNm": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "infoHallFlr": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "prntGrmFthrNm": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "prntGrmFthrDeceasedYn": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "prntGrmMthrNm": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "prntGrmMthrDeceasedYn": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "prntGrmRankNm": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "prntBrdFthrNm": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "prntBrdFthrDeceasedYn": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "prntBrdMthrNm": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "prntBrdMthrDeceasedYn": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "prntBrdRankNm": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "invTtl": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "invMsg": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "intrTtl": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "intrGrmMsg": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "intrBrdMsg": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "prntIntrTtl": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "prntIntrMsg": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "acntTtl": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "acntMsg": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "acntGrmBnkNm": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "acntGrmNo": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "acntGrmHldrNm": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "acntGrmFthrBnkNm": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "acntGrmFthrNo": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "acntGrmFthrHldrNm": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "acntGrmMthrBnkNm": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "acntGrmMthrNo": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "acntGrmMthrHldrNm": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "acntBrdBnkNm": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "acntBrdNo": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "acntBrdHldrNm": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "acntBrdFthrBnkNm": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "acntBrdFthrNo": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "acntBrdFthrHldrNm": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "acntBrdMthrBnkNm": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "acntBrdMthrNo": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "acntBrdMthrHldrNm": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "locAddr": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "locAddrDtl": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "locGuideMsg": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "locTrans1Ttl": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "locTrans1Msg": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "locTrans2Ttl": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "locTrans2Msg": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "locTrans3Ttl": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "locTrans3Msg": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "themeFontNm": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "themeFontSize": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "themeBgColor": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "themeAccentColor": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "themeZoomPreventYn": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "loadStyl": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "creatDt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updtDt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "wedd": {
+          "$ref": "#/definitions/Wedd"
+        },
+        "weddMedia": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/WeddMedia"
+          }
+        }
+      }
+    },
+    "WeddMedia": {
+      "type": "object",
+      "properties": {
+        "mediaId": {
+          "type": "integer"
+        },
+        "imgType": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "displayOrdr": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "orgUrl": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "editUrl": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "fileExtsn": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "fileSize": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "creatDt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updtDt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "weddDtl": {
+          "$ref": "#/definitions/WeddDtl"
+        }
+      }
+    },
+    "WeddSectOrdr": {
+      "type": "object",
+      "properties": {
+        "sectKey": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "integer"
+        },
+        "displayYn": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "displayOrdr": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "creatDt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updtDt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "wedd": {
+          "$ref": "#/definitions/Wedd"
+        }
+      }
+    }
+  },
+  "type": "object",
+  "properties": {
+    "test": {
+      "$ref": "#/definitions/test"
+    },
+    "user": {
+      "$ref": "#/definitions/User"
+    },
+    "userSoc": {
+      "$ref": "#/definitions/UserSoc"
+    },
+    "wedd": {
+      "$ref": "#/definitions/Wedd"
+    },
+    "weddDtl": {
+      "$ref": "#/definitions/WeddDtl"
+    },
+    "weddMedia": {
+      "$ref": "#/definitions/WeddMedia"
+    },
+    "weddSectOrdr": {
+      "$ref": "#/definitions/WeddSectOrdr"
+    }
+  }
+}

@@ -1,31 +1,179 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
-//generator client {
-//  provider = "prisma-client"
-//  output   = "../src/generated/prisma"
-//}
-
-//datasource db {
-//  provider = "postgresql"
-//  url      = env("DATABASE_URL")
-//}
-
 generator client {
   provider = "prisma-client-js"
 }
 
-datasource db {
-  provider  = "myslq"
-  url       = env("DATABASE_URL")
+generator jsonSchema {
+  provider = "prisma-json-schema-generator"
+  output   = "../prisma/json-schema"
 }
 
-model Test {
-  id int    @id @default(autoincremnt())
-  name String
-  email String? // optional field (NULL 허용)
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model test {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String?
   createdAt DateTime @default(now())
+  updatedAt DateTime
+}
+
+/// 사용자 정보
+model User {
+  userId      Int       @id @map("user_id")
+  creatDt     DateTime? @default(now()) @db.DateTime(0) @map("creat_dt")
+  lastLoginDt DateTime? @updatedAt @db.DateTime(0) @map("last_login_dt")
+
+  userSoc     UserSoc[]
+  wedd        Wedd[]
+
+  @@map("user")
+}
+
+/// 소셜 로그인 계정
+model UserSoc {
+  userId        Int       @map("user_id")
+  socId         Int       @map("soc_id")
+  prvdrNm       String?   @db.VarChar(50) @map("prvdr_nm")
+  prvdrUserId   String?   @db.VarChar(100) @map("prvdr_user_id")
+  accessTkn     String?   @db.Text @map("access_tkn")
+  refreshTkn    String?   @db.Text @map("refresh_tkn")
+  idTkn         String?   @db.Text @map("id_tkn")
+  tknExprDt     DateTime? @db.DateTime(0) @map("tkn_expr_dt")
+  scope         String?   @db.VarChar(100) @map("scope")
+  creatDt       DateTime? @default(now()) @db.DateTime(0) @map("creat_dt")
+  updtDt        DateTime? @updatedAt @db.DateTime(0) @map("updt_dt")
+
+  user          User      @relation(fields: [userId], references: [userId])
+
+  @@id([userId, socId])
+  @@map("user_soc")
+}
+
+/// 청첩장 기본정보
+model Wedd {
+  weddId        Int         @id @map("wedd_id")
+  userId        Int         @map("user_id")
+  weddTtl       String?     @db.VarChar(50) @map("wedd_ttl")
+  weddSlug      String?     @db.VarChar(100) @map("wedd_slug")
+  creatDt       DateTime?   @default(now()) @db.DateTime(0) @map("creat_dt")
+  updtDt        DateTime?   @updatedAt @db.DateTime(0) @map("updt_dt")
+
+  user          User        @relation(fields: [userId], references: [userId])
+  weddDtl       WeddDtl?
+  weddSectOrdr  WeddSectOrdr[]
+
+  @@map("wedd")
+}
+
+/// 청첩장 상세정보
+model WeddDtl {
+  weddId                Int       @id @map("wedd_id")
+  mainPosterStyl        String?   @db.VarChar(50) @map("main_poster_styl")
+  shrTtl                String?   @db.VarChar(50) @map("shr_ttl")
+  infoGrmLastNm         String?   @db.VarChar(50) @map("info_grm_last_nm")
+  infoGrmFirstNm        String?   @db.VarChar(50) @map("info_grm_first_nm")
+  infoBrdLastNm         String?   @db.VarChar(50) @map("info_brd_last_nm")
+  infoBrdFirstNm        String?   @db.VarChar(50) @map("info_brd_first_nm")
+  infoNmOrdrSe          String?   @db.VarChar(1) @map("info_nm_ordr_se")
+  infoWeddDe            String?   @db.VarChar(8) @map("info_wedd_de")
+  infoWeddTm            String?   @db.VarChar(4) @map("info_wedd_tm")
+  infoHallNm            String?   @db.VarChar(50) @map("info_hall_nm")
+  infoHallFlr           String?   @db.VarChar(50) @map("info_hall_flr")
+  prntGrmFthrNm         String?   @db.VarChar(50) @map("prnt_grm_fthr_nm")
+  prntGrmFthrDeceasedYn String?   @db.Char(1) @map("prnt_grm_fthr_deceased_yn")
+  prntGrmMthrNm         String?   @db.VarChar(50) @map("prnt_grm_mthr_nm")
+  prntGrmMthrDeceasedYn String?   @db.Char(1) @map("prnt_grm_mthr_deceased_yn")
+  prntGrmRankNm         String?   @db.VarChar(50) @map("prnt_grm_rank_nm")
+  prntBrdFthrNm         String?   @db.VarChar(50) @map("prnt_brd_fthr_nm")
+  prntBrdFthrDeceasedYn String?   @db.Char(1) @map("prnt_brd_fthr_deceased_yn")
+  prntBrdMthrNm         String?   @db.VarChar(50) @map("prnt_brd_mthr_nm")
+  prntBrdMthrDeceasedYn String?   @db.Char(1) @map("prnt_brd_mthr_deceased_yn")
+  prntBrdRankNm         String?   @db.VarChar(50) @map("prnt_brd_rank_nm")
+  invTtl                String?   @db.VarChar(50) @map("inv_ttl")
+  invMsg                String?   @db.Text @map("inv_msg")
+  intrTtl               String?   @db.VarChar(50) @map("intr_ttl")
+  intrGrmMsg            String?   @db.Text @map("intr_grm_msg")
+  intrBrdMsg            String?   @db.Text @map("intr_brd_msg")
+  prntIntrTtl           String?   @db.VarChar(50) @map("prnt_intr_ttl")
+  prntIntrMsg           String?   @db.Text @map("prnt_intr_msg")
+  acntTtl               String?   @db.VarChar(50) @map("acnt_ttl")
+  acntMsg               String?   @db.Text @map("acnt_msg")
+  acntGrmBnkNm          String?   @db.VarChar(10) @map("acnt_grm_bnk_nm")
+  acntGrmNo             String?   @db.VarChar(20) @map("acnt_grm_no")
+  acntGrmHldrNm         String?   @db.VarChar(50) @map("acnt_grm_hldr_nm")
+  acntGrmFthrBnkNm      String?   @db.VarChar(10) @map("acnt_grm_fthr_bnk_nm")
+  acntGrmFthrNo         String?   @db.VarChar(20) @map("acnt_grm_fthr_no")
+  acntGrmFthrHldrNm     String?   @db.VarChar(50) @map("acnt_grm_fthr_hldr_nm")
+  acntGrmMthrBnkNm      String?   @db.VarChar(10) @map("acnt_grm_mthr_bnk_nm")
+  acntGrmMthrNo         String?   @db.VarChar(20) @map("acnt_grm_mthr_no")
+  acntGrmMthrHldrNm     String?   @db.VarChar(50) @map("acnt_grm_mthr_hldr_nm")
+  acntBrdBnkNm          String?   @db.VarChar(10) @map("acnt_brd_bnk_nm")
+  acntBrdNo             String?   @db.VarChar(20) @map("acnt_brd_no")
+  acntBrdHldrNm         String?   @db.VarChar(50) @map("acnt_brd_hldr_nm")
+  acntBrdFthrBnkNm      String?   @db.VarChar(10) @map("acnt_brd_fthr_bnk_nm")
+  acntBrdFthrNo         String?   @db.VarChar(20) @map("acnt_brd_fthr_no")
+  acntBrdFthrHldrNm     String?   @db.VarChar(50) @map("acnt_brd_fthr_hldr_nm")
+  acntBrdMthrBnkNm      String?   @db.VarChar(10) @map("acnt_brd_mthr_bnk_nm")
+  acntBrdMthrNo         String?   @db.VarChar(20) @map("acnt_brd_mthr_no")
+  acntBrdMthrHldrNm     String?   @db.VarChar(50) @map("acnt_brd_mthr_hldr_nm")
+  locAddr               String?   @db.VarChar(100) @map("loc_addr")
+  locAddrDtl            String?   @db.VarChar(100) @map("loc_addr_dtl")
+  locGuideMsg           String?   @db.Text @map("loc_guide_msg")
+  locTrans1Ttl          String?   @db.VarChar(50) @map("loc_trans_1_ttl")
+  locTrans1Msg          String?   @db.Text @map("loc_trans_1_msg")
+  locTrans2Ttl          String?   @db.VarChar(50) @map("loc_trans_2_ttl")
+  locTrans2Msg          String?   @db.Text @map("loc_trans_2_msg")
+  locTrans3Ttl          String?   @db.VarChar(50) @map("loc_trans_3_ttl")
+  locTrans3Msg          String?   @db.Text @map("loc_trans_3_msg")
+  themeFontNm           String?   @db.VarChar(50) @map("theme_font_nm")
+  themeFontSize         String?   @db.VarChar(20) @map("theme_font_size")
+  themeBgColor          String?   @db.VarChar(20) @map("theme_bg_color")
+  themeAccentColor      String?   @db.VarChar(20) @map("theme_accent_color")
+  themeZoomPreventYn    String?   @db.Char(1) @map("theme_zoom_prevent_yn")
+  loadStyl              String?   @db.VarChar(50) @map("load_styl")
+  creatDt               DateTime? @default(now()) @db.DateTime(0) @map("creat_dt")
+  updtDt                DateTime? @updatedAt @db.DateTime(0) @map("updt_dt")
+
+  wedd                  Wedd      @relation(fields: [weddId], references: [weddId])
+  weddMedia             WeddMedia[]
+
+  @@map("wedd_dtl")
+}
+
+/// 이미지 통합 테이블
+model WeddMedia {
+  weddId      Int       @map("wedd_id")
+  mediaId     Int       @map("media_id")
+  imgType     String?   @db.VarChar(50) @map("img_type")
+  displayOrdr Int?      @map("display_ordr")
+  orgUrl      String?   @db.VarChar(255) @map("org_url")
+  editUrl     String?   @db.VarChar(255) @map("edit_url")
+  fileExtsn   String?   @db.VarChar(10) @map("file_extsn")
+  fileSize    Int?      @map("file_size")
+  creatDt     DateTime? @default(now()) @db.DateTime(0) @map("creat_dt")
+  updtDt      DateTime? @updatedAt @db.DateTime(0) @map("updt_dt")
+
+  weddDtl     WeddDtl   @relation(fields: [weddId], references: [weddId])
+
+  @@id([weddId, mediaId])
+  @@map("wedd_media")
+}
+
+/// 섹션 순서 관리
+model WeddSectOrdr {
+  weddId      Int       @map("wedd_id")
+  sectKey     String    @db.VarChar(50) @map("sect_key")
+  userId      Int       @map("user_id")
+  displayYn   String?   @db.Char(1) @map("display_yn")
+  displayOrdr Int?      @map("display_ordr")
+  creatDt     DateTime? @default(now()) @db.DateTime(0) @map("creat_dt")
+  updtDt      DateTime? @updatedAt @db.DateTime(0) @map("updt_dt")
+
+  wedd        Wedd      @relation(fields: [weddId], references: [weddId])
+
+  @@id([weddId, sectKey])
+  @@map("wedd_sect_ordr")
 }
