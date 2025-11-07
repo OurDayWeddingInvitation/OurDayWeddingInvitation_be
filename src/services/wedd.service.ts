@@ -36,17 +36,18 @@ export const createWedd = async (userId: string, data: any) => {
   ];
 
   const result = await prisma.$transaction(async (tx) => {
+    delete border.weddId;
     const wedd = await tx.wedd.create({
       data: border
     });
     const weddDtl = await tx.weddDtl.create({
       data: {
-        weddId: border.weddId
+        weddId: wedd.weddId
       }
     });
     const weddSectOrdr = await tx.weddSectOrdr.createMany({
       data: defaultSections.map((key, index) => ({
-        weddId: border.weddId,
+        weddId: wedd.weddId,
         sectKey: key,
         displayYn: "Y",
         displayOrdr: index + 1,

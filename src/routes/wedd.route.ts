@@ -4,317 +4,561 @@ import * as weddController from '../controllers/wedd.controller';
 const router = Router();
 
 /**
- * @swagger
- * tags:
- *   name: Wedd
- *   description: 청첩장 기본정보 API
- */
-
-/**
- * @swagger
+ * @openapi
  * tags:
  *   - name: Wedd
- *     description: 청첩장 생성 및 관리 API
- * components:
- *   schemas:
- *     WeddMedia:
- *       type: object
- *       properties:
- *         weddId:
- *           type: integer
- *           description: 청첩장 ID
- *         mediaId:
- *           type: integer
- *           description: 미디어 ID
- *         imgType:
- *           type: string
- *           description: 이미지 타입 (MAIN / GALLERY 등)
- *         displayOrdr:
- *           type: integer
- *           description: 노출 순서
- *         orgUrl:
- *           type: string
- *           description: 원본 이미지 URL
- *         editUrl:
- *           type: string
- *           description: 편집 이미지 URL
- *         fileExtsn:
- *           type: string
- *           description: 파일 확장자
- *         fileSize:
- *           type: integer
- *           description: 파일 크기(byte)
- *       example:
- *         weddId: 1
- *         mediaId: 101
- *         imgType: 'MAIN'
- *         displayOrdr: 1
- *         orgUrl: 'https://cdn.example.com/original.jpg'
- *         editUrl: 'https://cdn.example.com/edited.jpg'
- *         fileExtsn: 'jpg'
- *         fileSize: 204800
- *
- *     WeddSectOrdr:
- *       type: object
- *       properties:
- *         weddId:
- *           type: integer
- *           description: 청첩장 ID
- *         sectKey:
- *           type: string
- *           description: 섹션 키명 (main, weddingInfo 등)
- *         displayYn:
- *           type: string
- *           description: 노출 여부 (Y/N)
- *         displayOrdr:
- *           type: integer
- *           description: 표시 순서
- *       example:
- *         weddId: 1
- *         sectKey: 'main'
- *         displayYn: 'Y'
- *         displayOrdr: 1
- *
- *     WeddSection:
- *       type: object
- *       properties:
- *         sectKey:
- *           type: string
- *           description: 섹션 키명
- *         displayYn:
- *           type: string
- *           description: 노출 여부
- *         displayOrdr:
- *           type: integer
- *           description: 섹션 순서
- *         mainPosterStyl:
- *           type: string
- *           description: 메인 포스터 스타일
- *         media:
- *           type: array
- *           items:
- *             $ref: '#/components/schemas/WeddMedia'
- *       example:
- *         sectKey: 'main'
- *         displayYn: 'Y'
- *         displayOrdr: 1
- *         mainPosterStyl: 'modern'
- *
- *     WeddCreateRequest:
- *       type: object
- *       properties:
- *         border:
- *           type: object
- *           properties:
- *             weddId:
- *               type: integer
- *               description: 청첩장 ID
- *             userId:
- *               type: string
- *               description: 사용자 ID
- *             weddTtl:
- *               type: string
- *               description: 청첩장 제목
- *             weddSlug:
- *               type: string
- *               description: 공유용 URL 식별자
- *           required:
- *             - userId
- *         sections:
- *           type: object
- *           description: 섹션 정보 (main, weddingInfo 등)
- *           additionalProperties:
- *             $ref: '#/components/schemas/WeddSection'
- *         weddSectOrdr:
- *           type: array
- *           description: 섹션 순서 정보
- *           items:
- *             $ref: '#/components/schemas/WeddSectOrdr'
- *       required:
- *         - border
- *       example:
- *         border:
- *           weddId: 1
- *           userId: 'U001'
- *           weddTtl: ''
- *           weddSlug: 'chano-yoonhwan'
- *         sections:
- *           main:
- *             sectKey: 'main'
- *             displayYn: 'Y'
- *             displayOrdr: 1
- *             mainPosterStyl: 'modern'
- *           weddingInfo:
- *             sectKey: 'weddingInfo'
- *             displayYn: 'Y'
- *             displayOrdr: 2
- *             infoWeddDe: '20251107'
- *             infoWeddTm: '1530'
- *         weddSectOrdr:
- *           - weddId: 1
- *             sectKey: 'main'
- *             displayYn: 'Y'
- *             displayOrdr: 1
- *           - weddId: 1
- *             sectKey: 'weddingInfo'
- *             displayYn: 'Y'
- *             displayOrdr: 2
- *
- *     WeddCreateResponse:
- *       type: object
- *       properties:
- *         wedd:
- *           type: object
- *           description: 생성된 청첩장 기본정보
- *           example:
- *             wedd_id: 1
- *             user_id: 'U001'
- *             wedd_ttl: ''
- *             wedd_slug: 'chano-yoonhwan'
- *         weddDtl:
- *           type: object
- *           description: 생성된 상세정보 (기본값 포함)
- *           example:
- *             wedd_dtl_id: 1
- *             wedd_id: 1
- *             user_id: 'U001'
- *             main_poster_styl: null
- *             info_wedd_de: null
- *         weddSectOrdr:
- *           type: object
- *           description: 생성된 섹션 순서 결과
- *           example:
- *             count: 13
+ *     description: 청첩장(Wedd) 관리 API
  */
 
 /**
- * @swagger
+ * @openapi
  * /api/wedds:
  *   get:
- *     summary: 사용자 청첩장 기본정보 전체 조회
- *     tags: [Wedd]
- *     parameters:
- *       - in: path
- *         name: userId
- *         schema:
- *           type: string
- *         required: true
- *         description: 사용자 ID
- *     responses:
- *       200:
- *         description: 사용자의 청첩장 기본정보 전체 목록 반환
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                 data:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/Wedd'
- *         
- */
-router.get('/', weddController.getAllWedds);
-
-/**
- * @swagger
- * /api/wedds/{weddId}:
- *   get:
- *     summary: 청첩장 기본정보 조회
- *     tags: [Wedd]
- *     parameters:
- *       - in: path
- *         name: weddId
- *         schema:
- *           type: integer
- *         required: true
- *         description: 청접창 ID
- *     responses:
- *       200:
- *         description: 청첩장 기본정보 반환
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                 data:
- *                   $ref: '#/components/schemas/Wedd'
- */
-router.get('/:weddId', weddController.getWeddById);
-
-/**
- * @swagger
- * /api/wedds:
- *   post:
- *     summary: 청첩장 생성
- *     description: 새로운 청첩장을 생성하고 wedd_dtl 및 wedd_sect_ordr 기본값을 초기화합니다.
+ *     summary: 사용자의 모든 청첩장 조회
  *     tags: [Wedd]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/WeddCreateRequest'
+ *             type: object
+ *             properties:
+ *               userId:
+ *                 type: string
+ *                 description: 사용자 ID
+ *     responses:
+ *       200:
+ *         description: 청첩장 목록 조회 성공
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/WeddSimple'
+ */
+
+/**
+ * @openapi
+ * /api/wedds/{weddId}:
+ *   get:
+ *     summary: 단일 청첩장 조회
+ *     tags: [Wedd]
+ *     parameters:
+ *       - name: weddId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: 청첩장 ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userId:
+ *                 type: string
+ *                 description: 사용자 ID
+ *     responses:
+ *       200:
+ *         description: 단일 청첩장 조회 성공
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/WeddTransactionResult'
+ *       404:
+ *         description: 존재하지 않는 청첩장
+ */
+
+/**
+ * @openapi
+ * /api/wedds:
+ *   post:
+ *     summary: 청첩장 생성
+ *     tags: [Wedd]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/WeddUpdateRequestBody'
  *     responses:
  *       200:
  *         description: 청첩장 생성 성공
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/WeddCreateResponse'
- *       400:
- *         description: 잘못된 요청
- *       500:
- *         description: 서버 오류
+ *               $ref: '#/components/schemas/WeddTransactionResult'
  */
-router.post('/', weddController.createWedd);
 
 /**
- * @swagger
+ * @openapi
  * /api/wedds/{weddId}:
  *   put:
- *     summary: 수정
+ *     summary: 청첩장 수정
  *     tags: [Wedd]
  *     parameters:
- *       - in: path
- *         name: weddId
+ *       - name: weddId
+ *         in: path
+ *         required: true
  *         schema:
  *           type: integer
- *         required: true
  *         description: 청첩장 ID
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/WeddUpdate'
+ *             $ref: '#/components/schemas/WeddUpdateRequestBody'
  *     responses:
  *       200:
- *         description: 수정된 청첩장 기본정보 반환
+ *         description: 청첩장 수정 성공
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/WeddTransactionResult'
+ *       400:
+ *         description: 잘못된 요청
+ *       404:
+ *         description: 존재하지 않는 청첩장
  */
-router.put('/:weddId', weddController.updateWedd);
 
 /**
- * @swagger
+ * @openapi
  * /api/wedds/{weddId}:
  *   delete:
- *     summary: 청첩장 기본정보 삭제
+ *     summary: 청첩장 삭제
  *     tags: [Wedd]
  *     parameters:
- *       - in: path
- *         name: weddId
+ *       - name: weddId
+ *         in: path
+ *         required: true
  *         schema:
  *           type: integer
- *         required: true
  *         description: 청첩장 ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userId:
+ *                 type: string
+ *                 description: 사용자 ID
  *     responses:
  *       200:
- *         description: 삭제 완료 메시지 반환
+ *         description: 삭제 성공
+ *       404:
+ *         description: 존재하지 않는 청첩장
  */
+
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     WeddSimple:
+ *       type: object
+ *       description: 청첩장 요약 정보
+ *       properties:
+ *         weddId:
+ *           type: integer
+ *         userId:
+ *           type: string
+ *         weddTtl:
+ *           type: string
+ *         weddSlug:
+ *           type: string
+ *         creatDt:
+ *           type: string
+ *           format: date-time
+ *
+ *     WeddMedia:
+ *       type: object
+ *       properties:
+ *         weddId:
+ *           type: integer
+ *         mediaId:
+ *           type: integer
+ *         imgType:
+ *           type: string
+ *         displayOrdr:
+ *           type: integer
+ *         orgUrl:
+ *           type: string
+ *         editUrl:
+ *           type: string
+ *         fileExtsn:
+ *           type: string
+ *         fileSize:
+ *           type: number
+ *
+ *     WeddSectOrdr:
+ *       type: object
+ *       properties:
+ *         weddId:
+ *           type: integer
+ *         sectKey:
+ *           type: string
+ *         displayYn:
+ *           type: string
+ *           enum: [Y, N]
+ *         displayOrDr:
+ *           type: integer
+ *
+ *     WeddUpdateRequestBody:
+ *       type: object
+ *       description: 청첩장 생성/수정 요청 데이터
+ *       properties:
+ *         border:
+ *           type: object
+ *           properties:
+ *             weddId:
+ *               type: integer
+ *             userId:
+ *               type: string
+ *             weddTtl:
+ *               type: string
+ *             weddSlug:
+ *               type: string
+ *         sections:
+ *           type: object
+ *           description: 섹션별 데이터 구조
+ *           properties:
+ *             main:
+ *               $ref: '#/components/schemas/SectionMain'
+ *             shareLink:
+ *               $ref: '#/components/schemas/SectionShareLink'
+ *             weddingInfo:
+ *               $ref: '#/components/schemas/SectionWeddingInfo'
+ *             familyInfo:
+ *               $ref: '#/components/schemas/SectionFamilyInfo'
+ *             invitationMessage:
+ *               $ref: '#/components/schemas/SectionInvitationMessage'
+ *             coupleIntro:
+ *               $ref: '#/components/schemas/SectionCoupleIntro'
+ *             parentsIntro:
+ *               $ref: '#/components/schemas/SectionParentsIntro'
+ *             accountInfo:
+ *               $ref: '#/components/schemas/SectionAccountInfo'
+ *             locationInfo:
+ *               $ref: '#/components/schemas/SectionLocationInfo'
+ *             themeFont:
+ *               $ref: '#/components/schemas/SectionThemeFont'
+ *             loadingScreen:
+ *               $ref: '#/components/schemas/SectionLoadingScreen'
+ *             gallery:
+ *               $ref: '#/components/schemas/SectionGallery'
+ *             flipbook:
+ *               $ref: '#/components/schemas/SectionFlipbook'
+ *         weddSectOrdr:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/WeddSectOrdr'
+ *
+ *     WeddTransactionResult:
+ *       type: object
+ *       properties:
+ *         wedd:
+ *           $ref: '#/components/schemas/WeddSimple'
+ *         weddDtl:
+ *           type: object
+ *           description: 상세 데이터 (내부 전용)
+ *         weddSectOrdr:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/WeddSectOrdr'
+ */
+
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     SectionMain:
+ *       type: object
+ *       description: 메인 포스터 섹션
+ *       properties:
+ *         sectKey:
+ *           type: string
+ *         displayYn:
+ *           type: string
+ *           enum: [Y, N]
+ *         displayOrdr:
+ *           type: integer
+ *         mainPosterStyl:
+ *           type: string
+ *         media:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/WeddMedia'
+ *
+ *     SectionShareLink:
+ *       type: object
+ *       description: 공유 링크 섹션
+ *       properties:
+ *         sectKey:
+ *           type: string
+ *         displayYn:
+ *           type: string
+ *           enum: [Y, N]
+ *         displayOrdr:
+ *           type: integer
+ *         shrTtl:
+ *           type: string
+ *         media:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/WeddMedia'
+ *
+ *     SectionWeddingInfo:
+ *       type: object
+ *       description: 예식 기본 정보 섹션
+ *       properties:
+ *         sectKey:
+ *           type: string
+ *         displayYn:
+ *           type: string
+ *         displayOrdr:
+ *           type: integer
+ *         infoGrmLastNm:
+ *           type: string
+ *         infoGrmFirstNm:
+ *           type: string
+ *         infoBrdLastNm:
+ *           type: string
+ *         infoBrdFirstNm:
+ *           type: string
+ *         infoNmOrdrSe:
+ *           type: string
+ *         infoWeddDe:
+ *           type: string
+ *         infoWeddTm:
+ *           type: string
+ *         infoHallNm:
+ *           type: string
+ *         infoHallFlr:
+ *           type: string
+ *
+ *     SectionFamilyInfo:
+ *       type: object
+ *       description: 양가 혼주 정보 섹션
+ *       properties:
+ *         sectKey:
+ *           type: string
+ *         displayYn:
+ *           type: string
+ *         displayOrdr:
+ *           type: integer
+ *         prntGrmFthrNm:
+ *           type: string
+ *         prntGrmFthrDeceasedYn:
+ *           type: string
+ *         prntGrmMthrNm:
+ *           type: string
+ *         prntGrmMthrDeceasedYn:
+ *           type: string
+ *         prntGrmRankNm:
+ *           type: string
+ *         prntBrdFthrNm:
+ *           type: string
+ *         prntBrdFthrDeceasedYn:
+ *           type: string
+ *         prntBrdMthrNm:
+ *           type: string
+ *         prntBrdMthrDeceasedYn:
+ *           type: string
+ *         prntBrdRankNm:
+ *           type: string
+ *
+ *     SectionInvitationMessage:
+ *       type: object
+ *       description: 초대 메시지 섹션
+ *       properties:
+ *         sectKey:
+ *           type: string
+ *         displayYn:
+ *           type: string
+ *         displayOrdr:
+ *           type: integer
+ *         invTtl:
+ *           type: string
+ *         invMsg:
+ *           type: string
+ *
+ *     SectionCoupleIntro:
+ *       type: object
+ *       description: 신랑/신부 소개 섹션
+ *       properties:
+ *         sectKey:
+ *           type: string
+ *         displayYn:
+ *           type: string
+ *         displayOrdr:
+ *           type: integer
+ *         intrTtl:
+ *           type: string
+ *         intrGrmMsg:
+ *           type: string
+ *         intrBrdMsg:
+ *           type: string
+ *         media:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/WeddMedia'
+ *
+ *     SectionParentsIntro:
+ *       type: object
+ *       description: 부모님 소개 섹션
+ *       properties:
+ *         sectKey:
+ *           type: string
+ *         displayYn:
+ *           type: string
+ *         displayOrdr:
+ *           type: integer
+ *         prntIntrTtl:
+ *           type: string
+ *         prntIntrMsg:
+ *           type: string
+ *         media:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/WeddMedia'
+ *
+ *     SectionAccountInfo:
+ *       type: object
+ *       description: 계좌 정보 섹션
+ *       properties:
+ *         sectKey:
+ *           type: string
+ *         displayYn:
+ *           type: string
+ *         displayOrdr:
+ *           type: integer
+ *         acntTtl:
+ *           type: string
+ *         acntMsg:
+ *           type: string
+ *         acntGrmBnkNm:
+ *           type: string
+ *         acntGrmNo:
+ *           type: string
+ *         acntGrmHldrNm:
+ *           type: string
+ *         acntBrdBnkNm:
+ *           type: string
+ *         acntBrdNo:
+ *           type: string
+ *         acntBrdHldrNm:
+ *           type: string
+ *
+ *     SectionLocationInfo:
+ *       type: object
+ *       description: 오시는 길 섹션
+ *       properties:
+ *         sectKey:
+ *           type: string
+ *         displayYn:
+ *           type: string
+ *         displayOrdr:
+ *           type: integer
+ *         locAddr:
+ *           type: string
+ *         locAddrDtl:
+ *           type: string
+ *         locGuideMsg:
+ *           type: string
+ *         locTrans1Ttl:
+ *           type: string
+ *         locTrans1Msg:
+ *           type: string
+ *         locTrans2Ttl:
+ *           type: string
+ *         locTrans2Msg:
+ *           type: string
+ *         locTrans3Ttl:
+ *           type: string
+ *         locTrans3Msg:
+ *           type: string
+ *
+ *     SectionThemeFont:
+ *       type: object
+ *       description: 테마/폰트 섹션
+ *       properties:
+ *         sectKey:
+ *           type: string
+ *         displayYn:
+ *           type: string
+ *         displayOrdr:
+ *           type: integer
+ *         themeFontNm:
+ *           type: string
+ *         themeFontSize:
+ *           type: string
+ *         themeBgColor:
+ *           type: string
+ *         themeAccentColor:
+ *           type: string
+ *         themeZoomPreventYn:
+ *           type: string
+ *
+ *     SectionLoadingScreen:
+ *       type: object
+ *       description: 로딩 화면 섹션
+ *       properties:
+ *         sectKey:
+ *           type: string
+ *         displayYn:
+ *           type: string
+ *         displayOrdr:
+ *           type: integer
+ *         loadStyl:
+ *           type: string
+ *
+ *     SectionGallery:
+ *       type: object
+ *       description: 갤러리 섹션
+ *       properties:
+ *         sectKey:
+ *           type: string
+ *         displayYn:
+ *           type: string
+ *         displayOrdr:
+ *           type: integer
+ *         gllyTtl:
+ *           type: string
+ *         media:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/WeddMedia'
+ *
+ *     SectionFlipbook:
+ *       type: object
+ *       description: 플립북 섹션
+ *       properties:
+ *         sectKey:
+ *           type: string
+ *         displayYn:
+ *           type: string
+ *         displayOrdr:
+ *           type: integer
+ *         media:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/WeddMedia'
+ */
+
+
+
+router.get('/', weddController.getAllWedds);
+
+router.get('/:weddId', weddController.getWeddById);
+
+router.post('/', weddController.createWedd);
+
+router.put('/:weddId', weddController.updateWedd);
+
 router.delete('/:weddId', weddController.deleteWedd);
 
 export default router;

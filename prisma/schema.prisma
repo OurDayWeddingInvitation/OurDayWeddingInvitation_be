@@ -54,7 +54,7 @@ model UserSoc {
 
 /// 청첩장 기본정보
 model Wedd {
-  weddId        Int         @id @map("wedd_id")
+  weddId        Int         @default(autoincrement()) @id @map("wedd_id")
   userId        String      @map("user_id")
   weddTtl       String?     @db.VarChar(50) @map("wedd_ttl")
   weddSlug      String?     @db.VarChar(100) @map("wedd_slug")
