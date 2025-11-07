@@ -22,7 +22,7 @@ model test {
 
 /// 사용자 정보
 model User {
-  userId      Int       @id @map("user_id")
+  userId      String    @id @map("user_id")
   creatDt     DateTime? @default(now()) @db.DateTime(0) @map("creat_dt")
   lastLoginDt DateTime? @updatedAt @db.DateTime(0) @map("last_login_dt")
 
@@ -34,8 +34,8 @@ model User {
 
 /// 소셜 로그인 계정
 model UserSoc {
-  userId        Int       @map("user_id")
-  socId         Int       @map("soc_id")
+  userId        String    @map("user_id")
+  socId         String    @map("soc_id")
   prvdrNm       String?   @db.VarChar(50) @map("prvdr_nm")
   prvdrUserId   String?   @db.VarChar(100) @map("prvdr_user_id")
   accessTkn     String?   @db.Text @map("access_tkn")
@@ -55,7 +55,7 @@ model UserSoc {
 /// 청첩장 기본정보
 model Wedd {
   weddId        Int         @id @map("wedd_id")
-  userId        Int         @map("user_id")
+  userId        String      @map("user_id")
   weddTtl       String?     @db.VarChar(50) @map("wedd_ttl")
   weddSlug      String?     @db.VarChar(100) @map("wedd_slug")
   creatDt       DateTime?   @default(now()) @db.DateTime(0) @map("creat_dt")
@@ -133,6 +133,7 @@ model WeddDtl {
   themeBgColor          String?   @db.VarChar(20) @map("theme_bg_color")
   themeAccentColor      String?   @db.VarChar(20) @map("theme_accent_color")
   themeZoomPreventYn    String?   @db.Char(1) @map("theme_zoom_prevent_yn")
+  gllyTtl               String?   @db.VarChar(50) @map("glly_ttl")
   loadStyl              String?   @db.VarChar(50) @map("load_styl")
   creatDt               DateTime? @default(now()) @db.DateTime(0) @map("creat_dt")
   updtDt                DateTime? @updatedAt @db.DateTime(0) @map("updt_dt")
@@ -166,7 +167,6 @@ model WeddMedia {
 model WeddSectOrdr {
   weddId      Int       @map("wedd_id")
   sectKey     String    @db.VarChar(50) @map("sect_key")
-  userId      Int       @map("user_id")
   displayYn   String?   @db.Char(1) @map("display_yn")
   displayOrdr Int?      @map("display_ordr")
   creatDt     DateTime? @default(now()) @db.DateTime(0) @map("creat_dt")

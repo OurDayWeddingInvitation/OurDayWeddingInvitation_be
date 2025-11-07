@@ -3,7 +3,7 @@ import prisma from '../prisma/client';
 /**
  * 모든 UserSoc 조회
  */
-export const getAllUserSocs = async (userId: number) => {
+export const getAllUserSocs = async (userId: string) => {
   return await prisma.userSoc.findMany({
     where: { userId },
     select: {
@@ -19,7 +19,7 @@ export const getAllUserSocs = async (userId: number) => {
 /**
  * 단일 UserSoc 조회
  */
-export const getUserSocById = async (userId: number, socId: number) => {
+export const getUserSocById = async (userId: string, socId: number) => {
   return await prisma.userSoc.findUnique({
     where: { userId_socId: { userId, socId } },
     select: {
@@ -51,7 +51,7 @@ export const createUserSoc = async (data: any) => {
 /**
  * UserSoc 수정
  */
-export const updateUserSoc = async (userId: number, socId: number, data: any) => {
+export const updateUserSoc = async (userId: string, socId: number, data: any) => {
   return await prisma.userSoc.update({
     where: { userId_socId: { userId, socId } },
     data,
@@ -68,7 +68,7 @@ export const updateUserSoc = async (userId: number, socId: number, data: any) =>
 /**
  * UserSoc 삭제
  */
-export const deleteUserSoc = async (userId: number, socId: number) => {
+export const deleteUserSoc = async (userId: string, socId: number) => {
   return await prisma.userSoc.delete({
     where: { userId_socId: { userId, socId } },
   });

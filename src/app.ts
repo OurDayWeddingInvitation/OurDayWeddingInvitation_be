@@ -10,9 +10,10 @@ import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './config/swagger.js';
 
 // 라우터 import
-import testRouter from './routes/test.route.js';
+// import testRouter from './testSrc/test.route.js';
 import userRoutes from './routes/user.route.js';
-import userSocRoutes from './routes/userSoc.route.js';
+// import userSocRoutes from './routes/userSoc.route.js';
+import weddRoutes from './routes/wedd.route.js';
 
 const app = express();
 
@@ -28,8 +29,9 @@ app.get('/health', (_req, res) => {
 });
 
 // /api/test 라우터 등록
-app.use('/api/test', testRouter);
+// app.use('/api/test', testRouter);
 app.use('/api/users', userRoutes);
-app.use('/api/users', userSocRoutes);
+// app.use('/api/users', userSocRoutes);
+app.use('/api/wedds', weddRoutes);
 
 export default app;

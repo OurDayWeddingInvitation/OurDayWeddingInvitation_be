@@ -54,3 +54,6 @@ const options: Options = {
 };
 
 export const swaggerSpec = swaggerJSDoc(options);
+
+fs.writeFileSync("./swagger.json", JSON.stringify(swaggerSpec, null, 2));
+console.log("✅ swagger.json 파일 생성 완료");

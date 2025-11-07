@@ -30,7 +30,7 @@
       "type": "object",
       "properties": {
         "userId": {
-          "type": "integer"
+          "type": "string"
         },
         "creatDt": {
           "type": [
@@ -64,7 +64,7 @@
       "type": "object",
       "properties": {
         "socId": {
-          "type": "integer"
+          "type": "string"
         },
         "prvdrNm": {
           "type": [
@@ -556,6 +556,12 @@
             "null"
           ]
         },
+        "gllyTtl": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "loadStyl": {
           "type": [
             "string",
@@ -653,9 +659,6 @@
       "properties": {
         "sectKey": {
           "type": "string"
-        },
-        "userId": {
-          "type": "integer"
         },
         "displayYn": {
           "type": [

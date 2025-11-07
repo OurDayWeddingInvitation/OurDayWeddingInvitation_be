@@ -19,19 +19,19 @@ const router = Router();
  *       properties:
  *         userId:
  *           type: integer
- *           descrptions: 사용자 ID
+ *           descrption: 사용자 ID
  *         socId:
  *           type: integer
- *           descrptions: 소셜 계정 ID
+ *           descrption: 소셜 계정 ID
  *         prvdrNm:
  *           type: string
- *           descrptions: 로그인 제공자명
+ *           descrption: 로그인 제공자명
  *         prvdrUserId:
  *           type: string
- *           descrptions: 외부 사용자 고유 ID
+ *           descrption: 외부 사용자 고유 ID
  *         scope:
  *           type: string
- *           descrptions: 권한 범위
+ *           descrption: 권한 범위
  *       required:
  *         - userId
  *         - socId
@@ -179,7 +179,7 @@ router.put('/:userId/socials/:socId', userSocController.updateUserSoc);
  *         description: 소셜 계정 ID
  *     responses:
  *       200:
- *         description: 삭제 완료 메시지 반홤
+ *         description: 삭제 완료 메시지 반환
  */
 router.delete('/:userId/socials/:socId', userSocController.deleteUserSoc);
 

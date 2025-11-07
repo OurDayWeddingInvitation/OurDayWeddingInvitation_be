@@ -14,9 +14,9 @@ export const getAllUsers = async () => {
 /**
  * 단일 User 조회
  */
-export const getUserById = async (userId: number) => {
+export const getUserById = async (userId: string) => {
   return await prisma.user.findUnique({
-    where: { userId: userId },
+    where: { userId },
     select: {
       userId: true,
     },
@@ -40,7 +40,7 @@ export const createUser = async (data: any) => {
 /**
  * User 수정
  */
-export const updateUser = async (userId: number, data: any) => {
+export const updateUser = async (userId: string, data: any) => {
   return await prisma.user.update({
     where: { userId: userId },
     data: {
@@ -55,8 +55,8 @@ export const updateUser = async (userId: number, data: any) => {
 /**
  * User 삭제
  */
-export const deleteUser = async (id: number) => {
+export const deleteUser = async (userId: string) => {
   return await prisma.user.delete({
-    where: { userId: id },
+    where: { userId },
   });
 };

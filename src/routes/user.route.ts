@@ -18,23 +18,23 @@ const router = Router();
  *       type: object
  *       properties:
  *         userId:
- *           type: integer
- *           description: 사용자 고유 ID
+ *           type: string
+ *           description: 사용자 ID
  *       required:
  *         - userId
  *       example:
- *         userId: 1
+ *         userId: 'userId'
  */
 
 /**
  * @swagger
  * /api/users:
  *   get:
- *     summary: 모든 사용자 조회
+ *     summary: 사용자 전체 조회
  *     tags: [User]
  *     responses:
  *       200:
- *         description: 모든 사용자 목록 반환
+ *         description: 사용자 전체 목록 반환
  *         content:
  *           application/json:
  *             schema:
@@ -53,13 +53,13 @@ router.get('/', userController.getAllUsers);
  * @swagger
  * /api/users/{userId}:
  *   get:
- *     summary: 특정 사용자 조회
+ *     summary: 사용자 조회
  *     tags: [User]
  *     parameters:
  *       - in: path
  *         name: userId
  *         schema:
- *           type: integer
+ *           type: string
  *         required: true
  *         description: 사용자 ID
  *     responses:
@@ -105,7 +105,7 @@ router.post('/', userController.createUser);
  *       - in: path
  *         name: userId
  *         schema:
- *           type: integer
+ *           type: string
  *         required: true
  *         description: 사용자 ID
  *     requestBody:
@@ -130,12 +130,12 @@ router.put('/:userId', userController.updateUser);
  *       - in: path
  *         name: userId
  *         schema:
- *           type: integer
+ *           type: string
  *         required: true
  *         description: 사용자 ID
  *     responses:
  *       200:
- *         description: 삭제 완료 메시지 반홤
+ *         description: 삭제 완료 메시지 반환
  */
 router.delete('/:userId', userController.deleteUser);
 
