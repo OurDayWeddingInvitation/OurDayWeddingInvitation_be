@@ -13,21 +13,6 @@
   ],
   "components": {
     "schemas": {
-      "User": {
-        "type": "object",
-        "properties": {
-          "userId": {
-            "type": "string",
-            "description": "사용자 ID"
-          }
-        },
-        "required": [
-          "userId"
-        ],
-        "example": {
-          "userId": "userId"
-        }
-      },
       "WeddSimple": {
         "type": "object",
         "description": "청첩장 요약 정보",
@@ -611,147 +596,36 @@
     }
   },
   "paths": {
-    "/api/users": {
-      "get": {
-        "summary": "사용자 전체 조회",
-        "tags": [
-          "User"
-        ],
-        "responses": {
-          "200": {
-            "description": "사용자 전체 목록 반환",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean"
-                    },
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/User"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
+    "/api/v1/auth/social": {
       "post": {
-        "summary": "사용자 생성",
+        "summary": "소셜 로그인 (네이버 등)",
         "tags": [
-          "User"
+          "Auth"
         ],
         "requestBody": {
-          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/User"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "생성된 사용자 반환"
-          }
-        }
-      }
-    },
-    "/api/users/{userId}": {
-      "get": {
-        "summary": "사용자 조회",
-        "tags": [
-          "User"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "userId",
-            "schema": {
-              "type": "string"
-            },
-            "required": true,
-            "description": "사용자 ID"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "단일 사용자 반환",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean"
-                    },
-                    "data": {
-                      "$ref": "#/components/schemas/User"
-                    }
+                "type": "object",
+                "properties": {
+                  "provider": {
+                    "type": "string",
+                    "example": "naver"
+                  },
+                  "code": {
+                    "type": "string"
+                  },
+                  "state": {
+                    "type": "string"
                   }
                 }
               }
             }
           }
-        }
-      },
-      "put": {
-        "summary": "사용자 수정",
-        "tags": [
-          "User"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "userId",
-            "schema": {
-              "type": "string"
-            },
-            "required": true,
-            "description": "사용자 ID"
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/User"
-              }
-            }
-          }
         },
         "responses": {
           "200": {
-            "description": "수정된 사용자 반환"
-          }
-        }
-      },
-      "delete": {
-        "summary": "사용자 삭제",
-        "tags": [
-          "User"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "userId",
-            "schema": {
-              "type": "string"
-            },
-            "required": true,
-            "description": "사용자 ID"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "삭제 완료 메시지 반환"
+            "description": "로그인 성공"
           }
         }
       }
@@ -961,10 +835,6 @@
     }
   },
   "tags": [
-    {
-      "name": "User",
-      "description": "사용자 관리 API"
-    },
     {
       "name": "Wedd",
       "description": "청첩장(Wedd) 관리 API"

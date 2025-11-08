@@ -1,4 +1,4 @@
-import prisma from '../prisma/client';
+import prisma from '../../../config/prisma';
 
 /**
  * 사용자의 모든 wedd 조회

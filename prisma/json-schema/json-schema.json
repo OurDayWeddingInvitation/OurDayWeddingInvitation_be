@@ -63,16 +63,13 @@
     "UserSoc": {
       "type": "object",
       "properties": {
-        "socId": {
+        "prvdrNm": {
           "type": "string"
         },
-        "prvdrNm": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
         "prvdrUserId": {
+          "type": "string"
+        },
+        "socId": {
           "type": [
             "string",
             "null"

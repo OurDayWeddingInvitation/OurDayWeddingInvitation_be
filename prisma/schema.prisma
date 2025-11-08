@@ -34,10 +34,10 @@ model User {
 
 /// 소셜 로그인 계정
 model UserSoc {
-  userId        String    @map("user_id")
-  socId         String    @map("soc_id")
-  prvdrNm       String?   @db.VarChar(50) @map("prvdr_nm")
-  prvdrUserId   String?   @db.VarChar(100) @map("prvdr_user_id")
+  prvdrNm       String    @db.VarChar(50) @map("prvdr_nm")
+  prvdrUserId   String    @db.VarChar(100) @map("prvdr_user_id")
+  userId        String    @db.VarChar(100) @map("user_id")
+  socId         String?   @db.VarChar(100) @map("soc_id")
   accessTkn     String?   @db.Text @map("access_tkn")
   refreshTkn    String?   @db.Text @map("refresh_tkn")
   idTkn         String?   @db.Text @map("id_tkn")
@@ -48,7 +48,7 @@ model UserSoc {
 
   user          User      @relation(fields: [userId], references: [userId])
 
-  @@id([userId, socId])
+  @@id([prvdrNm, prvdrUserId])
   @@map("user_soc")
 }
 
