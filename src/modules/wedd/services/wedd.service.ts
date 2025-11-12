@@ -38,7 +38,7 @@ export const createWedd = async (userId: string, data: any) => {
   const result = await prisma.$transaction(async (tx) => {
     delete border.weddId;
     const wedd = await tx.wedd.create({
-      data: border
+      data: { ...border, userId}
     });
     const weddDtl = await tx.weddDtl.create({
       data: {

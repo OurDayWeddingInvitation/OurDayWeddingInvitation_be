@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { authenticateJWT } from '@/middlewares/auth.middleware';
 import * as weddController from '../controllers/wedd.controller';
 
 const router = Router();
@@ -12,20 +13,10 @@ const router = Router();
 
 /**
  * @openapi
- * /api/wedds:
+ * /api/v1/wedds:
  *   get:
  *     summary: 사용자의 모든 청첩장 조회
  *     tags: [Wedd]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               userId:
- *                 type: string
- *                 description: 사용자 ID
  *     responses:
  *       200:
  *         description: 청첩장 목록 조회 성공
@@ -39,7 +30,7 @@ const router = Router();
 
 /**
  * @openapi
- * /api/wedds/{weddId}:
+ * /api/v1/wedds/{weddId}:
  *   get:
  *     summary: 단일 청첩장 조회
  *     tags: [Wedd]
@@ -73,7 +64,7 @@ const router = Router();
 
 /**
  * @openapi
- * /api/wedds:
+ * /api/v1/wedds:
  *   post:
  *     summary: 청첩장 생성
  *     tags: [Wedd]
@@ -94,7 +85,7 @@ const router = Router();
 
 /**
  * @openapi
- * /api/wedds/{weddId}:
+ * /api/v1/wedds/{weddId}:
  *   put:
  *     summary: 청첩장 수정
  *     tags: [Wedd]
@@ -126,7 +117,7 @@ const router = Router();
 
 /**
  * @openapi
- * /api/wedds/{weddId}:
+ * /api/v1/wedds/{weddId}:
  *   delete:
  *     summary: 청첩장 삭제
  *     tags: [Wedd]
@@ -551,14 +542,14 @@ const router = Router();
 
 
 
-router.get('/', weddController.getAllWedds);
+router.get('/', authenticateJWT, weddController.getAllWedds);
 
-router.get('/:weddId', weddController.getWeddById);
+router.get('/:weddId', authenticateJWT, weddController.getWeddById);
 
-router.post('/', weddController.createWedd);
+router.post('/', authenticateJWT, weddController.createWedd);
 
-router.put('/:weddId', weddController.updateWedd);
+router.put('/:weddId', authenticateJWT, weddController.updateWedd);
 
-router.delete('/:weddId', weddController.deleteWedd);
+router.delete('/:weddId', authenticateJWT, weddController.deleteWedd);
 
 export default router;

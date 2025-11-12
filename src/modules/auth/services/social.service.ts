@@ -1,13 +1,23 @@
 import { naverAuth } from './providers/naver.service';
 import prisma from '../../../config/prisma';
-import jwt from 'jsonwebtoken';
+import { generateAccessToken, generateRefreshToken } from '../../../utils/token.util';
 
 export async function socialLogin(provider: string, code: string, state?: string) {
-  if (provider !== 'naver') throw new Error('지원하지 않는 provider');
+  let tokens, userInfo;
+  switch (provider) {
+    case 'naver':
+      const naverAuthData = await naverAuth({ code, state });
+      tokens = naverAuthData.tokens;
+      userInfo = naverAuthData.userInfo;
+      break;
+    default:
+      throw new Error(`지원하지 않는 provider: ${provider}`);
+  }
 
-  const { tokens, userInfo } = await naverAuth({ code, state });
+  let user;
+  let isNew = false;
 
-  const existing = await prisma.userSoc.findUnique({
+  let userSoc = await prisma.userSoc.findUnique({
     where: {
       prvdrNm_prvdrUserId: {
         prvdrNm: 'naver',
@@ -17,14 +27,13 @@ export async function socialLogin(provider: string, code: string, state?: string
     include: { user: true },
   });
 
-  let user;
-  let isNew = false;
+  
+  console.log(userSoc?.userId);
 
-  if (!existing) {
+  if (!userSoc) {
     isNew = true;
     user = await prisma.user.create({
       data: {
-        userId: 'test', // 인코딩 필요
         userSoc: {
           create: {
             prvdrNm: 'naver',
@@ -35,10 +44,11 @@ export async function socialLogin(provider: string, code: string, state?: string
           },
         },
       },
+      include: { userSoc: true },
     });
   } else {
     user = await prisma.user.update({
-      where: { userId: existing.userId },
+      where: { userId: userSoc.userId },
       data: {
         userSoc: {
           update: {
@@ -56,12 +66,23 @@ export async function socialLogin(provider: string, code: string, state?: string
           },
         },
       },
+      include: { userSoc: true },
     });
   }
+  console.log(user)
+  // JWT 발급
+  const accessToken = generateAccessToken({ userId: user.userId, provider });
+  const refreshToken = generateRefreshToken({ userId: user.userId, provider });
 
-  const jwtToken = jwt.sign({ userId: user.userId, prvdr: provider }, process.env.JWT_SECRET!, {
-    expiresIn: '7d',
-  });
+  const expiresInSec = 60 * 60;
 
-  return { isNew, token: jwtToken, user: { userId: user.userId } };
+  return {
+    accessToken,
+    refreshToken,
+    expiresIn: expiresInSec,
+    user: {
+      userId: user.userId,
+      provider: provider
+    }
+  };
 }

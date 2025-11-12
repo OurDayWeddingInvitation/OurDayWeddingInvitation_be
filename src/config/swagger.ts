@@ -24,6 +24,7 @@ const options: Options = {
       version: '1.0.0',
       description: 'OurDay API 문서',
     },
+    security: [{ bearerAuth: [] }],
     servers: [
       {
         url: 'http://localhost:8080',
@@ -31,6 +32,13 @@ const options: Options = {
       },
     ],
     components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        }
+      },
       schemas: loadPrismaSchemas(), // Prisma 모델 자동 반영
       responses: {
         SuccessResponse: {

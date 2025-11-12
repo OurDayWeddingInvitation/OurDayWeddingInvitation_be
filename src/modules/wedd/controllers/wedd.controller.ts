@@ -6,7 +6,8 @@ import * as weddService from '../services/wedd.service';
  */
 export const getAllWedds = async (req: Request, res: Response) => {
   try {
-    const userId = req.params.userId;
+    const { userId } = (req as any).user;
+    const testUserId = req.params.userId;
     const wedds = await weddService.getAllWedds(userId);
     res.status(200).json({ success: true, data: wedds });
   } catch (error: any) {
@@ -34,7 +35,8 @@ export const getWeddById = async (req: Request, res: Response) => {
  */
 export const createWedd = async (req: Request, res: Response) => {
   try {
-    const userId = req.params.userId;
+    const { userId } = (req as any).user;
+    // const userId = req.params.userId;
     const wedd = await weddService.createWedd(userId, req.body);
     res.status(200).json({ success: true, data: wedd });
   } catch (error: any) {

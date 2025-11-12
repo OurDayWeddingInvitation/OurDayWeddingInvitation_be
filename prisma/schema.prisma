@@ -22,7 +22,7 @@ model test {
 
 /// 사용자 정보
 model User {
-  userId      String    @id @map("user_id")
+  userId      String    @id @default(uuid()) @map("user_id")
   creatDt     DateTime? @default(now()) @db.DateTime(0) @map("creat_dt")
   lastLoginDt DateTime? @updatedAt @db.DateTime(0) @map("last_login_dt")
 
