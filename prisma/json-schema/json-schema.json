@@ -1,45 +1,39 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "definitions": {
-    "test": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "integer"
-        },
-        "name": {
-          "type": "string"
-        },
-        "email": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "updatedAt": {
-          "type": "string",
-          "format": "date-time"
-        }
-      }
-    },
     "User": {
       "type": "object",
       "properties": {
         "userId": {
           "type": "string"
         },
-        "creatDt": {
+        "refreshToken": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "lastProviderName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "lastLoginAt": {
           "type": [
             "string",
             "null"
           ],
           "format": "date-time"
         },
-        "lastLoginDt": {
+        "createdAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updatedAt": {
           "type": [
             "string",
             "null"
@@ -63,37 +57,37 @@
     "UserSoc": {
       "type": "object",
       "properties": {
-        "prvdrNm": {
+        "providerName": {
           "type": "string"
         },
-        "prvdrUserId": {
+        "providerUserId": {
           "type": "string"
         },
-        "socId": {
+        "socialId": {
           "type": [
             "string",
             "null"
           ]
         },
-        "accessTkn": {
+        "accessToken": {
           "type": [
             "string",
             "null"
           ]
         },
-        "refreshTkn": {
+        "refreshToken": {
           "type": [
             "string",
             "null"
           ]
         },
-        "idTkn": {
+        "idToken": {
           "type": [
             "string",
             "null"
           ]
         },
-        "tknExprDt": {
+        "tokenExpiredAt": {
           "type": [
             "string",
             "null"
@@ -106,14 +100,14 @@
             "null"
           ]
         },
-        "creatDt": {
+        "createdAt": {
           "type": [
             "string",
             "null"
           ],
           "format": "date-time"
         },
-        "updtDt": {
+        "updatedAt": {
           "type": [
             "string",
             "null"
@@ -128,29 +122,29 @@
     "Wedd": {
       "type": "object",
       "properties": {
-        "weddId": {
+        "weddingId": {
           "type": "integer"
         },
-        "weddTtl": {
+        "weddingTitle": {
           "type": [
             "string",
             "null"
           ]
         },
-        "weddSlug": {
+        "weddingSlug": {
           "type": [
             "string",
             "null"
           ]
         },
-        "creatDt": {
+        "createdAt": {
           "type": [
             "string",
             "null"
           ],
           "format": "date-time"
         },
-        "updtDt": {
+        "updatedAt": {
           "type": [
             "string",
             "null"
@@ -170,10 +164,10 @@
             }
           ]
         },
-        "weddSectOrdr": {
+        "WeddSectSet": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/WeddSectOrdr"
+            "$ref": "#/definitions/WeddSectSet"
           }
         }
       }
@@ -181,349 +175,349 @@
     "WeddDtl": {
       "type": "object",
       "properties": {
-        "mainPosterStyl": {
+        "mainPosterStyle": {
           "type": [
             "string",
             "null"
           ]
         },
-        "shrTtl": {
+        "shareLinkTitle": {
           "type": [
             "string",
             "null"
           ]
         },
-        "infoGrmLastNm": {
+        "weddingInfoGroomLastName": {
           "type": [
             "string",
             "null"
           ]
         },
-        "infoGrmFirstNm": {
+        "weddingInfoGroomFirstName": {
           "type": [
             "string",
             "null"
           ]
         },
-        "infoBrdLastNm": {
+        "weddingInfoBrideLastName": {
           "type": [
             "string",
             "null"
           ]
         },
-        "infoBrdFirstNm": {
+        "weddingInfoBrideFirstName": {
           "type": [
             "string",
             "null"
           ]
         },
-        "infoNmOrdrSe": {
+        "weddingInfoNameOrderType": {
           "type": [
             "string",
             "null"
           ]
         },
-        "infoWeddDe": {
+        "weddingInfoDate": {
           "type": [
             "string",
             "null"
           ]
         },
-        "infoWeddTm": {
+        "weddingInfoTime": {
           "type": [
             "string",
             "null"
           ]
         },
-        "infoHallNm": {
+        "weddingInfoHallName": {
           "type": [
             "string",
             "null"
           ]
         },
-        "infoHallFlr": {
+        "weddingInfoHallFloor": {
           "type": [
             "string",
             "null"
           ]
         },
-        "prntGrmFthrNm": {
+        "familyInfoGroomFatherName": {
           "type": [
             "string",
             "null"
           ]
         },
-        "prntGrmFthrDeceasedYn": {
+        "familyInfoGroomFatherDeceased": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "familyInfoGroomMotherName": {
           "type": [
             "string",
             "null"
           ]
         },
-        "prntGrmMthrNm": {
+        "familyInfoGroomMotherDeceased": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "familyInfoGroomRankName": {
           "type": [
             "string",
             "null"
           ]
         },
-        "prntGrmMthrDeceasedYn": {
+        "familyInfoBrideFatherName": {
           "type": [
             "string",
             "null"
           ]
         },
-        "prntGrmRankNm": {
+        "familyInfoBrideFatherDeceased": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "familyInfoBrideMotherName": {
           "type": [
             "string",
             "null"
           ]
         },
-        "prntBrdFthrNm": {
+        "familyInfoBrideMotherDeceased": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "familyInfoBrideRankName": {
           "type": [
             "string",
             "null"
           ]
         },
-        "prntBrdFthrDeceasedYn": {
+        "invitationMessageTitle": {
           "type": [
             "string",
             "null"
           ]
         },
-        "prntBrdMthrNm": {
+        "invitationMessageContent": {
           "type": [
             "string",
             "null"
           ]
         },
-        "prntBrdMthrDeceasedYn": {
+        "coupleIntroTitle": {
           "type": [
             "string",
             "null"
           ]
         },
-        "prntBrdRankNm": {
+        "coupleIntroGroomMessage": {
           "type": [
             "string",
             "null"
           ]
         },
-        "invTtl": {
+        "coupleIntroBrideMessage": {
           "type": [
             "string",
             "null"
           ]
         },
-        "invMsg": {
+        "parentsIntroTitle": {
           "type": [
             "string",
             "null"
           ]
         },
-        "intrTtl": {
+        "parentsIntroMessage": {
           "type": [
             "string",
             "null"
           ]
         },
-        "intrGrmMsg": {
+        "accountInfoTitle": {
           "type": [
             "string",
             "null"
           ]
         },
-        "intrBrdMsg": {
+        "accountInfoMessage": {
           "type": [
             "string",
             "null"
           ]
         },
-        "prntIntrTtl": {
+        "accountInfoGroomBankName": {
           "type": [
             "string",
             "null"
           ]
         },
-        "prntIntrMsg": {
+        "accountInfoGroomNumber": {
           "type": [
             "string",
             "null"
           ]
         },
-        "acntTtl": {
+        "accountInfoGroomHolder": {
           "type": [
             "string",
             "null"
           ]
         },
-        "acntMsg": {
+        "accountInfoGroomFatherBankName": {
           "type": [
             "string",
             "null"
           ]
         },
-        "acntGrmBnkNm": {
+        "accountInfoGroomFatherNumber": {
           "type": [
             "string",
             "null"
           ]
         },
-        "acntGrmNo": {
+        "accountInfoGroomFatherHolder": {
           "type": [
             "string",
             "null"
           ]
         },
-        "acntGrmHldrNm": {
+        "accountInfoGroomMotherBankName": {
           "type": [
             "string",
             "null"
           ]
         },
-        "acntGrmFthrBnkNm": {
+        "accountInfoGroomMotherNumber": {
           "type": [
             "string",
             "null"
           ]
         },
-        "acntGrmFthrNo": {
+        "accountInfoGroomMotherHolder": {
           "type": [
             "string",
             "null"
           ]
         },
-        "acntGrmFthrHldrNm": {
+        "accountInfoBrideBankName": {
           "type": [
             "string",
             "null"
           ]
         },
-        "acntGrmMthrBnkNm": {
+        "accountInfoBrideNumber": {
           "type": [
             "string",
             "null"
           ]
         },
-        "acntGrmMthrNo": {
+        "accountInfoBrideHolder": {
           "type": [
             "string",
             "null"
           ]
         },
-        "acntGrmMthrHldrNm": {
+        "accountInfoBrideFatherBankName": {
           "type": [
             "string",
             "null"
           ]
         },
-        "acntBrdBnkNm": {
+        "accountInfoBrideFatherNumber": {
           "type": [
             "string",
             "null"
           ]
         },
-        "acntBrdNo": {
+        "accountInfoBrideFatherHolder": {
           "type": [
             "string",
             "null"
           ]
         },
-        "acntBrdHldrNm": {
+        "accountInfoBrideMotherBankName": {
           "type": [
             "string",
             "null"
           ]
         },
-        "acntBrdFthrBnkNm": {
+        "accountInfoBrideMotherNumber": {
           "type": [
             "string",
             "null"
           ]
         },
-        "acntBrdFthrNo": {
+        "accountInfoBrideMotherHolder": {
           "type": [
             "string",
             "null"
           ]
         },
-        "acntBrdFthrHldrNm": {
+        "locationInfoAddress": {
           "type": [
             "string",
             "null"
           ]
         },
-        "acntBrdMthrBnkNm": {
+        "locationInfoAddressDetail": {
           "type": [
             "string",
             "null"
           ]
         },
-        "acntBrdMthrNo": {
+        "locationInfoGuideMessage": {
           "type": [
             "string",
             "null"
           ]
         },
-        "acntBrdMthrHldrNm": {
+        "locationInfoTransport1Title": {
           "type": [
             "string",
             "null"
           ]
         },
-        "locAddr": {
+        "locationInfoTransport1Message": {
           "type": [
             "string",
             "null"
           ]
         },
-        "locAddrDtl": {
+        "locationInfoTransport2Title": {
           "type": [
             "string",
             "null"
           ]
         },
-        "locGuideMsg": {
+        "locationInfoTransport2Message": {
           "type": [
             "string",
             "null"
           ]
         },
-        "locTrans1Ttl": {
+        "locationInfoTransport3Title": {
           "type": [
             "string",
             "null"
           ]
         },
-        "locTrans1Msg": {
+        "locationInfoTransport3Message": {
           "type": [
             "string",
             "null"
           ]
         },
-        "locTrans2Ttl": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "locTrans2Msg": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "locTrans3Ttl": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "locTrans3Msg": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "themeFontNm": {
+        "themeFontName": {
           "type": [
             "string",
             "null"
@@ -535,44 +529,44 @@
             "null"
           ]
         },
-        "themeBgColor": {
+        "themeFontBackgroundColor": {
           "type": [
             "string",
             "null"
           ]
         },
-        "themeAccentColor": {
+        "themeFontAccentColor": {
           "type": [
             "string",
             "null"
           ]
         },
-        "themeZoomPreventYn": {
+        "themeFontZoomPreventYn": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "loadingScreenStyle": {
           "type": [
             "string",
             "null"
           ]
         },
-        "gllyTtl": {
+        "galleryTitle": {
           "type": [
             "string",
             "null"
           ]
         },
-        "loadStyl": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "creatDt": {
+        "createdAt": {
           "type": [
             "string",
             "null"
           ],
           "format": "date-time"
         },
-        "updtDt": {
+        "updatedAt": {
           "type": [
             "string",
             "null"
@@ -596,31 +590,25 @@
         "mediaId": {
           "type": "integer"
         },
-        "imgType": {
+        "imageType": {
           "type": [
             "string",
             "null"
           ]
         },
-        "displayOrdr": {
-          "type": [
-            "integer",
-            "null"
-          ]
-        },
-        "orgUrl": {
+        "originalUrl": {
           "type": [
             "string",
             "null"
           ]
         },
-        "editUrl": {
+        "editedUrl": {
           "type": [
             "string",
             "null"
           ]
         },
-        "fileExtsn": {
+        "fileExtension": {
           "type": [
             "string",
             "null"
@@ -632,14 +620,14 @@
             "null"
           ]
         },
-        "creatDt": {
+        "createdAt": {
           "type": [
             "string",
             "null"
           ],
           "format": "date-time"
         },
-        "updtDt": {
+        "updatedAt": {
           "type": [
             "string",
             "null"
@@ -651,32 +639,32 @@
         }
       }
     },
-    "WeddSectOrdr": {
+    "WeddSectSet": {
       "type": "object",
       "properties": {
-        "sectKey": {
+        "sectionKey": {
           "type": "string"
         },
         "displayYn": {
           "type": [
-            "string",
+            "boolean",
             "null"
           ]
         },
-        "displayOrdr": {
+        "displayOrder": {
           "type": [
             "integer",
             "null"
           ]
         },
-        "creatDt": {
+        "createdAt": {
           "type": [
             "string",
             "null"
           ],
           "format": "date-time"
         },
-        "updtDt": {
+        "updatedAt": {
           "type": [
             "string",
             "null"
@@ -691,9 +679,6 @@
   },
   "type": "object",
   "properties": {
-    "test": {
-      "$ref": "#/definitions/test"
-    },
     "user": {
       "$ref": "#/definitions/User"
     },
@@ -709,8 +694,8 @@
     "weddMedia": {
       "$ref": "#/definitions/WeddMedia"
     },
-    "weddSectOrdr": {
-      "$ref": "#/definitions/WeddSectOrdr"
+    "weddSectSet": {
+      "$ref": "#/definitions/WeddSectSet"
     }
   }
 }

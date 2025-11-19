@@ -20,6 +20,6 @@ app.get('/health', (_req, res) => {
   res.status(200).json({ ok: true, port: process.env.PORT });
 });
 
-app.use('/api/v1', modules);
+app.use('/v1', modules);
 
 export default app;

@@ -4,9 +4,14 @@ const prisma = new PrismaClient({
     omit: {
         wedd: {
             userId: true,
-            creatDt: true,
-            updtDt: true,
+            createdAt: true,
+            updatedAt: true,
         },
+        weddSectSet: {
+            weddingId: true,
+            createdAt: true,
+            updatedAt: true,
+        }
     },
 });
 

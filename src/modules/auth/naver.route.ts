@@ -4,11 +4,11 @@ const router = Router();
 
 /**
  * [1] 테스트용 네이버 로그인 시작 URL
- * 예: http://localhost:8080/api/v1/auth/naver/login
+ * 예: http://localhost:8080/v1/auth/naver/login
  */
 router.get('/login', (req, res) => {
   const state = crypto.randomUUID();
-  const redirectUri = encodeURIComponent('http://localhost:8080/api/v1/auth/naver/callback');
+  const redirectUri = encodeURIComponent('http://localhost:8080/v1/auth/naver/callback');
   const clientId = process.env.NAVER_CLIENT_ID;
 
   const naverAuthUrl =
@@ -23,7 +23,7 @@ router.get('/login', (req, res) => {
 /**
  * [2] 콜백 엔드포인트
  * 네이버가 로그인 성공 시 여기로 code/state를 보냄
- * 예: http://localhost:8080/api/v1/auth/naver/callback?code=xxx&state=yyy
+ * 예: http://localhost:8080/v1/auth/naver/callback?code=xxx&state=yyy
  */
 router.get('/callback', async (req, res) => {
   const { code, state } = req.query;
@@ -36,7 +36,7 @@ router.get('/callback', async (req, res) => {
     <h2>네이버 로그인 콜백 도착 ✅</h2>
     <p>code: ${code}</p>
     <p>state: ${state}</p>
-    <p>이제 이 code/state를 POST /api/v1/auth/social 로 전달하면 됩니다.</p>
+    <p>이제 이 code/state를 POST /v1/auth/social 로 전달하면 됩니다.</p>
   `);
 });
 

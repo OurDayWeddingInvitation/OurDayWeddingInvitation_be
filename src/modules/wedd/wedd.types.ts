@@ -11,7 +11,7 @@ export interface weddMedia {
 	fileSize?: number
 }
 
-export interface weddSectOrdr {
+export interface WeddSectSet {
 	weddId: number;
 	sectKey: string;
 	displayYn?: string;
@@ -188,5 +188,32 @@ export interface weddUpdateRequestBody {
 			media?: weddMedia[];
 		}
 	};
-	weddSectOrdr?: weddSectOrdr[];
+	WeddSectSet?: WeddSectSet[];
 }
+
+const WEDDING_SECTION_MAP = {
+  main: [
+    "mainPosterStyl",
+    "mainTitle",
+    "mainSubTitle",
+  ],
+  weddingInfo: [
+    "infoGrmLastNm",
+    "infoGrmFirstNm",
+    "infoBrdLastNm",
+    "infoBrdFirstNm",
+    "infoWeddDe",
+    "infoWeddTm",
+    "infoHallNm",
+    "infoHallFlr",
+  ],
+  shareLink: [
+    "shrTtl",
+    "shrDesc",
+  ],
+  gallery: [
+    "galleryUseYn",
+    "galleryType",
+  ],
+  // ... 모든 섹션을 여기에 정의
+} as const;

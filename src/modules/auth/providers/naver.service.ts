@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+// 네이버 인증
 export async function naverAuth({ code, state }: { code: string; state?: string }) {
   const tokenRes = await axios.post(
     `https://nid.naver.com/oauth2.0/token?grant_type=authorization_code` +

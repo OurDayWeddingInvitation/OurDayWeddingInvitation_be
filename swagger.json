@@ -25,561 +25,430 @@
       }
     },
     "schemas": {
-      "WeddSimple": {
+      "WeddingMainSection": {
         "type": "object",
-        "description": "청첩장 요약 정보",
         "properties": {
-          "weddId": {
-            "type": "integer"
-          },
-          "userId": {
-            "type": "string"
-          },
-          "weddTtl": {
-            "type": "string"
-          },
-          "weddSlug": {
-            "type": "string"
-          },
-          "creatDt": {
+          "mainPosterStyle": {
             "type": "string",
-            "format": "date-time"
+            "description": "메인 포스터 스타일",
+            "example": "typeA"
           }
         }
       },
-      "WeddMedia": {
+      "WeddingShareLinkSection": {
         "type": "object",
         "properties": {
-          "weddId": {
-            "type": "integer"
-          },
-          "mediaId": {
-            "type": "integer"
-          },
-          "imgType": {
-            "type": "string"
-          },
-          "displayOrdr": {
-            "type": "integer"
-          },
-          "orgUrl": {
-            "type": "string"
-          },
-          "editUrl": {
-            "type": "string"
-          },
-          "fileExtsn": {
-            "type": "string"
-          },
-          "fileSize": {
-            "type": "number"
-          }
-        }
-      },
-      "WeddSectOrdr": {
-        "type": "object",
-        "properties": {
-          "weddId": {
-            "type": "integer"
-          },
-          "sectKey": {
-            "type": "string"
-          },
-          "displayYn": {
+          "shareLinkTitle": {
             "type": "string",
-            "enum": [
-              "Y",
-              "N"
-            ]
-          },
-          "displayOrDr": {
-            "type": "integer"
+            "description": "공유 링크 제목",
+            "example": "우리의 결혼식에 초대합니다"
           }
         }
       },
-      "WeddUpdateRequestBody": {
-        "type": "object",
-        "description": "청첩장 생성/수정 요청 데이터",
-        "properties": {
-          "border": {
-            "type": "object",
-            "properties": {
-              "weddId": {
-                "type": "integer"
-              },
-              "userId": {
-                "type": "string"
-              },
-              "weddTtl": {
-                "type": "string"
-              },
-              "weddSlug": {
-                "type": "string"
-              }
-            }
-          },
-          "sections": {
-            "type": "object",
-            "description": "섹션별 데이터 구조",
-            "properties": {
-              "main": {
-                "$ref": "#/components/schemas/SectionMain"
-              },
-              "shareLink": {
-                "$ref": "#/components/schemas/SectionShareLink"
-              },
-              "weddingInfo": {
-                "$ref": "#/components/schemas/SectionWeddingInfo"
-              },
-              "familyInfo": {
-                "$ref": "#/components/schemas/SectionFamilyInfo"
-              },
-              "invitationMessage": {
-                "$ref": "#/components/schemas/SectionInvitationMessage"
-              },
-              "coupleIntro": {
-                "$ref": "#/components/schemas/SectionCoupleIntro"
-              },
-              "parentsIntro": {
-                "$ref": "#/components/schemas/SectionParentsIntro"
-              },
-              "accountInfo": {
-                "$ref": "#/components/schemas/SectionAccountInfo"
-              },
-              "locationInfo": {
-                "$ref": "#/components/schemas/SectionLocationInfo"
-              },
-              "themeFont": {
-                "$ref": "#/components/schemas/SectionThemeFont"
-              },
-              "loadingScreen": {
-                "$ref": "#/components/schemas/SectionLoadingScreen"
-              },
-              "gallery": {
-                "$ref": "#/components/schemas/SectionGallery"
-              },
-              "flipbook": {
-                "$ref": "#/components/schemas/SectionFlipbook"
-              }
-            }
-          },
-          "weddSectOrdr": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/WeddSectOrdr"
-            }
-          }
-        }
-      },
-      "WeddTransactionResult": {
+      "WeddingInfoSection": {
         "type": "object",
         "properties": {
-          "wedd": {
-            "$ref": "#/components/schemas/WeddSimple"
-          },
-          "weddDtl": {
-            "type": "object",
-            "description": "상세 데이터 (내부 전용)"
-          },
-          "weddSectOrdr": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/WeddSectOrdr"
-            }
-          }
-        }
-      },
-      "SectionMain": {
-        "type": "object",
-        "description": "메인 포스터 섹션",
-        "properties": {
-          "sectKey": {
-            "type": "string"
-          },
-          "displayYn": {
+          "weddingInfoGroomLastName": {
             "type": "string",
-            "enum": [
-              "Y",
-              "N"
-            ]
+            "example": "김"
           },
-          "displayOrdr": {
-            "type": "integer"
-          },
-          "mainPosterStyl": {
-            "type": "string"
-          },
-          "media": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/WeddMedia"
-            }
-          }
-        }
-      },
-      "SectionShareLink": {
-        "type": "object",
-        "description": "공유 링크 섹션",
-        "properties": {
-          "sectKey": {
-            "type": "string"
-          },
-          "displayYn": {
+          "weddingInfoGroomFirstName": {
             "type": "string",
-            "enum": [
-              "Y",
-              "N"
-            ]
+            "example": "민수"
           },
-          "displayOrdr": {
-            "type": "integer"
+          "weddingInfoBrideLastName": {
+            "type": "string",
+            "example": "박"
           },
-          "shrTtl": {
-            "type": "string"
+          "weddingInfoBrideFirstName": {
+            "type": "string",
+            "example": "수진"
           },
-          "media": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/WeddMedia"
-            }
+          "weddingInfoNameOrderType": {
+            "type": "string",
+            "description": "이름 표기 순서 타입",
+            "example": "groomFirst"
+          },
+          "weddingInfoDate": {
+            "type": "string",
+            "description": "예식 일자 (YYYY-MM-DD)",
+            "example": "2025-11-22"
+          },
+          "weddingInfoTime": {
+            "type": "string",
+            "description": "예식 시간 (HH:mm)",
+            "example": "13:30"
+          },
+          "weddingInfoHallName": {
+            "type": "string",
+            "example": "우리웨딩홀"
+          },
+          "weddingInfoHallFloor": {
+            "type": "string",
+            "example": "3층"
           }
         }
       },
-      "SectionWeddingInfo": {
+      "WeddingFamilyInfoSection": {
         "type": "object",
-        "description": "예식 기본 정보 섹션",
         "properties": {
-          "sectKey": {
-            "type": "string"
+          "familyInfoGroomFatherName": {
+            "type": "string",
+            "example": "김아버지"
           },
-          "displayYn": {
-            "type": "string"
+          "familyInfoGroomFatherDeceased": {
+            "type": "boolean",
+            "example": false
           },
-          "displayOrdr": {
-            "type": "integer"
+          "familyInfoGroomMotherName": {
+            "type": "string",
+            "example": "김어머니"
           },
-          "infoGrmLastNm": {
-            "type": "string"
+          "familyInfoGroomMotherDeceased": {
+            "type": "boolean",
+            "example": false
           },
-          "infoGrmFirstNm": {
-            "type": "string"
+          "familyInfoGroomRankName": {
+            "type": "string",
+            "description": "장남 / 차남 / 외동 등",
+            "example": "장남"
           },
-          "infoBrdLastNm": {
-            "type": "string"
+          "familyInfoBrideFatherName": {
+            "type": "string",
+            "example": "박아버지"
           },
-          "infoBrdFirstNm": {
-            "type": "string"
+          "familyInfoBrideFatherDeceased": {
+            "type": "boolean",
+            "example": false
           },
-          "infoNmOrdrSe": {
-            "type": "string"
+          "familyInfoBrideMotherName": {
+            "type": "string",
+            "example": "박어머니"
           },
-          "infoWeddDe": {
-            "type": "string"
+          "familyInfoBrideMotherDeceased": {
+            "type": "boolean",
+            "example": false
           },
-          "infoWeddTm": {
-            "type": "string"
-          },
-          "infoHallNm": {
-            "type": "string"
-          },
-          "infoHallFlr": {
-            "type": "string"
+          "familyInfoBrideRankName": {
+            "type": "string",
+            "example": "장녀"
           }
         }
       },
-      "SectionFamilyInfo": {
+      "WeddingInvitationMessageSection": {
         "type": "object",
-        "description": "양가 혼주 정보 섹션",
         "properties": {
-          "sectKey": {
-            "type": "string"
+          "invitationMessageTitle": {
+            "type": "string",
+            "example": "함께해주신다면 더없는 기쁨이겠습니다"
           },
-          "displayYn": {
-            "type": "string"
-          },
-          "displayOrdr": {
-            "type": "integer"
-          },
-          "prntGrmFthrNm": {
-            "type": "string"
-          },
-          "prntGrmFthrDeceasedYn": {
-            "type": "string"
-          },
-          "prntGrmMthrNm": {
-            "type": "string"
-          },
-          "prntGrmMthrDeceasedYn": {
-            "type": "string"
-          },
-          "prntGrmRankNm": {
-            "type": "string"
-          },
-          "prntBrdFthrNm": {
-            "type": "string"
-          },
-          "prntBrdFthrDeceasedYn": {
-            "type": "string"
-          },
-          "prntBrdMthrNm": {
-            "type": "string"
-          },
-          "prntBrdMthrDeceasedYn": {
-            "type": "string"
-          },
-          "prntBrdRankNm": {
-            "type": "string"
+          "invitationMessageContent": {
+            "type": "string",
+            "example": "두 사람이 하나 되어 새로운 삶을 시작합니다..."
           }
         }
       },
-      "SectionInvitationMessage": {
+      "WeddingCoupleIntroSection": {
         "type": "object",
-        "description": "초대 메시지 섹션",
         "properties": {
-          "sectKey": {
-            "type": "string"
+          "coupleIntroTitle": {
+            "type": "string",
+            "example": "신랑·신부 소개"
           },
-          "displayYn": {
-            "type": "string"
+          "coupleIntroGroomMessage": {
+            "type": "string",
+            "example": "성실하고 따뜻한 신랑 김민수입니다."
           },
-          "displayOrdr": {
-            "type": "integer"
-          },
-          "invTtl": {
-            "type": "string"
-          },
-          "invMsg": {
-            "type": "string"
+          "coupleIntroBrideMessage": {
+            "type": "string",
+            "example": "밝고 다정한 신부 박수진입니다."
           }
         }
       },
-      "SectionCoupleIntro": {
+      "WeddingParentsIntroSection": {
         "type": "object",
-        "description": "신랑/신부 소개 섹션",
         "properties": {
-          "sectKey": {
-            "type": "string"
+          "parentsIntroTitle": {
+            "type": "string",
+            "example": "혼주 소개"
           },
-          "displayYn": {
-            "type": "string"
-          },
-          "displayOrdr": {
-            "type": "integer"
-          },
-          "intrTtl": {
-            "type": "string"
-          },
-          "intrGrmMsg": {
-            "type": "string"
-          },
-          "intrBrdMsg": {
-            "type": "string"
-          },
-          "media": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/WeddMedia"
-            }
+          "parentsIntroMessage": {
+            "type": "string",
+            "example": "두 집안 부모님을 소개합니다."
           }
         }
       },
-      "SectionParentsIntro": {
+      "WeddingAccountInfoSection": {
         "type": "object",
-        "description": "부모님 소개 섹션",
         "properties": {
-          "sectKey": {
-            "type": "string"
+          "accountInfoTitle": {
+            "type": "string",
+            "example": "마음 전하실 곳"
           },
-          "displayYn": {
-            "type": "string"
+          "accountInfoMessage": {
+            "type": "string",
+            "example": "참석이 어려우신 분들을 위해 계좌번호를 안내드립니다."
           },
-          "displayOrdr": {
-            "type": "integer"
+          "accountInfoGroomBankName": {
+            "type": "string",
+            "example": "우리은행"
           },
-          "prntIntrTtl": {
-            "type": "string"
+          "accountInfoGroomNumber": {
+            "type": "string",
+            "example": "1002-123-456789"
           },
-          "prntIntrMsg": {
-            "type": "string"
+          "accountInfoGroomHolder": {
+            "type": "string",
+            "example": "김민수"
           },
-          "media": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/WeddMedia"
-            }
+          "accountInfoGroomFatherBankName": {
+            "type": "string",
+            "example": "국민은행"
+          },
+          "accountInfoGroomFatherNumber": {
+            "type": "string",
+            "example": "123456-01-987654"
+          },
+          "accountInfoGroomFatherHolder": {
+            "type": "string",
+            "example": "김아버지"
+          },
+          "accountInfoGroomMotherBankName": {
+            "type": "string",
+            "example": "신한은행"
+          },
+          "accountInfoGroomMotherNumber": {
+            "type": "string",
+            "example": "110-123-456789"
+          },
+          "accountInfoGroomMotherHolder": {
+            "type": "string",
+            "example": "김어머니"
+          },
+          "accountInfoBrideBankName": {
+            "type": "string",
+            "example": "카카오뱅크"
+          },
+          "accountInfoBrideNumber": {
+            "type": "string",
+            "example": "3333-12-3456789"
+          },
+          "accountInfoBrideHolder": {
+            "type": "string",
+            "example": "박수진"
+          },
+          "accountInfoBrideFatherBankName": {
+            "type": "string",
+            "example": "하나은행"
+          },
+          "accountInfoBrideFatherNumber": {
+            "type": "string",
+            "example": "123-910123-45678"
+          },
+          "accountInfoBrideFatherHolder": {
+            "type": "string",
+            "example": "박아버지"
+          },
+          "accountInfoBrideMotherBankName": {
+            "type": "string",
+            "example": "농협"
+          },
+          "accountInfoBrideMotherNumber": {
+            "type": "string",
+            "example": "302-1234-5678-91"
+          },
+          "accountInfoBrideMotherHolder": {
+            "type": "string",
+            "example": "박어머니"
           }
         }
       },
-      "SectionAccountInfo": {
+      "WeddingLocationInfoSection": {
         "type": "object",
-        "description": "계좌 정보 섹션",
         "properties": {
-          "sectKey": {
-            "type": "string"
+          "locationInfoAddress": {
+            "type": "string",
+            "example": "서울시 강남구 청첩장로 123"
           },
-          "displayYn": {
-            "type": "string"
+          "locationInfoAddressDetail": {
+            "type": "string",
+            "example": "우리웨딩홀 3층 라벤더홀"
           },
-          "displayOrdr": {
-            "type": "integer"
+          "locationInfoGuideMessage": {
+            "type": "string",
+            "example": "주차는 2시간 무료 제공됩니다."
           },
-          "acntTtl": {
-            "type": "string"
+          "locationInfoTransport1Title": {
+            "type": "string",
+            "example": "지하철 안내"
           },
-          "acntMsg": {
-            "type": "string"
+          "locationInfoTransport1Message": {
+            "type": "string",
+            "example": "2호선 강남역 3번 출구 도보 5분"
           },
-          "acntGrmBnkNm": {
-            "type": "string"
+          "locationInfoTransport2Title": {
+            "type": "string",
+            "example": "버스 안내"
           },
-          "acntGrmNo": {
-            "type": "string"
+          "locationInfoTransport2Message": {
+            "type": "string",
+            "example": "간선 146, 360 / 지선 4212 이용"
           },
-          "acntGrmHldrNm": {
-            "type": "string"
+          "locationInfoTransport3Title": {
+            "type": "string",
+            "example": "자가용 안내"
           },
-          "acntBrdBnkNm": {
-            "type": "string"
-          },
-          "acntBrdNo": {
-            "type": "string"
-          },
-          "acntBrdHldrNm": {
-            "type": "string"
+          "locationInfoTransport3Message": {
+            "type": "string",
+            "example": "네비에 '우리웨딩홀' 검색"
           }
         }
       },
-      "SectionLocationInfo": {
+      "WeddingThemeFontSection": {
         "type": "object",
-        "description": "오시는 길 섹션",
         "properties": {
-          "sectKey": {
-            "type": "string"
-          },
-          "displayYn": {
-            "type": "string"
-          },
-          "displayOrdr": {
-            "type": "integer"
-          },
-          "locAddr": {
-            "type": "string"
-          },
-          "locAddrDtl": {
-            "type": "string"
-          },
-          "locGuideMsg": {
-            "type": "string"
-          },
-          "locTrans1Ttl": {
-            "type": "string"
-          },
-          "locTrans1Msg": {
-            "type": "string"
-          },
-          "locTrans2Ttl": {
-            "type": "string"
-          },
-          "locTrans2Msg": {
-            "type": "string"
-          },
-          "locTrans3Ttl": {
-            "type": "string"
-          },
-          "locTrans3Msg": {
-            "type": "string"
-          }
-        }
-      },
-      "SectionThemeFont": {
-        "type": "object",
-        "description": "테마/폰트 섹션",
-        "properties": {
-          "sectKey": {
-            "type": "string"
-          },
-          "displayYn": {
-            "type": "string"
-          },
-          "displayOrdr": {
-            "type": "integer"
-          },
-          "themeFontNm": {
-            "type": "string"
+          "themeFontName": {
+            "type": "string",
+            "example": "Escoredream"
           },
           "themeFontSize": {
-            "type": "string"
+            "type": "integer",
+            "example": 16
           },
-          "themeBgColor": {
-            "type": "string"
+          "themeFontBackgroundColor": {
+            "type": "string",
+            "example": "#F5F5F5"
           },
-          "themeAccentColor": {
-            "type": "string"
+          "themeFontAccentColor": {
+            "type": "string",
+            "example": "#FF6B6B"
           },
-          "themeZoomPreventYn": {
-            "type": "string"
+          "themeFontZoomPreventYn": {
+            "type": "boolean",
+            "description": "확대 방지 여부",
+            "example": true
           }
         }
       },
-      "SectionLoadingScreen": {
+      "WeddingLoadingScreenSection": {
         "type": "object",
-        "description": "로딩 화면 섹션",
         "properties": {
-          "sectKey": {
-            "type": "string"
-          },
-          "displayYn": {
-            "type": "string"
-          },
-          "displayOrdr": {
-            "type": "integer"
-          },
-          "loadStyl": {
-            "type": "string"
+          "loadingScreenStyle": {
+            "type": "string",
+            "example": "styleA"
           }
         }
       },
-      "SectionGallery": {
+      "WeddingGallerySection": {
         "type": "object",
-        "description": "갤러리 섹션",
         "properties": {
-          "sectKey": {
-            "type": "string"
+          "galleryTitle": {
+            "type": "string",
+            "example": "우리의 소중한 순간들"
+          }
+        }
+      },
+      "WeddingSections": {
+        "type": "object",
+        "properties": {
+          "main": {
+            "$ref": "#/components/schemas/WeddingMainSection"
           },
-          "displayYn": {
-            "type": "string"
+          "shareLink": {
+            "$ref": "#/components/schemas/WeddingShareLinkSection"
           },
-          "displayOrdr": {
-            "type": "integer"
+          "weddingInfo": {
+            "$ref": "#/components/schemas/WeddingInfoSection"
           },
-          "gllyTtl": {
-            "type": "string"
+          "familyInfo": {
+            "$ref": "#/components/schemas/WeddingFamilyInfoSection"
           },
-          "media": {
+          "invitationMessage": {
+            "$ref": "#/components/schemas/WeddingInvitationMessageSection"
+          },
+          "coupleIntro": {
+            "$ref": "#/components/schemas/WeddingCoupleIntroSection"
+          },
+          "parentsIntro": {
+            "$ref": "#/components/schemas/WeddingParentsIntroSection"
+          },
+          "accountInfo": {
+            "$ref": "#/components/schemas/WeddingAccountInfoSection"
+          },
+          "locationInfo": {
+            "$ref": "#/components/schemas/WeddingLocationInfoSection"
+          },
+          "themeFont": {
+            "$ref": "#/components/schemas/WeddingThemeFontSection"
+          },
+          "loadingScreen": {
+            "$ref": "#/components/schemas/WeddingLoadingScreenSection"
+          },
+          "gallery": {
+            "$ref": "#/components/schemas/WeddingGallerySection"
+          }
+        }
+      },
+      "WeddingSectionSetting": {
+        "type": "object",
+        "properties": {
+          "sectionKey": {
+            "type": "string",
+            "description": "섹션 ID (main, shareLink, weddingInfo, familyInfo, invitationMessage, coupleIntro, parentsIntro, accountInfo, locationInfo, themeFont, loadingScreen, gallery, flipbook, sectionOrder 등)",
+            "example": "gallery"
+          },
+          "isVisible": {
+            "type": "boolean",
+            "description": "섹션 표시 여부",
+            "example": true
+          },
+          "displayOrder": {
+            "type": "integer",
+            "description": "섹션 표시 순서",
+            "example": 5
+          }
+        }
+      },
+      "WeddingDetail": {
+        "type": "object",
+        "properties": {
+          "weddingId": {
+            "type": "integer",
+            "example": 1
+          },
+          "sections": {
+            "$ref": "#/components/schemas/WeddingSections"
+          },
+          "sectionSettings": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/WeddMedia"
+              "$ref": "#/components/schemas/WeddingSectionSetting"
             }
           }
         }
       },
-      "SectionFlipbook": {
+      "WeddingReplaceRequest": {
         "type": "object",
-        "description": "플립북 섹션",
         "properties": {
-          "sectKey": {
-            "type": "string"
+          "sections": {
+            "$ref": "#/components/schemas/WeddingSections"
           },
-          "displayYn": {
-            "type": "string"
-          },
-          "displayOrdr": {
-            "type": "integer"
-          },
-          "media": {
+          "sectionSettings": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/WeddMedia"
+              "$ref": "#/components/schemas/WeddingSectionSetting"
+            }
+          }
+        }
+      },
+      "WeddingSectionSettingsUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "sections": {
+            "type": "array",
+            "description": "섹션 설정 배열",
+            "items": {
+              "$ref": "#/components/schemas/WeddingSectionSetting"
             }
           }
         }
@@ -608,32 +477,27 @@
     }
   },
   "paths": {
-    "/api/auth/refresh": {
+    "/v1/auth/token/refresh": {
       "post": {
-        "summary": "Refresh Token으로 Access Token 재발급"
-      }
-    },
-    "/api/v1/auth/social": {
-      "post": {
-        "summary": "소셜 로그인 (네이버 등)",
+        "summary": "리프레시 토큰을 이용하여 Access Token 재발급",
+        "description": "저장된 Refresh Token을 이용해 새로운 Access Token을 발급합니다.",
         "tags": [
           "Auth"
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
+                "required": [
+                  "refreshToken"
+                ],
                 "properties": {
-                  "provider": {
+                  "refreshToken": {
                     "type": "string",
-                    "example": "naver"
-                  },
-                  "code": {
-                    "type": "string"
-                  },
-                  "state": {
-                    "type": "string"
+                    "description": "클라이언트가 가지고 있는 리프레시 토큰",
+                    "example": "eyJhbGciOiJIUzI1..."
                   }
                 }
               }
@@ -642,15 +506,209 @@
         },
         "responses": {
           "200": {
-            "description": "로그인 성공"
+            "description": "새로운 Access Token 발급 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "error": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "messages": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "accessToken": {
+                          "type": "string",
+                          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI..."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "요청값 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 400
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": null
+                    },
+                    "messages": {
+                      "type": "string",
+                      "example": "유효하지 않은 리프레시 토큰입니다."
+                    },
+                    "data": {
+                      "type": "object",
+                      "nullable": true,
+                      "example": null
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
     },
-    "/api/v1/media/upload": {
+    "/v1/auth/social/{provider}": {
       "post": {
-        "summary": "이미지 파일 업로드",
-        "description": "업로드된 이미지를 서버에 저장하고 DB에 등록합니다.",
+        "summary": "소셜 로그인 요청",
+        "description": "네이버 소셜 로그인 인증 후 Access / Refresh Token을 발급합니다.",
+        "tags": [
+          "Social"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "provider",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "naver",
+            "description": "사용할 소셜 로그인 provider"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "code"
+                ],
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "description": "소셜 인증 후 받은 code",
+                    "example": "H3asDo3flaS..."
+                  },
+                  "state": {
+                    "type": "string",
+                    "nullable": true,
+                    "description": "(선택) Naver 인증 시 전달되는 state 값",
+                    "example": "xyz123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "소셜 로그인 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "error": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "messages": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "accessToken": {
+                          "type": "string",
+                          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                        },
+                        "refreshToken": {
+                          "type": "string",
+                          "example": "eyJhbgciOiJIUzUxMiIsInR5cCI6IkpXVCJ9..."
+                        },
+                        "expiresIn": {
+                          "type": "integer",
+                          "example": 3600
+                        },
+                        "user": {
+                          "type": "object",
+                          "properties": {
+                            "userId": {
+                              "type": "string",
+                              "example": "df4f6062-a6c4-4156..."
+                            },
+                            "providerName": {
+                              "type": "string",
+                              "example": "naver"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청(코드 누락 등)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 400
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "invalid_request"
+                    },
+                    "messages": {
+                      "type": "string",
+                      "example": "지원하지 않는 제공자입니다."
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/weddings/{weddingId}/media": {
+      "post": {
+        "summary": "새 이미지 업로드",
+        "description": "단일 이미지를 업로드하고 DB에 저장합니다.",
         "tags": [
           "Media"
         ],
@@ -659,31 +717,41 @@
             "bearerAuth": []
           }
         ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "weddingId",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "청첩장 ID"
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
             "multipart/form-data": {
               "schema": {
                 "type": "object",
+                "required": [
+                  "file",
+                  "imageType",
+                  "displayOrder"
+                ],
                 "properties": {
                   "file": {
                     "type": "string",
-                    "format": "binary",
-                    "description": "업로드할 이미지 파일"
+                    "format": "binary"
                   },
-                  "weddId": {
-                    "type": "integer",
-                    "description": "청첩장 ID",
-                    "example": 1
-                  },
-                  "imgType": {
+                  "imageType": {
                     "type": "string",
-                    "description": "이미지 타입 (예: main, gallery)",
-                    "example": "main"
+                    "description": "이미지 타입(main, gallery 등)",
+                    "example": "gallery"
                   },
-                  "displayOrdr": {
+                  "displayOrder": {
                     "type": "integer",
-                    "description": "이미지 표시 순서",
+                    "description": "노출 순서",
                     "example": 1
                   }
                 }
@@ -697,7 +765,194 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WeddMediaResponse"
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "error": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "messages": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": "업로드 성공"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {
+                        "mediaId": 1,
+                        "imageType": "gallery",
+                        "originalUrl": "/uploads/wedding/1/main.png"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "여러 개 이미지 업로드 및 전체 저장",
+        "description": "여러 파일을 업로드하고 displayOrder 또는 imageType을 함께 저장합니다.",
+        "tags": [
+          "Media"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "weddingId",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "청첩장 ID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "files": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    }
+                  },
+                  "media": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "파일 각각에 대응하는 메타데이터 JSON 문자열 배열  \n예:  \n`[{\"mediaId\": 1, \"displayOrder\": 1, \"imageType\": \"gallery\"}]`\n"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "전체 저장 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "error": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "messages": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": "저장되었습니다."
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {
+                        "count": 5
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "이미지 순서 변경",
+        "description": "파일 업로드 없이 이미지의 displayOrder만 수정합니다.",
+        "tags": [
+          "Media"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "weddingId",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "metadatas": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "mediaId": {
+                          "type": "integer",
+                          "example": 3
+                        },
+                        "displayOrder": {
+                          "type": "integer",
+                          "example": 1
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "순서 변경 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "error": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "messages": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": "정렬 완료"
+                    },
+                    "data": {
+                      "example": null
+                    }
+                  }
                 }
               }
             }
@@ -705,21 +960,123 @@
         }
       }
     },
-    "/api/v1/wedds": {
-      "get": {
-        "summary": "사용자의 모든 청첩장 조회",
+    "/v1/weddings/{weddingId}/media/{mediaId}": {
+      "delete": {
+        "summary": "이미지 삭제",
+        "description": "DB 삭제 및 파일 삭제까지 함께 수행됩니다.",
         "tags": [
-          "Wedd"
+          "Media"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "weddingId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "mediaId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
         ],
         "responses": {
           "200": {
-            "description": "청첩장 목록 조회 성공",
+            "description": "삭제 성공",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/WeddSimple"
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "error": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "messages": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": "삭제 성공"
+                    },
+                    "data": {
+                      "example": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/weddings": {
+      "get": {
+        "summary": "나의 모든 청첩장 목록 조회",
+        "description": "로그인한 사용자의 모든 청첩장(wedd) 리스트를 조회합니다.",
+        "tags": [
+          "Wedding"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "error": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "messages": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "data": {
+                      "type": "array",
+                      "description": "wedd 테이블 리스트 (간단 정보)",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "weddingId": {
+                            "type": "integer",
+                            "example": 1
+                          },
+                          "weddingTitle": {
+                            "type": "string",
+                            "example": "관나의 청첩장"
+                          },
+                          "mainImageUrl": {
+                            "type": "string",
+                            "example": "/upload/weddingId/image.jpg"
+                          }
+                        }
+                      }
+                    }
                   }
                 }
               }
@@ -728,27 +1085,202 @@
         }
       },
       "post": {
-        "summary": "청첩장 생성",
+        "summary": "신규 청첩장 생성",
+        "description": "새로운 청첩장을 생성하고 초기 섹션 및 섹션 설정을 함께 반환합니다.",
         "tags": [
-          "Wedd"
+          "Wedding"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
         ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/WeddUpdateRequestBody"
+                "type": "object",
+                "example": {
+                  "sections": {
+                    "mainSection": {
+                      "mainPosterStyle": null
+                    },
+                    "shareLinkSection": {
+                      "shareLinkTitle": null
+                    },
+                    "weddingInfoSection": {
+                      "weddingInfoGroomLastName": null,
+                      "weddingInfoGroomFirstName": null,
+                      "weddingInfoBrideLastName": null,
+                      "weddingInfoBrideFirstName": null,
+                      "weddingInfoNameOrderType": null,
+                      "weddingInfoDate": null,
+                      "weddingInfoTime": null,
+                      "weddingInfoHallName": null,
+                      "weddingInfoHallFloor": null
+                    },
+                    "familyInfoSection": {
+                      "familyInfoGroomFatherName": null,
+                      "familyInfoGroomFatherDeceased": null,
+                      "familyInfoGroomMotherName": null,
+                      "familyInfoGroomMotherDeceased": null,
+                      "familyInfoGroomRankName": null,
+                      "familyInfoBrideFatherName": null,
+                      "familyInfoBrideFatherDeceased": null,
+                      "familyInfoBrideMotherName": null,
+                      "familyInfoBrideMotherDeceased": null,
+                      "familyInfoBrideRankName": null
+                    },
+                    "invitationMessageSection": {
+                      "invitationMessageTitle": null,
+                      "invitationMessageContent": null
+                    },
+                    "coupleIntroSection": {
+                      "coupleIntroTitle": null,
+                      "coupleIntroGroomMessage": null,
+                      "coupleIntroBrideMessage": null
+                    },
+                    "parentsIntroSection": {
+                      "parentsIntroTitle": null,
+                      "parentsIntroMessage": null
+                    },
+                    "accountInfoSection": {
+                      "accountInfoTitle": null,
+                      "accountInfoMessage": null,
+                      "accountInfoGroomBankName": null,
+                      "accountInfoGroomNumber": null,
+                      "accountInfoGroomHolder": null,
+                      "accountInfoGroomFatherBankName": null,
+                      "accountInfoGroomFatherNumber": null,
+                      "accountInfoGroomFatherHolder": null,
+                      "accountInfoGroomMotherBankName": null,
+                      "accountInfoGroomMotherNumber": null,
+                      "accountInfoGroomMotherHolder": null,
+                      "accountInfoBrideBankName": null,
+                      "accountInfoBrideNumber": null,
+                      "accountInfoBrideHolder": null,
+                      "accountInfoBrideFatherBankName": null,
+                      "accountInfoBrideFatherNumber": null,
+                      "accountInfoBrideFatherHolder": null,
+                      "accountInfoBrideMotherBankName": null,
+                      "accountInfoBrideMotherNumber": null,
+                      "accountInfoBrideMotherHolder": null
+                    },
+                    "locationInfoSection": {
+                      "locationInfoAddress": null,
+                      "locationInfoAddressDetail": null,
+                      "locationInfoGuideMessage": null,
+                      "locationInfoTransport1Title": null,
+                      "locationInfoTransport1Message": null,
+                      "locationInfoTransport2Title": null,
+                      "locationInfoTransport2Message": null,
+                      "locationInfoTransport3Title": null,
+                      "locationInfoTransport3Message": null
+                    },
+                    "themeFontSection": {
+                      "themeFontName": null,
+                      "themeFontSize": null,
+                      "themeFontBackgroundColor": null,
+                      "themeFontAccentColor": null,
+                      "themeFontZoomPreventYn": null
+                    },
+                    "loadingScreenSection": {
+                      "loadingScreenStyle": null
+                    },
+                    "gallerySection": {
+                      "galleryTitle": null
+                    }
+                  },
+                  "sectionSettings": [
+                    {
+                      "sectionKey": "main",
+                      "displayYn": true,
+                      "displayOrder": 1
+                    },
+                    {
+                      "sectionKey": "shareLink",
+                      "displayYn": true,
+                      "displayOrder": 2
+                    },
+                    {
+                      "sectionKey": "weddingInfo",
+                      "displayYn": true,
+                      "displayOrder": 3
+                    },
+                    {
+                      "sectionKey": "familyInfo",
+                      "displayYn": true,
+                      "displayOrder": 4
+                    },
+                    {
+                      "sectionKey": "invitationMessage",
+                      "displayYn": true,
+                      "displayOrder": 5
+                    },
+                    {
+                      "sectionKey": "coupleIntro",
+                      "displayYn": true,
+                      "displayOrder": 6
+                    },
+                    {
+                      "sectionKey": "parentsIntro",
+                      "displayYn": true,
+                      "displayOrder": 7
+                    },
+                    {
+                      "sectionKey": "accountInfo",
+                      "displayYn": true,
+                      "displayOrder": 8
+                    },
+                    {
+                      "sectionKey": "locationInfo",
+                      "displayYn": true,
+                      "displayOrder": 9
+                    },
+                    {
+                      "sectionKey": "themeFont",
+                      "displayYn": true,
+                      "displayOrder": 10
+                    },
+                    {
+                      "sectionKey": "loadingScreen",
+                      "displayYn": true,
+                      "displayOrder": 11
+                    },
+                    {
+                      "sectionKey": "gallery",
+                      "displayYn": true,
+                      "displayOrder": 12
+                    },
+                    {
+                      "sectionKey": "flipbook",
+                      "displayYn": true,
+                      "displayOrder": 13
+                    }
+                  ]
+                }
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "청첩장 생성 성공",
+            "description": "생성 성공",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WeddTransactionResult"
+                  "type": "object"
+                },
+                "example": {
+                  "status": 200,
+                  "error": null,
+                  "messages": "생성되었습니다.",
+                  "data": {
+                    "weddingId": 19,
+                    "sections": "(위 request example과 동일)",
+                    "sectionSettings": "(위 request example과 동일)"
+                  }
                 }
               }
             }
@@ -756,16 +1288,22 @@
         }
       }
     },
-    "/api/v1/wedds/{weddId}": {
+    "/v1/weddings/{weddingId}": {
       "get": {
-        "summary": "단일 청첩장 조회",
+        "summary": "청첩장 상세 조회",
+        "description": "특정 청첩장에 대한 모든 섹션 데이터 및 섹션 설정을 조회합니다.",
         "tags": [
-          "Wedd"
+          "Wedding"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
         ],
         "parameters": [
           {
-            "name": "weddId",
             "in": "path",
+            "name": "weddingId",
             "required": true,
             "schema": {
               "type": "integer"
@@ -773,52 +1311,57 @@
             "description": "청첩장 ID"
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "userId": {
-                    "type": "string",
-                    "description": "사용자 ID"
+        "responses": {
+          "200": {
+            "description": "상세 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "error": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "messages": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/WeddingDetail"
+                    }
                   }
                 }
               }
             }
           }
-        },
-        "responses": {
-          "200": {
-            "description": "단일 청첩장 조회 성공",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WeddTransactionResult"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "존재하지 않는 청첩장"
-          }
         }
       },
       "put": {
-        "summary": "청첩장 수정",
+        "summary": "청첩장 전체 교체(섹션 전체 저장)",
+        "description": "하나의 청첩장에 포함된 모든 섹션 데이터 및 섹션 설정을 한 번에 저장합니다.",
         "tags": [
-          "Wedd"
+          "Wedding"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
         ],
         "parameters": [
           {
-            "name": "weddId",
             "in": "path",
+            "name": "weddingId",
             "required": true,
             "schema": {
               "type": "integer"
-            },
-            "description": "청첩장 ID"
+            }
           }
         ],
         "requestBody": {
@@ -826,39 +1369,113 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/WeddUpdateRequestBody"
+                "$ref": "#/components/schemas/WeddingReplaceRequest"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "청첩장 수정 성공",
+            "description": "교체 성공",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WeddTransactionResult"
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "error": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "messages": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": "저장되었습니다."
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/WeddingDetail"
+                    }
+                  }
                 }
               }
             }
-          },
-          "400": {
-            "description": "잘못된 요청"
-          },
-          "404": {
-            "description": "존재하지 않는 청첩장"
           }
         }
       },
       "delete": {
         "summary": "청첩장 삭제",
+        "description": "해당 청첩장 및 관련 상세/섹션설정/미디어를 모두 삭제합니다.",
         "tags": [
-          "Wedd"
+          "Wedding"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
         ],
         "parameters": [
           {
-            "name": "weddId",
             "in": "path",
+            "name": "weddingId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "삭제 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "error": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "messages": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": "삭제되었습니다."
+                    },
+                    "data": {
+                      "example": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/weddings/test/{weddingId}": {
+      "get": {
+        "summary": "청첩장 상세 조회",
+        "description": "특정 청첩장에 대한 모든 섹션 데이터 및 섹션 설정을 조회합니다.",
+        "tags": [
+          "Wedding"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "weddingId",
             "required": true,
             "schema": {
               "type": "integer"
@@ -866,28 +1483,211 @@
             "description": "청첩장 ID"
           }
         ],
+        "responses": {
+          "200": {
+            "description": "상세 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "error": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "messages": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/WeddingDetail"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/weddings/{weddingId}/sections/{sectionId}": {
+      "patch": {
+        "summary": "특정 섹션만 부분 수정",
+        "description": "섹션 ID에 해당하는 일부 필드만 부분 수정합니다. body는 해당 섹션 구조를 따릅니다.",
+        "tags": [
+          "Wedding"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "weddingId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "path",
+            "name": "sectionId",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "섹션 ID (main, shareLink, weddingInfo, familyInfo, invitationMessage, coupleIntro, parentsIntro, accountInfo, locationInfo, themeFont, loadingScreen, gallery ...)"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "userId": {
-                    "type": "string",
-                    "description": "사용자 ID"
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/WeddingMainSection"
+                  },
+                  {
+                    "$ref": "#/components/schemas/WeddingShareLinkSection"
+                  },
+                  {
+                    "$ref": "#/components/schemas/WeddingInfoSection"
+                  },
+                  {
+                    "$ref": "#/components/schemas/WeddingFamilyInfoSection"
+                  },
+                  {
+                    "$ref": "#/components/schemas/WeddingInvitationMessageSection"
+                  },
+                  {
+                    "$ref": "#/components/schemas/WeddingCoupleIntroSection"
+                  },
+                  {
+                    "$ref": "#/components/schemas/WeddingParentsIntroSection"
+                  },
+                  {
+                    "$ref": "#/components/schemas/WeddingAccountInfoSection"
+                  },
+                  {
+                    "$ref": "#/components/schemas/WeddingLocationInfoSection"
+                  },
+                  {
+                    "$ref": "#/components/schemas/WeddingThemeFontSection"
+                  },
+                  {
+                    "$ref": "#/components/schemas/WeddingLoadingScreenSection"
+                  },
+                  {
+                    "$ref": "#/components/schemas/WeddingGallerySection"
                   }
-                }
+                ]
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "삭제 성공"
-          },
-          "404": {
-            "description": "존재하지 않는 청첩장"
+            "description": "섹션 수정 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "error": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "messages": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": "수정되었습니다."
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/WeddingDetail"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/weddings/{weddingId}/sections-settings": {
+      "patch": {
+        "summary": "섹션 표시 설정 및 순서 변경",
+        "description": "섹션의 표시 여부(displayYn)와 순서를 일괄 수정합니다.",
+        "tags": [
+          "Wedding"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "weddingId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WeddingSectionSettingsUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "섹션 설정 변경 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "error": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "messages": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": "설정이 변경되었습니다."
+                    },
+                    "data": {
+                      "example": null
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -895,8 +1695,20 @@
   },
   "tags": [
     {
-      "name": "Wedd",
-      "description": "청첩장(Wedd) 관리 API"
+      "name": "Auth",
+      "description": "인증 관련 API"
+    },
+    {
+      "name": "Social",
+      "description": "소셜 로그인 API"
+    },
+    {
+      "name": "Media",
+      "description": "이미지 업로드 및 관리 API"
+    },
+    {
+      "name": "Wedding",
+      "description": "청첩장(웨딩) 관리 API"
     }
   ]
 }
