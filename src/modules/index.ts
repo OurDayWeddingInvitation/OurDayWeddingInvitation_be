@@ -11,7 +11,7 @@ const router = Router();
 router.use('/auth', authRouter);
 router.use('/auth/social', socialRouter);
 router.use('/weddings', weddRouter);
-router.use('/media', mediaRouter);
+router.use('/weddings', mediaRouter);
 
 router.use('/auth/naver', naverRouter);   // 테스트용 콜백
 

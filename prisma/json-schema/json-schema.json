@@ -223,6 +223,12 @@
             "null"
           ]
         },
+        "weddingInfoTimePeriod": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "weddingInfoTime": {
           "type": [
             "string",
@@ -525,7 +531,7 @@
         },
         "themeFontSize": {
           "type": [
-            "string",
+            "integer",
             "null"
           ]
         },
@@ -593,6 +599,12 @@
         "imageType": {
           "type": [
             "string",
+            "null"
+          ]
+        },
+        "displayOrder": {
+          "type": [
+            "integer",
             "null"
           ]
         },

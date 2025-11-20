@@ -5,7 +5,8 @@ import { respondSuccess, respondError } from '../../utils/response.util'
 export async function postMedia(req: Request, res: Response) {
   try {
     const weddingId = Number(req.params.weddingId);
-    const metadata = JSON.parse(req.body);
+    // const metadata = JSON.parse(req.body);
+    const metadata = req.body;
 
     const file = req.file as Express.Multer.File;
 
@@ -44,7 +45,7 @@ export const replaceMedia = async (req: Request, res: Response) => {
 export const updateMedia = async (req: Request, res: Response) => {
   try {
     const weddingId = Number(req.params.weddingId);
-    await mediaService.updateMedia(weddingId, req.body);
+    await mediaService.updateMedia(weddingId, req.body.media);
     return respondSuccess(res, 200, '수정 성공', );
   } catch (err: any) {
     console.error('Media Upload Error:', err);

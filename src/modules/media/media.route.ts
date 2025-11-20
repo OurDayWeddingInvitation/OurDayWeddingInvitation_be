@@ -57,7 +57,7 @@ const uploads = multer({ storage }).any();
  *                 format: binary
  *               imageType:
  *                 type: string
- *                 description: 이미지 타입(main, gallery 등)
+ *                 description: 이미지 타입(mainImage, kakaoThumbnailImage, linkThumbnailImage, groomImage, brideImage, groomParentsImage, brideParentsImage, galleryImage, flipbookImage)
  *                 example: "gallery"
  *               displayOrder:
  *                 type: integer
@@ -86,62 +86,7 @@ router.post('/:weddingId/media', authenticateJWT, upload.single('file'), mediaCo
 
 /**
  * @swagger
- * /v1/weddings/{weddingId}/media:
- *   put:
- *     summary: 여러 개 이미지 업로드 및 전체 저장
- *     description: 여러 파일을 업로드하고 displayOrder 또는 imageType을 함께 저장합니다.
- *     tags: [Media]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: weddingId
- *         schema:
- *           type: integer
- *         required: true
- *         description: 청첩장 ID
- *     requestBody:
- *       required: true
- *       content:
- *         multipart/form-data:
- *           schema:
- *             type: object
- *             properties:
- *               files:
- *                 type: array
- *                 items:
- *                   type: string
- *                   format: binary
- *               media:
- *                 type: array
- *                 items:
- *                   type: string
- *                 description: |
- *                   파일 각각에 대응하는 메타데이터 JSON 문자열 배열  
- *                   예:  
- *                   `[{"mediaId": 1, "displayOrder": 1, "imageType": "gallery"}]`
- *     responses:
- *       200:
- *         description: 전체 저장 성공
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 status: { type: integer, example: 200 }
- *                 error: { type: string, nullable: true, example: null }
- *                 messages: { type: string, nullable: true, example: "저장되었습니다." }
- *                 data:
- *                   type: object
- *                   example:
- *                     count: 5
- */
-
-router.put('/:weddingId/media/:mediaId/cropped', authenticateJWT, upload.single('file'), mediaCotroller.replaceMedia);
-
-/**
- * @swagger
- * /v1/weddings/{weddingId}/media:
+ * /v1/weddings/{weddingId}/media/reorder:
  *   patch:
  *     summary: 이미지 순서 변경
  *     description: 파일 업로드 없이 이미지의 displayOrder만 수정합니다.
@@ -161,7 +106,7 @@ router.put('/:weddingId/media/:mediaId/cropped', authenticateJWT, upload.single(
  *           schema:
  *             type: object
  *             properties:
- *               metadatas:
+ *               media:
  *                 type: array
  *                 items:
  *                   type: object
@@ -183,6 +128,58 @@ router.put('/:weddingId/media/:mediaId/cropped', authenticateJWT, upload.single(
  */
 
 router.patch('/:weddingId/media/reorder', authenticateJWT, mediaCotroller.updateMedia);
+
+/**
+ * @swagger
+ * /v1/weddings/{weddingId}/media/{mediaId}/cropped:
+ *   put:
+ *     summary: 수정된 이미지 저장
+ *     description: 수정된 이미지를 저장합니다
+ *     tags: [Media]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: weddingId
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: 청첩장 ID
+ *       - in: path
+ *         name: mediaId
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: 미디어 ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - file
+ *             properties:
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: 이미지 수정 완료
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status: { type: integer, example: 200 }
+ *                 error: { type: string, nullable: true, example: null }
+ *                 messages: { type: string, nullable: true, example: "저장되었습니다." }
+ *                 data:
+ *                   type: object
+ *                   example:
+ *                     count: 5
+ */
+router.put('/:weddingId/media/:mediaId/cropped', authenticateJWT, upload.single('file'), mediaCotroller.replaceMedia);
 
 /**
  * @swagger

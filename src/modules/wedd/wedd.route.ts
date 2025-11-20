@@ -21,10 +21,10 @@ const router = Router();
  *     WeddingMainSection:
  *       type: object
  *       properties:
- *         mainPosterStyle:
+ *         posterStyle:
  *           type: string
- *           description: 메인 포스터 스타일
- *           example: "typeA"
+ *           description: 포스터 스타일
+ *           example: "a"
  *
  *     # ==========================
  *     # Section: shareLink
@@ -32,9 +32,9 @@ const router = Router();
  *     WeddingShareLinkSection:
  *       type: object
  *       properties:
- *         shareLinkTitle:
+ *         shareTitle:
  *           type: string
- *           description: 공유 링크 제목
+ *           description: 청첩장 공유시 제목
  *           example: "우리의 결혼식에 초대합니다"
  *
  *     # ==========================
@@ -43,36 +43,40 @@ const router = Router();
  *     WeddingInfoSection:
  *       type: object
  *       properties:
- *         weddingInfoGroomLastName:
+ *         groomLastName:
  *           type: string
  *           example: "김"
- *         weddingInfoGroomFirstName:
+ *         groomFirstName:
  *           type: string
- *           example: "민수"
- *         weddingInfoBrideLastName:
+ *           example: "관휘"
+ *         brideLastName:
  *           type: string
- *           example: "박"
- *         weddingInfoBrideFirstName:
+ *           example: "유"
+ *         brideFirstName:
  *           type: string
- *           example: "수진"
- *         weddingInfoNameOrderType:
+ *           example: "나영"
+ *         nameOrderType:
  *           type: string
- *           description: 이름 표기 순서 타입
- *           example: "groomFirst"
- *         weddingInfoDate:
+ *           description: 이름 표기 순서 타입(G, B)
+ *           example: "B"
+ *         weddingDate:
  *           type: string
- *           description: 예식 일자 (YYYY-MM-DD)
- *           example: "2025-11-22"
- *         weddingInfoTime:
+ *           description: 예식 일자 (YYYYMMDD)
+ *           example: "20251227"
+ *         weddingTimePeriod:
  *           type: string
- *           description: 예식 시간 (HH:mm)
- *           example: "13:30"
+ *           description: 예식 시간 접두어
+ *           example: "저녁(PM)"
+ *         weddingTime:
+ *           type: string
+ *           description: 예식 시간 (hhmm)
+ *           example: "1120"
  *         weddingInfoHallName:
  *           type: string
- *           example: "우리웨딩홀"
+ *           example: "더베뉴지서울"
  *         weddingInfoHallFloor:
  *           type: string
- *           example: "3층"
+ *           example: "1층"
  *
  *     # ==========================
  *     # Section: familyInfo
@@ -80,35 +84,35 @@ const router = Router();
  *     WeddingFamilyInfoSection:
  *       type: object
  *       properties:
- *         familyInfoGroomFatherName:
+ *         groomFatherName:
  *           type: string
  *           example: "김아버지"
- *         familyInfoGroomFatherDeceased:
+ *         groomFatherDeceased:
  *           type: boolean
  *           example: false
- *         familyInfoGroomMotherName:
+ *         groomMotherName:
  *           type: string
  *           example: "김어머니"
- *         familyInfoGroomMotherDeceased:
+ *         groomMotherDeceased:
  *           type: boolean
  *           example: false
- *         familyInfoGroomRankName:
+ *         groomRankName:
  *           type: string
  *           description: 장남 / 차남 / 외동 등
  *           example: "장남"
- *         familyInfoBrideFatherName:
+ *         brideFatherName:
  *           type: string
- *           example: "박아버지"
- *         familyInfoBrideFatherDeceased:
+ *           example: "유아버지"
+ *         brideFatherDeceased:
  *           type: boolean
  *           example: false
- *         familyInfoBrideMotherName:
+ *         brideMotherName:
  *           type: string
- *           example: "박어머니"
- *         familyInfoBrideMotherDeceased:
+ *           example: "유어머니"
+ *         brideMotherDeceased:
  *           type: boolean
  *           example: false
- *         familyInfoBrideRankName:
+ *         brideRankName:
  *           type: string
  *           example: "장녀"
  *
@@ -118,10 +122,10 @@ const router = Router();
  *     WeddingInvitationMessageSection:
  *       type: object
  *       properties:
- *         invitationMessageTitle:
+ *         title:
  *           type: string
  *           example: "함께해주신다면 더없는 기쁨이겠습니다"
- *         invitationMessageContent:
+ *         message:
  *           type: string
  *           example: "두 사람이 하나 되어 새로운 삶을 시작합니다..."
  *
@@ -131,15 +135,15 @@ const router = Router();
  *     WeddingCoupleIntroSection:
  *       type: object
  *       properties:
- *         coupleIntroTitle:
+ *         title:
  *           type: string
  *           example: "신랑·신부 소개"
- *         coupleIntroGroomMessage:
+ *         groomIntro:
  *           type: string
- *           example: "성실하고 따뜻한 신랑 김민수입니다."
- *         coupleIntroBrideMessage:
+ *           example: "성실하고 따뜻한 신랑 김관휘입니다."
+ *         brideIntro:
  *           type: string
- *           example: "밝고 다정한 신부 박수진입니다."
+ *           example: "밝고 다정한 신부 유나영입니다."
  *
  *     # ==========================
  *     # Section: parentsIntro
@@ -147,10 +151,10 @@ const router = Router();
  *     WeddingParentsIntroSection:
  *       type: object
  *       properties:
- *         parentsIntroTitle:
+ *         title:
  *           type: string
  *           example: "혼주 소개"
- *         parentsIntroMessage:
+ *         message:
  *           type: string
  *           example: "두 집안 부모님을 소개합니다."
  *
@@ -160,72 +164,72 @@ const router = Router();
  *     WeddingAccountInfoSection:
  *       type: object
  *       properties:
- *         accountInfoTitle:
+ *         title:
  *           type: string
  *           example: "마음 전하실 곳"
- *         accountInfoMessage:
+ *         message:
  *           type: string
  *           example: "참석이 어려우신 분들을 위해 계좌번호를 안내드립니다."
  *
- *         accountInfoGroomBankName:
+ *         groomBankName:
  *           type: string
  *           example: "우리은행"
- *         accountInfoGroomNumber:
+ *         groomNumber:
  *           type: string
  *           example: "1002-123-456789"
- *         accountInfoGroomHolder:
+ *         groomHolder:
  *           type: string
- *           example: "김민수"
+ *           example: "김관휘"
  *
- *         accountInfoGroomFatherBankName:
+ *         groomFatherBankName:
  *           type: string
  *           example: "국민은행"
- *         accountInfoGroomFatherNumber:
+ *         groomFatherNumber:
  *           type: string
  *           example: "123456-01-987654"
- *         accountInfoGroomFatherHolder:
+ *         groomFatherHolder:
  *           type: string
  *           example: "김아버지"
  *
- *         accountInfoGroomMotherBankName:
+ *         groomMotherBankName:
  *           type: string
  *           example: "신한은행"
- *         accountInfoGroomMotherNumber:
+ *         groomMotherNumber:
  *           type: string
  *           example: "110-123-456789"
- *         accountInfoGroomMotherHolder:
+ *         groomMotherHolder:
  *           type: string
  *           example: "김어머니"
  *
- *         accountInfoBrideBankName:
+ *         brideBankName:
  *           type: string
  *           example: "카카오뱅크"
- *         accountInfoBrideNumber:
+ *         brideNumber:
  *           type: string
  *           example: "3333-12-3456789"
- *         accountInfoBrideHolder:
+ *         brideHolder:
  *           type: string
- *           example: "박수진"
+ *           example: "유나영"
  *
- *         accountInfoBrideFatherBankName:
+ *         brideFatherBankName:
  *           type: string
  *           example: "하나은행"
- *         accountInfoBrideFatherNumber:
+ *         brideFatherNumber:
  *           type: string
  *           example: "123-910123-45678"
- *         accountInfoBrideFatherHolder:
+ *         brideFatherHolder:
  *           type: string
- *           example: "박아버지"
+ *           example: "유아버지"
  *
- *         accountInfoBrideMotherBankName:
+ *         brideMotherBankName:
  *           type: string
  *           example: "농협"
- *         accountInfoBrideMotherNumber:
+ *         brideMotherNumber:
  *           type: string
  *           example: "302-1234-5678-91"
- *         accountInfoBrideMotherHolder:
+ *         brideMotherHolder:
  *           type: string
- *           example: "박어머니"
+ *           example: "유어머니"
  *
  *     # ==========================
  *     # Section: locationInfo
@@ -233,33 +237,33 @@ const router = Router();
  *     WeddingLocationInfoSection:
  *       type: object
  *       properties:
- *         locationInfoAddress:
+ *         address:
  *           type: string
- *           example: "서울시 강남구 청첩장로 123"
- *         locationInfoAddressDetail:
+ *           example: "서울시 강서구 강서로 388"
+ *         addressDetail:
  *           type: string
- *           example: "우리웨딩홀 3층 라벤더홀"
- *         locationInfoGuideMessage:
+ *           example: "더베뉴지서울 1층 네이처홀"
+ *         guideMessage:
  *           type: string
- *           example: "주차는 2시간 무료 제공됩니다."
- *         locationInfoTransport1Title:
+ *           example: "주차는 30초 무료 제공됩니다."
+ *         transport1Title:
  *           type: string
  *           example: "지하철 안내"
- *         locationInfoTransport1Message:
+ *         transport1Message:
  *           type: string
- *           example: "2호선 강남역 3번 출구 도보 5분"
- *         locationInfoTransport2Title:
+ *           example: "5호선 발산역 3번 출구 방향 1분 이내(신장 40m 기준)"
+ *         transport2Title:
  *           type: string
- *           example: "버스 안내"
- *         locationInfoTransport2Message:
+ *           example: "지하철 안내"
+ *         transport2Message:
  *           type: string
- *           example: "간선 146, 360 / 지선 4212 이용"
- *         locationInfoTransport3Title:
+ *           example: "9호선 양천향교역 6번 출구 도보 10분 직진(신장 40m 기준)"
+ *         transport3Title:
  *           type: string
- *           example: "자가용 안내"
- *         locationInfoTransport3Message:
+ *           example: null
+ *         transport3Message:
  *           type: string
- *           example: "네비에 '우리웨딩홀' 검색"
+ *           example: null
  *
  *     # ==========================
  *     # Section: themeFont
@@ -267,19 +271,19 @@ const router = Router();
  *     WeddingThemeFontSection:
  *       type: object
  *       properties:
- *         themeFontName:
+ *         fontName:
  *           type: string
  *           example: "Escoredream"
- *         themeFontSize:
+ *         fontSize:
  *           type: integer
  *           example: 16
- *         themeFontBackgroundColor:
+ *         backgroundColor:
  *           type: string
  *           example: "#F5F5F5"
- *         themeFontAccentColor:
+ *         accentColor:
  *           type: string
  *           example: "#FF6B6B"
- *         themeFontZoomPreventYn:
+ *         zoomPreventYn:
  *           type: boolean
  *           description: 확대 방지 여부
  *           example: true
@@ -290,9 +294,9 @@ const router = Router();
  *     WeddingLoadingScreenSection:
  *       type: object
  *       properties:
- *         loadingScreenStyle:
+ *         design:
  *           type: string
- *           example: "styleA"
+ *           example: "a"
  *
  *     # ==========================
  *     # Section: gallery
@@ -300,7 +304,7 @@ const router = Router();
  *     WeddingGallerySection:
  *       type: object
  *       properties:
- *         galleryTitle:
+ *         title:
  *           type: string
  *           example: "우리의 소중한 순간들"
  *
@@ -360,6 +364,59 @@ const router = Router();
  *     WeddingDetail:
  *       type: object
  *       properties:
+ *         sections:
+ *           $ref: '#/components/schemas/WeddingSections'
+ *         sectionSettings:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/WeddingSectionSetting'
+ *           example:
+ *             - sectionKey: "main"
+ *               displayYn: true
+ *               displayOrder: 1
+ *             - sectionKey: "shareLink"
+ *               displayYn: true
+ *               displayOrder: 2
+ *             - sectionKey: "weddingInfo"
+ *               displayYn: true
+ *               displayOrder: 3
+ *             - sectionKey: "familyInfo"
+ *               displayYn: true
+ *               displayOrder: 4
+ *             - sectionKey: "invitationMessage"
+ *               displayYn: true
+ *               displayOrder: 5
+ *             - sectionKey: "coupleIntro"
+ *               displayYn: true
+ *               displayOrder: 6
+ *             - sectionKey: "parentsIntro"
+ *               displayYn: true
+ *               displayOrder: 7
+ *             - sectionKey: "accountInfo"
+ *               displayYn: true
+ *               displayOrder: 8
+ *             - sectionKey: "locationInfo"
+ *               displayYn: true
+ *               displayOrder: 9
+ *             - sectionKey: "themeFont"
+ *               displayYn: true
+ *               displayOrder: 10
+ *             - sectionKey: "loadingScreen"
+ *               displayYn: true
+ *               displayOrder: 11
+ *             - sectionKey: "gallery"
+ *               displayYn: true
+ *               displayOrder: 12
+ *             - sectionKey: "flipbook"
+ *               displayYn: true
+ *               displayOrder: 13
+ *
+ *     # ==========================
+ *     # 전체 Wedd 상세 구조 (프론트에서 사용하는 형태)
+ *     # ==========================
+ *     WeddingDetailWithId:
+ *       type: object
+ *       properties:
  *         weddingId:
  *           type: integer
  *           example: 1
@@ -369,6 +426,46 @@ const router = Router();
  *           type: array
  *           items:
  *             $ref: '#/components/schemas/WeddingSectionSetting'
+ *           example:
+ *             - sectionKey: "main"
+ *               displayYn: true
+ *               displayOrder: 1
+ *             - sectionKey: "shareLink"
+ *               displayYn: true
+ *               displayOrder: 2
+ *             - sectionKey: "weddingInfo"
+ *               displayYn: true
+ *               displayOrder: 3
+ *             - sectionKey: "familyInfo"
+ *               displayYn: true
+ *               displayOrder: 4
+ *             - sectionKey: "invitationMessage"
+ *               displayYn: true
+ *               displayOrder: 5
+ *             - sectionKey: "coupleIntro"
+ *               displayYn: true
+ *               displayOrder: 6
+ *             - sectionKey: "parentsIntro"
+ *               displayYn: true
+ *               displayOrder: 7
+ *             - sectionKey: "accountInfo"
+ *               displayYn: true
+ *               displayOrder: 8
+ *             - sectionKey: "locationInfo"
+ *               displayYn: true
+ *               displayOrder: 9
+ *             - sectionKey: "themeFont"
+ *               displayYn: true
+ *               displayOrder: 10
+ *             - sectionKey: "loadingScreen"
+ *               displayYn: true
+ *               displayOrder: 11
+ *             - sectionKey: "gallery"
+ *               displayYn: true
+ *               displayOrder: 12
+ *             - sectionKey: "flipbook"
+ *               displayYn: true
+ *               displayOrder: 13
  *
  *     # ==========================
  *     # Wedd PATCH/PUT Request Body
@@ -465,38 +562,6 @@ router.get('/:weddingId', authenticateJWT, weddController.getWeddById);
 
 /**
  * @swagger
- * /v1/weddings/test/{weddingId}:
- *   get:
- *     summary: 청첩장 상세 조회
- *     description: 특정 청첩장에 대한 모든 섹션 데이터 및 섹션 설정을 조회합니다.
- *     tags: [Wedding]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: weddingId
- *         required: true
- *         schema:
- *           type: integer
- *         description: 청첩장 ID
- *     responses:
- *       200:
- *         description: 상세 조회 성공
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 status: { type: integer, example: 200 }
- *                 error: { type: string, nullable: true, example: null }
- *                 messages: { type: string, nullable: true, example: null }
- *                 data:
- *                   $ref: '#/components/schemas/WeddingDetail'
- */
-router.get('/test/:weddingId', authenticateJWT, weddController.getWeddById2);
-
-/**
- * @swagger
  * /v1/weddings:
  *   post:
  *     summary: 신규 청첩장 생성
@@ -505,130 +570,12 @@ router.get('/test/:weddingId', authenticateJWT, weddController.getWeddById2);
  *     security:
  *       - bearerAuth: []
  *
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             example:
- *               sections:
- *                 mainSection:
- *                   mainPosterStyle: null
- *                 shareLinkSection:
- *                   shareLinkTitle: null
- *                 weddingInfoSection:
- *                   weddingInfoGroomLastName: null
- *                   weddingInfoGroomFirstName: null
- *                   weddingInfoBrideLastName: null
- *                   weddingInfoBrideFirstName: null
- *                   weddingInfoNameOrderType: null
- *                   weddingInfoDate: null
- *                   weddingInfoTime: null
- *                   weddingInfoHallName: null
- *                   weddingInfoHallFloor: null
- *                 familyInfoSection:
- *                   familyInfoGroomFatherName: null
- *                   familyInfoGroomFatherDeceased: null
- *                   familyInfoGroomMotherName: null
- *                   familyInfoGroomMotherDeceased: null
- *                   familyInfoGroomRankName: null
- *                   familyInfoBrideFatherName: null
- *                   familyInfoBrideFatherDeceased: null
- *                   familyInfoBrideMotherName: null
- *                   familyInfoBrideMotherDeceased: null
- *                   familyInfoBrideRankName: null
- *                 invitationMessageSection:
- *                   invitationMessageTitle: null
- *                   invitationMessageContent: null
- *                 coupleIntroSection:
- *                   coupleIntroTitle: null
- *                   coupleIntroGroomMessage: null
- *                   coupleIntroBrideMessage: null
- *                 parentsIntroSection:
- *                   parentsIntroTitle: null
- *                   parentsIntroMessage: null
- *                 accountInfoSection:
- *                   accountInfoTitle: null
- *                   accountInfoMessage: null
- *                   accountInfoGroomBankName: null
- *                   accountInfoGroomNumber: null
- *                   accountInfoGroomHolder: null
- *                   accountInfoGroomFatherBankName: null
- *                   accountInfoGroomFatherNumber: null
- *                   accountInfoGroomFatherHolder: null
- *                   accountInfoGroomMotherBankName: null
- *                   accountInfoGroomMotherNumber: null
- *                   accountInfoGroomMotherHolder: null
- *                   accountInfoBrideBankName: null
- *                   accountInfoBrideNumber: null
- *                   accountInfoBrideHolder: null
- *                   accountInfoBrideFatherBankName: null
- *                   accountInfoBrideFatherNumber: null
- *                   accountInfoBrideFatherHolder: null
- *                   accountInfoBrideMotherBankName: null
- *                   accountInfoBrideMotherNumber: null
- *                   accountInfoBrideMotherHolder: null
- *                 locationInfoSection:
- *                   locationInfoAddress: null
- *                   locationInfoAddressDetail: null
- *                   locationInfoGuideMessage: null
- *                   locationInfoTransport1Title: null
- *                   locationInfoTransport1Message: null
- *                   locationInfoTransport2Title: null
- *                   locationInfoTransport2Message: null
- *                   locationInfoTransport3Title: null
- *                   locationInfoTransport3Message: null
- *                 themeFontSection:
- *                   themeFontName: null
- *                   themeFontSize: null
- *                   themeFontBackgroundColor: null
- *                   themeFontAccentColor: null
- *                   themeFontZoomPreventYn: null
- *                 loadingScreenSection:
- *                   loadingScreenStyle: null
- *                 gallerySection:
- *                   galleryTitle: null
- *               sectionSettings:
- *                 - sectionKey: "main"
- *                   displayYn: true
- *                   displayOrder: 1
- *                 - sectionKey: "shareLink"
- *                   displayYn: true
- *                   displayOrder: 2
- *                 - sectionKey: "weddingInfo"
- *                   displayYn: true
- *                   displayOrder: 3
- *                 - sectionKey: "familyInfo"
- *                   displayYn: true
- *                   displayOrder: 4
- *                 - sectionKey: "invitationMessage"
- *                   displayYn: true
- *                   displayOrder: 5
- *                 - sectionKey: "coupleIntro"
- *                   displayYn: true
- *                   displayOrder: 6
- *                 - sectionKey: "parentsIntro"
- *                   displayYn: true
- *                   displayOrder: 7
- *                 - sectionKey: "accountInfo"
- *                   displayYn: true
- *                   displayOrder: 8
- *                 - sectionKey: "locationInfo"
- *                   displayYn: true
- *                   displayOrder: 9
- *                 - sectionKey: "themeFont"
- *                   displayYn: true
- *                   displayOrder: 10
- *                 - sectionKey: "loadingScreen"
- *                   displayYn: true
- *                   displayOrder: 11
- *                 - sectionKey: "gallery"
- *                   displayYn: true
- *                   displayOrder: 12
- *                 - sectionKey: "flipbook"
- *                   displayYn: true
- *                   displayOrder: 13
+ *    #requestBody:
+ *    #  required: true
+ *    #  content:
+ *    #    application/json:
+ *    #       schema:
+ *    #         $ref: '#/components/schemas/WeddingDetail'
  *
  *
  *     responses:
@@ -638,14 +585,12 @@ router.get('/test/:weddingId', authenticateJWT, weddController.getWeddById2);
  *           application/json:
  *             schema:
  *               type: object
- *             example:
- *               status: 200
- *               error: null
- *               messages: "생성되었습니다."
- *               data:
- *                 weddingId: 19
- *                 sections: (위 request example과 동일)
- *                 sectionSettings: (위 request example과 동일)
+ *               properties:
+ *                 status: { type: integer, example: 200 }
+ *                 error: { type: string, nullable: true, example: null }
+ *                 messages: { type: string, nullable: true, example: null }
+ *                 data:
+ *                   $ref: '#/components/schemas/WeddingDetailWithId'
  */
 
 router.post('/', authenticateJWT, weddController.createWedd);
@@ -670,7 +615,7 @@ router.post('/', authenticateJWT, weddController.createWedd);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/WeddingReplaceRequest'
+ *             $ref: '#/components/schemas/WeddingDetail'
  *     responses:
  *       200:
  *         description: 교체 성공
@@ -686,6 +631,43 @@ router.post('/', authenticateJWT, weddController.createWedd);
  *                   $ref: '#/components/schemas/WeddingDetail'
  */
 router.put('/:weddingId', authenticateJWT, weddController.replaceWedd);
+
+/**
+ * @swagger
+ * /v1/weddings/{weddingId}/sections/settings:
+ *   patch:
+ *     summary: 섹션 표시 설정 및 순서 변경
+ *     description: 섹션의 표시 여부(displayYn)와 순서를 일괄 수정합니다.
+ *     tags: [Wedding]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: weddingId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/WeddingSectionSettingsUpdateRequest'
+ *     responses:
+ *       200:
+ *         description: 섹션 설정 변경 성공
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status: { type: integer, example: 200 }
+ *                 error: { type: string, nullable: true, example: null }
+ *                 messages: { type: string, nullable: true, example: "설정이 변경되었습니다." }
+ *                 data:
+ *                   example: null
+ */
+router.patch('/:weddingId/sections/settings', authenticateJWT, weddController.updateWeddSectsSet);
 
 /**
  * @swagger
@@ -736,48 +718,11 @@ router.put('/:weddingId', authenticateJWT, weddController.replaceWedd);
  *               properties:
  *                 status: { type: integer, example: 200 }
  *                 error: { type: string, nullable: true, example: null }
- *                 messages: { type: string, nullable: true, example: "수정되었습니다." }
+ *                 messages: { type: string, nullable: true, example: null }
  *                 data:
  *                   $ref: '#/components/schemas/WeddingDetail'
  */
 router.patch('/:weddingId/sections/:sectionId', authenticateJWT, weddController.updateWeddSection);
-
-/**
- * @swagger
- * /v1/weddings/{weddingId}/sections-settings:
- *   patch:
- *     summary: 섹션 표시 설정 및 순서 변경
- *     description: 섹션의 표시 여부(displayYn)와 순서를 일괄 수정합니다.
- *     tags: [Wedding]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: weddingId
- *         required: true
- *         schema:
- *           type: integer
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/WeddingSectionSettingsUpdateRequest'
- *     responses:
- *       200:
- *         description: 섹션 설정 변경 성공
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 status: { type: integer, example: 200 }
- *                 error: { type: string, nullable: true, example: null }
- *                 messages: { type: string, nullable: true, example: "설정이 변경되었습니다." }
- *                 data:
- *                   example: null
- */
-router.delete('/:weddingId', authenticateJWT, weddController.deleteWedd);
 
 /**
  * @swagger
@@ -804,10 +749,12 @@ router.delete('/:weddingId', authenticateJWT, weddController.deleteWedd);
  *               properties:
  *                 status: { type: integer, example: 200 }
  *                 error: { type: string, nullable: true, example: null }
- *                 messages: { type: string, nullable: true, example: "삭제되었습니다." }
+ *                 messages: { type: string, nullable: true, example: null }
  *                 data:
  *                   example: null
  */
-router.put('/:weddingId/sections/setttings', authenticateJWT, weddController.updateWeddSectsSet);
+router.delete('/:weddingId', authenticateJWT, weddController.deleteWedd);
 
 export default router;
+
+

@@ -1,5 +1,5 @@
 import prisma from '../../config/prisma';
-import path from 'path';
+import path, { join } from 'path';
 import fs from 'fs';
 
 export async function uploadMediaBackup({
@@ -74,12 +74,13 @@ export const uploadMedia = async (
   file: Express.Multer.File
 ) => {
   const tempPath = file.path;
-  const newPath = `uploads/${weddingId}/${file.fieldname}`;
+  const ext = path.extname(file.originalname);
+  const newPath = join(process.cwd(), `/uploads/${weddingId}/${Date.now()}-${Math.random().toString(36).substring(2, 9)}${ext}`);
 
-  fs.mkdirSync(`uploads/${weddingId}`, { recursive: true });
+  fs.mkdirSync(join(process.cwd(), `/uploads/${weddingId}`), { recursive: true });
   fs.renameSync(tempPath, newPath);
 
-  await prisma.$transaction(async (tx) => {
+  return await prisma.$transaction(async (tx) => {
     const maxMedia = await tx.weddMedia.aggregate({
       _max: { mediaId: true },
       where: { weddingId },
@@ -92,7 +93,7 @@ export const uploadMedia = async (
         weddingId,
         mediaId: nextMediaId,
         imageType: metadata.imageType,
-        displayOrder: metadata.displayOrder,
+        displayOrder: Number(metadata.displayOrder),
         originalUrl: newPath,
         fileExtension: path.extname(file.originalname).replace('.', ''),
         fileSize: file.size,
@@ -108,7 +109,7 @@ export const replaceMedia = async (
   mediaId: number,
   file: Express.Multer.File
 ) => {
-  const media = await prisma.weddMedia.findUnique({
+  const existing = await prisma.weddMedia.findUnique({
     where: {
       weddingId_mediaId: {
         weddingId: weddingId,
@@ -117,26 +118,37 @@ export const replaceMedia = async (
     },
   });
 
-  if(!media)
+  if(!existing)
     throw new Error('잘못된 요청입니다.');
   
   const tempPath = file.path;
-  let newPath = media.editedUrl;
+  let newPath = existing.editedUrl;
 
   if(!newPath){
-    fs.mkdirSync(`uploads/${weddingId}`, { recursive: true });
-    newPath = `uploads/${weddingId}/${file.fieldname}`;
+    const ext = path.extname(file.originalname);
+    newPath = join(process.cwd(), `uploads/${weddingId}/${Date.now()}-${Math.random().toString(36).substring(2, 9)}${ext}`);
   }
 
   fs.renameSync(tempPath, newPath);
+
+  const media = await prisma.weddMedia.update({
+    where: {
+      weddingId_mediaId: {
+        weddingId: weddingId,
+        mediaId: mediaId
+      }
+    },
+    data: { editedUrl: newPath }
+  })
 
   return media;
 }
 
 export const updateMedia = async (weddingId: number, metadatas: any) => {
+  console.log(metadatas)
   await prisma.$transaction(async (tx) => {
-    metadatas.map((metadata: any) => {
-      tx.weddMedia.update({
+    const result = metadatas.map((metadata: any) => {
+      return tx.weddMedia.update({
         where: {
           weddingId_mediaId: {
             weddingId: weddingId,
@@ -146,6 +158,8 @@ export const updateMedia = async (weddingId: number, metadatas: any) => {
         data: { displayOrder: metadata.displayOrder }
       })
     });
+
+    await Promise.all(result);
   });
 }
 
@@ -167,4 +181,13 @@ export const deleteMedia = async (weddingId: number, mediaId: number) => {
 
   if (fs.existsSync(originalPath)) fs.unlinkSync(originalPath);
   if (fs.existsSync(croppedPath)) fs.unlinkSync(croppedPath);
+
+  return await prisma.weddMedia.delete({
+    where: {
+      weddingId_mediaId: {
+        weddingId: weddingId,
+        mediaId: mediaId
+      }
+    },
+  });
 }
