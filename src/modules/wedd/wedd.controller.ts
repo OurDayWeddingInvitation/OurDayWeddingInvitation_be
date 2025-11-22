@@ -51,7 +51,7 @@ export const getWeddById2= async (req: Request, res: Response) => {
 export const createWedd = async (req: Request, res: Response) => {
   try {
     const { userId } = (req as any).user;
-    const wedd = await weddService.createWedd(userId, req.body);
+    const wedd = await weddService.createWedd(userId);
     respondSuccess(res, 200, null, wedd);
   } catch (error: any) {
     console.error(error);
@@ -64,7 +64,6 @@ export const createWedd = async (req: Request, res: Response) => {
  */
 export const replaceWedd = async (req: Request, res: Response) => {
   try {
-    delete req.body.weddingId;
     const weddingId = Number(req.params.weddingId);
     const wedd = await weddService.replaceWedd(weddingId, req.body);
     respondSuccess(res, 200, null, wedd);
@@ -79,7 +78,6 @@ export const replaceWedd = async (req: Request, res: Response) => {
  */
 export const updateWeddSection = async (req: Request, res: Response) => {
   try {
-    delete req.body.weddingId;
     const weddingId = Number(req.params.weddingId);
     const sectionId = req.params.sectionId;
     const wedd = await weddService.updateWeddSection(weddingId, sectionId, req.body);
@@ -109,7 +107,6 @@ export const deleteWedd = async (req: Request, res: Response) => {
  */
 export const updateWeddSectsSet = async (req: Request, res: Response) => {
   try {
-    delete req.body.weddingId;
     const weddingId = Number(req.params.weddingId);
     const wedd = await weddService.updateWeddSectsSet(weddingId, req.body);
     respondSuccess(res, 200, null, wedd);

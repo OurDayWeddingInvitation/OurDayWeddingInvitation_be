@@ -483,7 +483,7 @@ const router = Router();
  *     WeddingSectionSettingsUpdateRequest:
  *       type: object
  *       properties:
- *         sections:
+ *         sectionSettings:
  *           type: array
  *           description: 섹션 설정 배열
  *           items:
