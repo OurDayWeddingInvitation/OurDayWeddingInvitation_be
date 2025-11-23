@@ -27,6 +27,53 @@ const uploads = multer({ storage }).any();
 
 /**
  * @swagger
+ * components:
+ *   schemas:
+ *     media:
+ *       type: object
+ *       properties:
+ *         mediaId: { type: integer, example: 3 }
+ *         imageType: { type: string, example: mainImage }
+ *         displayOrder: { type: integer, example: 1 }
+ *         originalUrl: { type: string, example: "url/orgImage.jpg" }
+ *         editedUrl: { type: string, example: "url/croppedImage.jpg" }
+ */
+
+/**
+ * @swagger
+ * /v1/weddings/{weddingId}/media:
+ *   get:
+ *     summary: 모든 이미지 조회
+ *     description: 청첩장의 모든 이미지정보를 가져옵니다.
+ *     tags: [Media]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: weddingId
+ *         in: path
+ *         required: true
+ *         schema: { type: integer }
+ *     responses:
+ *       200:
+ *         description: 조회 성공
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status: { type: integer, example: 200 }
+ *                 error: { type: string, nullable: true, example: null }
+ *                 messages: { type: string, nullable: true, example: null }
+ *                 data:
+ *                   type: array
+ *                   description: wedd 테이블 리스트 (간단 정보)
+ *                   items:
+ *                     $ref: '#/components/schemas/media'
+ */
+router.get('/:weddingId/media', authenticateJWT, mediaCotroller.getAllMedia);
+
+/**
+ * @swagger
  * /v1/weddings/{weddingId}/media:
  *   post:
  *     summary: 새 이미지 업로드
@@ -81,7 +128,6 @@ const uploads = multer({ storage }).any();
  *                     imageType: "gallery"
  *                     originalUrl: "/uploads/wedding/1/main.png"
  */
-
 router.post('/:weddingId/media', authenticateJWT, upload.single('file'), mediaCotroller.postMedia);
 
 /**
@@ -126,7 +172,6 @@ router.post('/:weddingId/media', authenticateJWT, upload.single('file'), mediaCo
  *                 data:
  *                   example: null
  */
-
 router.patch('/:weddingId/media/reorder', authenticateJWT, mediaCotroller.updateMedia);
 
 /**
@@ -212,7 +257,6 @@ router.put('/:weddingId/media/:mediaId/cropped', authenticateJWT, upload.single(
  *                 data:
  *                   example: null
  */
-
 router.delete('/:weddingId/media/:mediaId', authenticateJWT, mediaCotroller.deleteMedia);
 
 export default router;

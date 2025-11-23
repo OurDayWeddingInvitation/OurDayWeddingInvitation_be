@@ -68,6 +68,12 @@ export async function uploadMediaBackup({
   return media;
 }
 
+export const getAllMedia = async (weddingId: number) => {
+  return await prisma.weddMedia.findMany({
+    where: { weddingId }
+  })
+}
+
 export const uploadMedia = async (
   weddingId: number,
   metadata: any,

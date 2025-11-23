@@ -25,6 +25,31 @@
       }
     },
     "schemas": {
+      "media": {
+        "type": "object",
+        "properties": {
+          "mediaId": {
+            "type": "integer",
+            "example": 3
+          },
+          "imageType": {
+            "type": "string",
+            "example": "mainImage"
+          },
+          "displayOrder": {
+            "type": "integer",
+            "example": 1
+          },
+          "originalUrl": {
+            "type": "string",
+            "example": "url/orgImage.jpg"
+          },
+          "editedUrl": {
+            "type": "string",
+            "example": "url/croppedImage.jpg"
+          }
+        }
+      },
       "WeddingMainSection": {
         "type": "object",
         "properties": {
@@ -859,6 +884,63 @@
       }
     },
     "/v1/weddings/{weddingId}/media": {
+      "get": {
+        "summary": "모든 이미지 조회",
+        "description": "청첩장의 모든 이미지정보를 가져옵니다.",
+        "tags": [
+          "Media"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "weddingId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "error": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "messages": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "data": {
+                      "type": "array",
+                      "description": "wedd 테이블 리스트 (간단 정보)",
+                      "items": {
+                        "$ref": "#/components/schemas/media"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       "post": {
         "summary": "새 이미지 업로드",
         "description": "단일 이미지를 업로드하고 DB에 저장합니다.",

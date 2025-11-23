@@ -2,7 +2,18 @@ import { Request, Response } from 'express';
 import * as mediaService from './media.service';
 import { respondSuccess, respondError } from '../../utils/response.util'
 
-export async function postMedia(req: Request, res: Response) {
+export const getAllMedia = async (req: Request, res: Response) => {
+  try {
+    const weddingId = Number(req.params.weddingId);
+    const mediaArray = await mediaService.getAllMedia(weddingId);
+
+    return respondSuccess(res, 200, '', mediaArray);
+  } catch (err: any) {
+    respondError(res, 500, '');
+  }
+}
+
+export const postMedia = async (req: Request, res: Response) => {
   try {
     const weddingId = Number(req.params.weddingId);
     // const metadata = JSON.parse(req.body);
