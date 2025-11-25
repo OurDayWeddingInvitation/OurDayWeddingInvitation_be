@@ -1,6 +1,7 @@
 import prisma from '../../config/prisma';
 import path, { join } from 'path';
 import fs from 'fs';
+import fsp from 'fs/promises';
 
 export async function uploadMediaBackup({
   weddingId,
@@ -84,7 +85,8 @@ export const uploadMedia = async (
   const newPath = join(process.cwd(), `/uploads/${weddingId}/${Date.now()}-${Math.random().toString(36).substring(2, 9)}${ext}`);
 
   fs.mkdirSync(join(process.cwd(), `/uploads/${weddingId}`), { recursive: true });
-  fs.renameSync(tempPath, newPath);
+  await fsp.copyFile(tempPath, newPath);
+  await fsp.unlink(tempPath);
 
   return await prisma.$transaction(async (tx) => {
     const maxMedia = await tx.weddMedia.aggregate({
@@ -135,7 +137,8 @@ export const replaceMedia = async (
     newPath = join(process.cwd(), `uploads/${weddingId}/${Date.now()}-${Math.random().toString(36).substring(2, 9)}${ext}`);
   }
 
-  fs.renameSync(tempPath, newPath);
+  await fsp.copyFile(tempPath, newPath);
+  await fsp.unlink(tempPath);
 
   const media = await prisma.weddMedia.update({
     where: {

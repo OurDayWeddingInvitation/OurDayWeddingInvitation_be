@@ -15,8 +15,8 @@ export const getAllWedds = async (userId: string) => {
         WEDD.WEDD_TTL AS weddingTitle,
         IFNULL(MEDIA.EDIT_URL, MEDIA.ORG_URL) AS  mainImageUrl
       FROM
-        WEDD WEDD
-      LEFT JOIN WEDD_MEDIA MEDIA
+        wedd WEDD
+      LEFT JOIN wedd_media MEDIA
         ON WEDD.WEDD_ID = MEDIA.WEDD_ID
         AND MEDIA.IMG_TYPE = 'mainImage'
       WHERE

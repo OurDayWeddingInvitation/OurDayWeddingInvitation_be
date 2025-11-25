@@ -6,9 +6,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsx watch src/server.ts",
-    "build": "tsup",
     "start": "node dist/server.js",
-    "make": "node scripts/make-module.js"
+    "make": "node scripts/make-module.js",
+
+    "generate-swagger": "tsx src/config/swagger.ts",
+    "build": "npm run generate-swagger && tsup"
   },
   "keywords": [],
   "author": "",
@@ -24,6 +26,7 @@
     "jsonwebtoken": "^9.0.2",
     "multer": "^2.0.2",
     "prisma": "^6.18.0",
+    "prisma-json-schema-generator": "^5.1.5",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-dist": "^5.30.2",
     "swagger-ui-express": "^5.0.1"
@@ -37,8 +40,7 @@
     "@types/node": "^24.9.2",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
-    "prisma-json-schema-generator": "^5.1.5",
-    "tsc-alias": "^1.8.16",
+    "tsup": "^8.5.1",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3"
   }
