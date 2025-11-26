@@ -10,6 +10,8 @@ import { respondSuccess, respondError } from '../utils/response.util'
 export function authenticateJWT(req: Request, res: Response, next: NextFunction) {
   const authHeader = req.headers.authorization;
 
+  console.log('authHeader:', authHeader);
+
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return respondError(res, 401, '인증 토큰이 없습니다.');
   }

@@ -44,6 +44,8 @@ export const getWeddById = async (weddingId: number): Promise<WeddingInfoRespons
  * wedd 생성
  */
 export const createWedd = async (userId: string): Promise<WeddingInfoResponse> => {
+  console.log(userId)
+
   const result = await prisma.$transaction(async (tx) => {
     const wedd = await tx.wedd.create({
       data: { userId }

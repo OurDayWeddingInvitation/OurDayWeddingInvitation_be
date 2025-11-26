@@ -2,6 +2,7 @@ import prisma from '../../config/prisma';
 import path, { join } from 'path';
 import fs from 'fs';
 import fsp from 'fs/promises';
+import { escape } from 'querystring';
 
 export async function uploadMediaBackup({
   weddingId,
@@ -82,10 +83,11 @@ export const uploadMedia = async (
 ) => {
   const tempPath = file.path;
   const ext = path.extname(file.originalname);
-  const newPath = join(process.cwd(), `/uploads/${weddingId}/${Date.now()}-${Math.random().toString(36).substring(2, 9)}${ext}`);
+  const newPath = `/uploads/${weddingId}/${Date.now()}-${Math.random().toString(36).substring(2, 9)}${ext}`
+  const absoluteNewPath = join(process.cwd(), newPath);
 
   fs.mkdirSync(join(process.cwd(), `/uploads/${weddingId}`), { recursive: true });
-  await fsp.copyFile(tempPath, newPath);
+  await fsp.copyFile(tempPath, absoluteNewPath);
   await fsp.unlink(tempPath);
 
   return await prisma.$transaction(async (tx) => {
@@ -130,14 +132,17 @@ export const replaceMedia = async (
     throw new Error('잘못된 요청입니다.');
   
   const tempPath = file.path;
-  let newPath = existing.editedUrl;
+  const newPath = existing.editedUrl;
+  let absoluteNewPath;
 
-  if(!newPath){
+  if(!newPath) {
     const ext = path.extname(file.originalname);
-    newPath = join(process.cwd(), `uploads/${weddingId}/${Date.now()}-${Math.random().toString(36).substring(2, 9)}${ext}`);
+    absoluteNewPath = join(process.cwd(), `/uploads/${weddingId}/${Date.now()}-${Math.random().toString(36).substring(2, 9)}${ext}`);
+  } else {
+    absoluteNewPath = join(process.cwd(), newPath);
   }
 
-  await fsp.copyFile(tempPath, newPath);
+  await fsp.copyFile(tempPath, absoluteNewPath);
   await fsp.unlink(tempPath);
 
   const media = await prisma.weddMedia.update({
@@ -185,8 +190,8 @@ export const deleteMedia = async (weddingId: number, mediaId: number) => {
   if(!media)
     throw new Error('잘못된 요청입니다.');
 
-  const originalPath = media.originalUrl || '';
-  const croppedPath = media.editedUrl || '';
+  const originalPath = join(process.cwd(), media.originalUrl) || '';
+  const croppedPath = join(process.cwd(), media.editedUrl) || '';
 
   if (fs.existsSync(originalPath)) fs.unlinkSync(originalPath);
   if (fs.existsSync(croppedPath)) fs.unlinkSync(croppedPath);

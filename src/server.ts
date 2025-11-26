@@ -3,7 +3,7 @@
  */
 import app from './app';
 
-const PORT = Number(process.env.PORT || 8080);
+const PORT = Number(process.env.PORT || 8000);
 
 /**
  * 서버 시작

@@ -27,7 +27,11 @@ const options: Options = {
     security: [{ bearerAuth: [] }],
     servers: [
       {
-        url: 'http://localhost:8080',
+        url: 'http://3.39.189.117:8000',
+        description: 'Local Server',
+      },
+      {
+        url: 'http://localhost:8000',
         description: 'Local Server',
       },
     ],
