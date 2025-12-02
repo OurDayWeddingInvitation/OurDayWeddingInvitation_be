@@ -1,4 +1,6 @@
 import { Router } from 'express';
+import { authenticateJWT } from '../core/middlewares/authenticateJWT';
+
 import authRouter from './auth/auth.route';
 import socialRouter from './auth/social.route';
 import weddRouter from './wedd/wedd.route';
@@ -10,9 +12,11 @@ const router = Router();
 
 router.use('/auth', authRouter);
 router.use('/auth/social', socialRouter);
+router.use('/auth/naver', naverRouter);   // 테스트용 콜백
+
+router.use(authenticateJWT); // 아래 라우터들은 모두 JWT 인증 필요
 router.use('/weddings', weddRouter);
 router.use('/weddings', mediaRouter);
 
-router.use('/auth/naver', naverRouter);   // 테스트용 콜백
 
 export default router;

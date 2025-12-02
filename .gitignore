@@ -1,7 +1,7 @@
 node_modules/
 dist/
 .env
-.env.docker
+.env.*
 .env.production
 /src/generated/prisma
 uploads/

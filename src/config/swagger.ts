@@ -4,18 +4,6 @@
 import fs from 'fs';
 import swaggerJSDoc, { Options } from 'swagger-jsdoc';
 
-const prismaSchemaPath = './prisma/json-schema/json-schema.json';
-
-function loadPrismaSchemas(): Record<string, any> {
-    if (!fs.existsSync(prismaSchemaPath)) {
-        console.warn('[swagger] Prisma JSON schema file not found');
-        return {};
-    }
-
-    const schemaJson = JSON.parse(fs.readFileSync(prismaSchemaPath, 'utf8'));
-    return schemaJson.definition || {};
-}
-
 const options: Options = {
   definition: {
     openapi: '3.0.3',
@@ -27,7 +15,7 @@ const options: Options = {
     security: [{ bearerAuth: [] }],
     servers: [
       {
-        url: 'http://3.39.189.117:8000',
+        url: 'http://api.ourday.kr',
         description: 'Local Server',
       },
       {
@@ -43,7 +31,6 @@ const options: Options = {
           bearerFormat: 'JWT',
         }
       },
-      schemas: loadPrismaSchemas(), // Prisma 모델 자동 반영
       responses: {
         SuccessResponse: {
           description: '성공 응답',

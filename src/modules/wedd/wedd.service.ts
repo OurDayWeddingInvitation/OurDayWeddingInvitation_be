@@ -1,7 +1,7 @@
 import prisma from '../../config/prisma';
 import { mapDbToSections, mapDbToSectionSettings, mapSectionsToDb } from './wedd.mapper';
-import { Sections, SectionSettings, SetttingSections, WeddingInfoRequest, WeddingInfoResponse } from './wedd.types';
-import { isSectionKey, SECTION_KEYS, SectionKey } from './wedd.contents';
+import { Sections, SectionSettings, SectionSettingsDb, SetttingSections, WeddingInfoRequest, WeddingInfoResponse } from './wedd.types';
+import { isSectionKey, SECTION_KEYS } from './wedd.constants';
 import { WeddSectSet } from '@prisma/client';
 
 /**
@@ -44,8 +44,6 @@ export const getWeddById = async (weddingId: number): Promise<WeddingInfoRespons
  * wedd 생성
  */
 export const createWedd = async (userId: string): Promise<WeddingInfoResponse> => {
-  console.log(userId)
-
   const result = await prisma.$transaction(async (tx) => {
     const wedd = await tx.wedd.create({
       data: { userId }
@@ -75,12 +73,12 @@ export const createWedd = async (userId: string): Promise<WeddingInfoResponse> =
  * wedd 교체
  */
 export const replaceWedd = async (weddingId: number, data: WeddingInfoRequest): Promise<WeddingInfoResponse> => {
-  const { sections, sectionSettings } = data as { sections: WeddingInfoRequest['sections'], sectionSettings: WeddingInfoRequest['sectionSettings'] };
+  const { sections, sectionSettings } = data as { sections: Sections, sectionSettings: SectionSettings[] };
 
   const weddDtlData = mapSectionsToDb(sections)
 
   // 이후 조율에 따라 수정하여 사용하거나 제거 필요
-  const WeddSectSetDataListFromSection: SectionSettings[] = [];
+  const WeddSectSetDataListFromSection: SectionSettingsDb[] = [];
   if(sections !== undefined) {
     for (const [sectionKey, section] of Object.entries(sections)) {
       if(section?.isVisible && section?.displayOrder){
@@ -93,7 +91,7 @@ export const replaceWedd = async (weddingId: number, data: WeddingInfoRequest): 
     }
   }
 
-  let WeddSectSetDataList: SectionSettings[] = [];
+  let WeddSectSetDataList: SectionSettingsDb[] = mapDbToSectionSettings(sectionSettings ?? []);
 
   const result = await prisma.$transaction(async (tx) => {
     const weddDtl = await tx.weddDtl.update({
@@ -101,7 +99,7 @@ export const replaceWedd = async (weddingId: number, data: WeddingInfoRequest): 
       data: weddDtlData
     });
     const WeddSectSet: WeddSectSet[] = [];
-    for await (const WeddSectSetData of [...WeddSectSetDataListFromSection, ...WeddSectSetDataList]){
+    for await (const WeddSectSetData of [...WeddSectSetDataListFromSection, ...WeddSectSetDataList ?? []]){
       
       WeddSectSet.push(await tx.weddSectSet.update({
         where: {weddingId_sectionKey: {
@@ -132,14 +130,14 @@ export const updateWeddSection = async (weddingId: number, sectionId: string, da
     throw new Error("존재하지 않는 섹션ID입니다.");
   }
 
-  const mappingData = mapSectionsToDb(data);
+  const mappingData = mapSectionsToDb({[sectionId]: data});
 
   const result = await prisma.weddDtl.update({
     where: { weddingId },
     data: mappingData
   });
 
-  return result;
+return mapDbToSections(result);
 };
 
 /**
@@ -164,7 +162,7 @@ export const updateWeddSectsSet = async (weddingId: number, data: SetttingSectio
   };
 
   await prisma.$transaction(
-    sections.map((section: any) =>
+    sections.map((section: SectionSettings) =>
       prisma.weddSectSet.update({
         where: {
           weddingId_sectionKey: {

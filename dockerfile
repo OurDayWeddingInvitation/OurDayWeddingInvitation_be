@@ -14,6 +14,9 @@ RUN npm install
 # 소스 전체 복사
 COPY . .
 
+# 환경변수 설정 (Prisma Client 생성 위해 필요)
+ENV DATABASE_URL="mysql://dummy:dummy@localhost:3306/dummy"
+
 # Prisma Client 생성
 RUN npx prisma generate
 

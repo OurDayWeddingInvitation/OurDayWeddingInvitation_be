@@ -1,6 +1,12 @@
-node_modules
-dist
-uploads
-tempUploads
+node_modules/
+dist/
+uploads/
+tempUploads/
+
+.env
+.env.*
+
 npm-debug.log
+
 .git
+.gitignore

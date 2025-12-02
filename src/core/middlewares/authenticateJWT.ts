@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { verifyToken } from '../utils/token.util';
-import { respondSuccess, respondError } from '../utils/response.util'
+import { AppError } from '../errors/AppError';
 
 /**
  * JWT 인증 미들웨어
@@ -10,19 +10,17 @@ import { respondSuccess, respondError } from '../utils/response.util'
 export function authenticateJWT(req: Request, res: Response, next: NextFunction) {
   const authHeader = req.headers.authorization;
 
-  console.log('authHeader:', authHeader);
-
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return respondError(res, 401, '인증 토큰이 없습니다.');
+    throw new AppError(401, '인증 토큰이 없습니다.');
   }
 
   const token = authHeader.split(' ')[1];
   const decoded = verifyToken(token);
   if (!decoded) {
-    return respondError(res, 401, '유효하지 않은 토큰입니다.');
+    throw new AppError(401, '유효하지 않는 토큰입니다.');
   }
 
   // 사용자 정보 req.user에 주입
-  (req as any).user = decoded;
+  req.user = decoded;
   next();
 }

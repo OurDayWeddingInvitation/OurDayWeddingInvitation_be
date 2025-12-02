@@ -2,7 +2,6 @@ import { Router } from 'express';
 import multer from 'multer';
 import path from 'path';
 import * as mediaCotroller from './media.controller';
-import { authenticateJWT } from '../../middlewares/auth.middleware';
 
 const router = Router();
 
@@ -70,7 +69,7 @@ const uploads = multer({ storage }).any();
  *                   items:
  *                     $ref: '#/components/schemas/media'
  */
-router.get('/:weddingId/media', authenticateJWT, mediaCotroller.getAllMedia);
+router.get('/:weddingId/media', mediaCotroller.getAllMedia);
 
 /**
  * @swagger
@@ -128,7 +127,7 @@ router.get('/:weddingId/media', authenticateJWT, mediaCotroller.getAllMedia);
  *                     imageType: "gallery"
  *                     originalUrl: "/uploads/wedding/1/main.png"
  */
-router.post('/:weddingId/media', authenticateJWT, upload.single('file'), mediaCotroller.postMedia);
+router.post('/:weddingId/media', upload.single('file'), mediaCotroller.postMedia);
 
 /**
  * @swagger
@@ -172,7 +171,7 @@ router.post('/:weddingId/media', authenticateJWT, upload.single('file'), mediaCo
  *                 data:
  *                   example: null
  */
-router.patch('/:weddingId/media/reorder', authenticateJWT, mediaCotroller.updateMedia);
+router.patch('/:weddingId/media/reorder', mediaCotroller.reorderMedia);
 
 /**
  * @swagger
@@ -224,7 +223,7 @@ router.patch('/:weddingId/media/reorder', authenticateJWT, mediaCotroller.update
  *                   example:
  *                     count: 5
  */
-router.put('/:weddingId/media/:mediaId/cropped', authenticateJWT, upload.single('file'), mediaCotroller.replaceMedia);
+router.put('/:weddingId/media/:mediaId/cropped', upload.single('file'), mediaCotroller.replaceMedia);
 
 /**
  * @swagger
@@ -257,6 +256,6 @@ router.put('/:weddingId/media/:mediaId/cropped', authenticateJWT, upload.single(
  *                 data:
  *                   example: null
  */
-router.delete('/:weddingId/media/:mediaId', authenticateJWT, mediaCotroller.deleteMedia);
+router.delete('/:weddingId/media/:mediaId', mediaCotroller.deleteMedia);
 
 export default router;

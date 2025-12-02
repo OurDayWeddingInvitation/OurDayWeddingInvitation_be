@@ -1,3 +1,0 @@
-CREATE USER 'ourday'@'%' IDENTIFIED BY 'roqkf1234';
-GRANT ALL PRIVILEGES ON ourday.* TO 'ourday'@'%';
-FLUSH PRIVILEGES;

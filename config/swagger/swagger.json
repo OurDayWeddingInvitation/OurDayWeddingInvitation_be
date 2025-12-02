@@ -12,7 +12,7 @@
   ],
   "servers": [
     {
-      "url": "http://api.ourday.kr",
+      "url": "http://3.39.189.117:8000",
       "description": "Local Server"
     },
     {
@@ -26,27 +26,6 @@
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "JWT"
-      }
-    },
-    "responses": {
-      "SuccessResponse": {
-        "description": "성공 응답",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "success": {
-                  "type": "boolean",
-                  "example": true
-                },
-                "data": {
-                  "type": "object"
-                }
-              }
-            }
-          }
-        }
       }
     },
     "schemas": {
@@ -119,35 +98,20 @@
             "description": "이름 표기 순서 타입(G, B)",
             "example": "B"
           },
-          "weddingYear": {
+          "weddingDate": {
             "type": "string",
-            "description": "예식 연도 (YYYY)",
-            "example": "2025"
-          },
-          "weddingMonth": {
-            "type": "string",
-            "description": "예식 월 (MM)",
-            "example": "12"
-          },
-          "weddingDay": {
-            "type": "string",
-            "description": "예식 일 (DD)",
-            "example": "27"
+            "description": "예식 일자 (YYYYMMDD)",
+            "example": "20251227"
           },
           "weddingTimePeriod": {
             "type": "string",
             "description": "예식 시간 접두어",
             "example": "저녁(PM)"
           },
-          "weddingHour": {
+          "weddingTime": {
             "type": "string",
-            "description": "예식 시간 (hh)",
-            "example": "11"
-          },
-          "weddingMinute": {
-            "type": "string",
-            "description": "예식 분 (mm)",
-            "example": "20"
+            "description": "예식 시간 (hhmm)",
+            "example": "1120"
           },
           "weddingInfoHallName": {
             "type": "string",
@@ -667,6 +631,27 @@
             "description": "섹션 설정 배열",
             "items": {
               "$ref": "#/components/schemas/WeddingSectionSetting"
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "SuccessResponse": {
+        "description": "성공 응답",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "object"
+                }
+              }
             }
           }
         }

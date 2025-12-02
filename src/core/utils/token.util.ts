@@ -1,8 +1,12 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
 
-const accessKey = process.env.JWT_SECRET!;
-const refreshKey = process.env.JWT_REFRESH_SECRET!;
+function getAccessKey() {
+  return process.env.JWT_SECRET!;
+}
 
+function getRefreshKey() {
+  return process.env.JWT_REFRESH_SECRET!;
+}
 /**
  * jwt 발급
  * 
@@ -11,11 +15,11 @@ const refreshKey = process.env.JWT_REFRESH_SECRET!;
  * @returns jwt
  */
 export function generateAccessToken(payload: object, expiresIn: string = process.env.JWT_EXPIRES_IN as string) { 
-  return jwt.sign(payload, accessKey, { expiresIn: expiresIn as jwt.SignOptions['expiresIn'] });
+  return jwt.sign(payload, getAccessKey(), { expiresIn: expiresIn as jwt.SignOptions['expiresIn'] });
 }
 
 export function generateRefreshToken(payload: object, expiresIn: string = process.env.JWT_REFRESH_EXPIRES_IN as string) {
-  return jwt.sign(payload, refreshKey, { expiresIn: expiresIn as jwt.SignOptions['expiresIn'] });
+  return jwt.sign(payload, getRefreshKey(), { expiresIn: expiresIn as jwt.SignOptions['expiresIn'] });
 }
 
 /**
@@ -26,7 +30,7 @@ export function generateRefreshToken(payload: object, expiresIn: string = proces
  */
 export function verifyToken(token: string, isRefresh = false): JwtPayload | null {
   try {
-    const secretKey = isRefresh ? refreshKey : accessKey;
+    const secretKey = isRefresh ? getRefreshKey() : getAccessKey();
     return jwt.verify(token, secretKey) as JwtPayload;
   } catch (err) {
     return null;

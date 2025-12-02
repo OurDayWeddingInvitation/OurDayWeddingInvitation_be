@@ -12,9 +12,14 @@ export interface WeddingInfo {
 	brideLastName?: string | null;
 	brideFirstName?: string | null;
 	nameOrderType?: string | null;
-	weddingDate?: string | null;
+	// weddingDate?: string | null;
+	weddingYear?: string | null;
+	weddingMonth?: string | null;
+	weddingDay?: string | null;
 	weddingTimePeriod?: string | null;
-	weddingTime?: string | null;
+	// weddingTime?: string | null;
+	weddingHour?: string | null;
+	weddingMinute?: string | null;
 	weddingHallName?: string | null;
 	weddingHallFloor?: string | null;
 }
@@ -103,7 +108,7 @@ export interface Flipbook {}
 
 export interface SectionSettings {
 	sectionKey: string;
-	displayYn?: boolean | null;
+	isVisible?: boolean | null;
 	displayOrder?: number | null;
 }
 

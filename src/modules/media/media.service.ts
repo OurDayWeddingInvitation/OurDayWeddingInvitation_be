@@ -1,8 +1,8 @@
 import prisma from '../../config/prisma';
+import { MediaRequest, MediaResponse } from './media.types';
 import path, { join } from 'path';
 import fs from 'fs';
 import fsp from 'fs/promises';
-import { escape } from 'querystring';
 
 export async function uploadMediaBackup({
   weddingId,
@@ -62,7 +62,6 @@ export async function uploadMediaBackup({
             fileSize: file.size,
           },
         });
-
       }
     };
   });
@@ -78,7 +77,7 @@ export const getAllMedia = async (weddingId: number) => {
 
 export const uploadMedia = async (
   weddingId: number,
-  metadata: any,
+  metadata: MediaRequest,
   file: Express.Multer.File
 ) => {
   const tempPath = file.path;
@@ -158,10 +157,10 @@ export const replaceMedia = async (
   return media;
 }
 
-export const updateMedia = async (weddingId: number, metadatas: any) => {
+export const reorderMedia = async (weddingId: number, metadatas: MediaRequest[]) => {
   console.log(metadatas)
   await prisma.$transaction(async (tx) => {
-    const result = metadatas.map((metadata: any) => {
+    const result = metadatas.map((metadata: MediaRequest) => {
       return tx.weddMedia.update({
         where: {
           weddingId_mediaId: {
@@ -190,8 +189,8 @@ export const deleteMedia = async (weddingId: number, mediaId: number) => {
   if(!media)
     throw new Error('잘못된 요청입니다.');
 
-  const originalPath = join(process.cwd(), media.originalUrl) || '';
-  const croppedPath = join(process.cwd(), media.editedUrl) || '';
+  const originalPath = join(process.cwd(), media.originalUrl ? media.originalUrl : '');
+  const croppedPath = join(process.cwd(), media.editedUrl ? media.editedUrl : '' );
 
   if (fs.existsSync(originalPath)) fs.unlinkSync(originalPath);
   if (fs.existsSync(croppedPath)) fs.unlinkSync(croppedPath);

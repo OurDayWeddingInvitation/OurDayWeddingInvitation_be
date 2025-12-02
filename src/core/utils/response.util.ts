@@ -23,12 +23,3 @@ export const respondSuccess = (
 ) => {
   return sendResponse(res, status, data, messages, null);
 };
-
-export const respondError = (
-  res: Response,
-  status: any = 400,
-  messages: any = null,
-  // error: any
-) => {
-  return sendResponse(res, status, null, messages, null);
-};

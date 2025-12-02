@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { authenticateJWT } from '@/middlewares/auth.middleware';
 import * as weddController from './wedd.controller';
 
 const router = Router();
@@ -59,18 +58,30 @@ const router = Router();
  *           type: string
  *           description: 이름 표기 순서 타입(G, B)
  *           example: "B"
- *         weddingDate:
+ *         weddingYear:
  *           type: string
- *           description: 예식 일자 (YYYYMMDD)
- *           example: "20251227"
+ *           description: 예식 연도 (YYYY)
+ *           example: "2025"
+ *         weddingMonth:
+ *           type: string
+ *           description: 예식 월 (MM)
+ *           example: "12"
+ *         weddingDay:
+ *           type: string
+ *           description: 예식 일 (DD)
+ *           example: "27"
  *         weddingTimePeriod:
  *           type: string
  *           description: 예식 시간 접두어
  *           example: "저녁(PM)"
- *         weddingTime:
+ *         weddingHour:
  *           type: string
- *           description: 예식 시간 (hhmm)
- *           example: "1120"
+ *           description: 예식 시간 (hh)
+ *           example: "11"
+ *         weddingMinute:
+ *           type: string
+ *           description: 예식 분 (mm)
+ *           example: "20"
  *         weddingInfoHallName:
  *           type: string
  *           example: "더베뉴지서울"
@@ -372,43 +383,43 @@ const router = Router();
  *             $ref: '#/components/schemas/WeddingSectionSetting'
  *           example:
  *             - sectionKey: "main"
- *               displayYn: true
+ *               isVisible: true
  *               displayOrder: 1
  *             - sectionKey: "shareLink"
- *               displayYn: true
+ *               isVisible: true
  *               displayOrder: 2
  *             - sectionKey: "weddingInfo"
- *               displayYn: true
+ *               isVisible: true
  *               displayOrder: 3
  *             - sectionKey: "familyInfo"
- *               displayYn: true
+ *               isVisible: true
  *               displayOrder: 4
  *             - sectionKey: "invitationMessage"
- *               displayYn: true
+ *               isVisible: true
  *               displayOrder: 5
  *             - sectionKey: "coupleIntro"
- *               displayYn: true
+ *               isVisible: true
  *               displayOrder: 6
  *             - sectionKey: "parentsIntro"
- *               displayYn: true
+ *               isVisible: true
  *               displayOrder: 7
  *             - sectionKey: "accountInfo"
- *               displayYn: true
+ *               isVisible: true
  *               displayOrder: 8
  *             - sectionKey: "locationInfo"
- *               displayYn: true
+ *               isVisible: true
  *               displayOrder: 9
  *             - sectionKey: "themeFont"
- *               displayYn: true
+ *               isVisible: true
  *               displayOrder: 10
  *             - sectionKey: "loadingScreen"
- *               displayYn: true
+ *               isVisible: true
  *               displayOrder: 11
  *             - sectionKey: "gallery"
- *               displayYn: true
+ *               isVisible: true
  *               displayOrder: 12
  *             - sectionKey: "flipbook"
- *               displayYn: true
+ *               isVisible: true
  *               displayOrder: 13
  *
  *     # ==========================
@@ -428,43 +439,43 @@ const router = Router();
  *             $ref: '#/components/schemas/WeddingSectionSetting'
  *           example:
  *             - sectionKey: "main"
- *               displayYn: true
+ *               isVisible: true
  *               displayOrder: 1
  *             - sectionKey: "shareLink"
- *               displayYn: true
+ *               isVisible: true
  *               displayOrder: 2
  *             - sectionKey: "weddingInfo"
- *               displayYn: true
+ *               isVisible: true
  *               displayOrder: 3
  *             - sectionKey: "familyInfo"
- *               displayYn: true
+ *               isVisible: true
  *               displayOrder: 4
  *             - sectionKey: "invitationMessage"
- *               displayYn: true
+ *               isVisible: true
  *               displayOrder: 5
  *             - sectionKey: "coupleIntro"
- *               displayYn: true
+ *               isVisible: true
  *               displayOrder: 6
  *             - sectionKey: "parentsIntro"
- *               displayYn: true
+ *               isVisible: true
  *               displayOrder: 7
  *             - sectionKey: "accountInfo"
- *               displayYn: true
+ *               isVisible: true
  *               displayOrder: 8
  *             - sectionKey: "locationInfo"
- *               displayYn: true
+ *               isVisible: true
  *               displayOrder: 9
  *             - sectionKey: "themeFont"
- *               displayYn: true
+ *               isVisible: true
  *               displayOrder: 10
  *             - sectionKey: "loadingScreen"
- *               displayYn: true
+ *               isVisible: true
  *               displayOrder: 11
  *             - sectionKey: "gallery"
- *               displayYn: true
+ *               isVisible: true
  *               displayOrder: 12
  *             - sectionKey: "flipbook"
- *               displayYn: true
+ *               isVisible: true
  *               displayOrder: 13
  *
  *     # ==========================
@@ -526,7 +537,7 @@ const router = Router();
  *                         type: string
  *                         example: "/upload/weddingId/image.jpg"
  */
-router.get('/', authenticateJWT, weddController.getAllWedds);
+router.get('/', weddController.getAllWedds);
 
 /**
  * @swagger
@@ -558,7 +569,7 @@ router.get('/', authenticateJWT, weddController.getAllWedds);
  *                 data:
  *                   $ref: '#/components/schemas/WeddingDetail'
  */
-router.get('/:weddingId', authenticateJWT, weddController.getWeddById);
+router.get('/:weddingId', weddController.getWeddById);
 
 /**
  * @swagger
@@ -593,7 +604,7 @@ router.get('/:weddingId', authenticateJWT, weddController.getWeddById);
  *                   $ref: '#/components/schemas/WeddingDetailWithId'
  */
 
-router.post('/', authenticateJWT, weddController.createWedd);
+router.post('/', weddController.createWedd);
 
 /**
  * @swagger
@@ -630,14 +641,14 @@ router.post('/', authenticateJWT, weddController.createWedd);
  *                 data:
  *                   $ref: '#/components/schemas/WeddingDetail'
  */
-router.put('/:weddingId', authenticateJWT, weddController.replaceWedd);
+router.put('/:weddingId', weddController.replaceWedd);
 
 /**
  * @swagger
  * /v1/weddings/{weddingId}/sections/settings:
  *   patch:
  *     summary: 섹션 표시 설정 및 순서 변경
- *     description: 섹션의 표시 여부(displayYn)와 순서를 일괄 수정합니다.
+ *     description: 섹션의 표시 여부(isVisible)와 순서를 일괄 수정합니다.
  *     tags: [Wedding]
  *     security:
  *       - bearerAuth: []
@@ -667,7 +678,7 @@ router.put('/:weddingId', authenticateJWT, weddController.replaceWedd);
  *                 data:
  *                   example: null
  */
-router.patch('/:weddingId/sections/settings', authenticateJWT, weddController.updateWeddSectsSet);
+router.patch('/:weddingId/sections/settings', weddController.updateWeddSectsSet);
 
 /**
  * @swagger
@@ -722,7 +733,7 @@ router.patch('/:weddingId/sections/settings', authenticateJWT, weddController.up
  *                 data:
  *                   $ref: '#/components/schemas/WeddingDetail'
  */
-router.patch('/:weddingId/sections/:sectionId', authenticateJWT, weddController.updateWeddSection);
+router.patch('/:weddingId/sections/:sectionId', weddController.updateWeddSection);
 
 /**
  * @swagger
@@ -753,7 +764,7 @@ router.patch('/:weddingId/sections/:sectionId', authenticateJWT, weddController.
  *                 data:
  *                   example: null
  */
-router.delete('/:weddingId', authenticateJWT, weddController.deleteWedd);
+router.delete('/:weddingId', weddController.deleteWedd);
 
 export default router;
 

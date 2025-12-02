@@ -34,9 +34,9 @@ export function mapWeddingInfoToDb(data?: WeddingInfo): WeddingInfoDb {
     weddingInfoBrideLastName: data.brideLastName,
     weddingInfoBrideFirstName: data.brideFirstName,
     weddingInfoNameOrderType: data.nameOrderType,
-    weddingInfoDate: data.weddingDate,
+    weddingInfoDate: (data.weddingYear! + data.weddingMonth + data.weddingDay),
     weddingInfoTimePeriod: data.weddingTimePeriod,
-    weddingInfoTime: data.weddingTime,
+    weddingInfoTime: (data.weddingHour! + data.weddingMinute),
     weddingInfoHallName: data.weddingHallName,
     weddingInfoHallFloor: data.weddingHallFloor
   }
@@ -158,7 +158,7 @@ export function mapSectionSettingsToDb(data: SectionSettings[]): SectionSettings
   if(!data) return [];
   return data.map((settings) => ({
     sectionKey: settings.sectionKey,
-    displayYn: settings.displayYn,
+    displayYn: settings.isVisible,
     displayOrder: settings.displayOrder
   }));
 }
@@ -209,9 +209,12 @@ export function mapDbToWeddingInfo(row: WeddDtl | null): WeddingInfo {
     brideLastName: row?.weddingInfoBrideLastName ?? null,
     brideFirstName: row?.weddingInfoBrideFirstName ?? null,
     nameOrderType: row?.weddingInfoNameOrderType ?? null,
-    weddingDate: row?.weddingInfoDate ?? null,
+    weddingYear: row?.weddingInfoDate?.substr(0, 4) ?? null,
+    weddingMonth: row?.weddingInfoDate?.substr(5, 2) ?? null,
+    weddingDay: row?.weddingInfoDate?.substr(8, 2) ?? null,
     weddingTimePeriod: row?.weddingInfoTimePeriod ?? null,
-    weddingTime: row?.weddingInfoTime ?? null,
+    weddingHour: row?.weddingInfoTime?.substr(0, 2) ?? null,
+    weddingMinute: row?.weddingInfoTime?.substr(3, 2) ?? null,
     weddingHallName: row?.weddingInfoHallName ?? null,
     weddingHallFloor: row?.weddingInfoHallFloor ?? null,
   };
@@ -337,7 +340,7 @@ export function mapDbToGallery(row: WeddDtl | null): Gallery {
 // FLIPBOOK
 export function mapDbToFlipbook(row: WeddDtl | null): Flipbook {
   return {
-    ...row //
+    // ...row
   };
 }
 
@@ -346,7 +349,7 @@ export function mapDbToFlipbook(row: WeddDtl | null): Flipbook {
 export function mapDbToSectionSettings(rows: SectionSettingsDb[] | null): SectionSettings[] {
   return rows?.map((setting) => ({
     sectionKey: setting.sectionKey ?? null,
-    displayYn: setting.displayYn ?? null,
+    isVisible: setting.displayYn ?? null,
     displayOrder: setting.displayOrder ?? null
   })) ?? [];
 }

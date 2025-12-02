@@ -1,6 +1,6 @@
 import { naverAuth } from './providers/naver.service';
 import prisma from '../../config/prisma';
-import { generateAccessToken, generateRefreshToken } from '../../utils/token.util';
+import { generateAccessToken, generateRefreshToken } from '../../core/utils/token.util';
 
 // 소셜 로그인 기능 <- 파라미터 수정 예정
 export async function socialLogin(providerName: string, code: string, state?: string) {
