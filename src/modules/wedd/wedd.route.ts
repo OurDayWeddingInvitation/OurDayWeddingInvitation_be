@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import * as weddController from './wedd.controller';
+import { asyncHandler } from '@/core/http/asyncHandler';
 
 const router = Router();
 
@@ -537,7 +538,7 @@ const router = Router();
  *                         type: string
  *                         example: "/upload/weddingId/image.jpg"
  */
-router.get('/', weddController.getAllWedds);
+router.get('/', asyncHandler(weddController.getAllWedds));
 
 /**
  * @swagger
@@ -569,7 +570,7 @@ router.get('/', weddController.getAllWedds);
  *                 data:
  *                   $ref: '#/components/schemas/WeddingDetail'
  */
-router.get('/:weddingId', weddController.getWeddById);
+router.get('/:weddingId', asyncHandler(weddController.getWeddById));
 
 /**
  * @swagger
@@ -604,7 +605,7 @@ router.get('/:weddingId', weddController.getWeddById);
  *                   $ref: '#/components/schemas/WeddingDetailWithId'
  */
 
-router.post('/', weddController.createWedd);
+router.post('/', asyncHandler(weddController.createWedd));
 
 /**
  * @swagger
@@ -641,7 +642,7 @@ router.post('/', weddController.createWedd);
  *                 data:
  *                   $ref: '#/components/schemas/WeddingDetail'
  */
-router.put('/:weddingId', weddController.replaceWedd);
+router.put('/:weddingId', asyncHandler(weddController.replaceWedd));
 
 /**
  * @swagger
@@ -678,7 +679,7 @@ router.put('/:weddingId', weddController.replaceWedd);
  *                 data:
  *                   example: null
  */
-router.patch('/:weddingId/sections/settings', weddController.updateWeddSectsSet);
+router.patch('/:weddingId/sections/settings', asyncHandler(weddController.updateWeddSectsSet));
 
 /**
  * @swagger
@@ -733,7 +734,7 @@ router.patch('/:weddingId/sections/settings', weddController.updateWeddSectsSet)
  *                 data:
  *                   $ref: '#/components/schemas/WeddingDetail'
  */
-router.patch('/:weddingId/sections/:sectionId', weddController.updateWeddSection);
+router.patch('/:weddingId/sections/:sectionId', asyncHandler(weddController.updateWeddSection));
 
 /**
  * @swagger
@@ -764,7 +765,7 @@ router.patch('/:weddingId/sections/:sectionId', weddController.updateWeddSection
  *                 data:
  *                   example: null
  */
-router.delete('/:weddingId', weddController.deleteWedd);
+router.delete('/:weddingId', asyncHandler(weddController.deleteWedd));
 
 export default router;
 

@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 import * as authController from './auth.controller';
+import { asyncHandler } from '@/core/http/asyncHandler';
 
 const router = Router();
 
@@ -77,6 +78,6 @@ const router = Router();
  *                   example: null
  */
 
-router.post('/token/refresh', authController.postAuthTokenRefresh);
+router.post('/token/refresh', asyncHandler(authController.postAuthTokenRefresh));
 
 export default router;

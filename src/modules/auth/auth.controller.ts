@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import * as authService from './auth.service';
-import { generateAccessToken, verifyToken } from '../../core/utils/token.util';
-import { respondSuccess } from '../../core/utils/response.util';
+import { generateAccessToken, verifyToken } from '../../core/utils/token';
 import { AppError } from '@/core/errors/AppError';
 
 export async function postAuthTokenRefresh(req: Request, res: Response) {
@@ -22,5 +21,10 @@ export async function postAuthTokenRefresh(req: Request, res: Response) {
     provider: user.lastProviderName,
   });
 
-  return respondSuccess(res, 200, null, newAccessToken);
+  res.status(200).json({
+    status: 200,
+    error: null,
+    messages: "토큰 갱신 성공",
+    data: newAccessToken,
+  });
 };

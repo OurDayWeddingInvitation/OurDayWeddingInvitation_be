@@ -1,7 +1,8 @@
 import { Router } from 'express';
 import multer from 'multer';
 import path from 'path';
-import * as mediaCotroller from './media.controller';
+import * as mediaController from './media.controller';
+import { asyncHandler } from '@/core/http/asyncHandler';
 
 const router = Router();
 
@@ -69,7 +70,7 @@ const uploads = multer({ storage }).any();
  *                   items:
  *                     $ref: '#/components/schemas/media'
  */
-router.get('/:weddingId/media', mediaCotroller.getAllMedia);
+router.get('/:weddingId/media', asyncHandler(mediaController.getAllMedia));
 
 /**
  * @swagger
@@ -127,7 +128,7 @@ router.get('/:weddingId/media', mediaCotroller.getAllMedia);
  *                     imageType: "gallery"
  *                     originalUrl: "/uploads/wedding/1/main.png"
  */
-router.post('/:weddingId/media', upload.single('file'), mediaCotroller.postMedia);
+router.post('/:weddingId/media', upload.single('file'), asyncHandler(mediaController.postMedia));
 
 /**
  * @swagger
@@ -171,7 +172,7 @@ router.post('/:weddingId/media', upload.single('file'), mediaCotroller.postMedia
  *                 data:
  *                   example: null
  */
-router.patch('/:weddingId/media/reorder', mediaCotroller.reorderMedia);
+router.patch('/:weddingId/media/reorder', asyncHandler(mediaController.reorderMedia));
 
 /**
  * @swagger
@@ -223,7 +224,7 @@ router.patch('/:weddingId/media/reorder', mediaCotroller.reorderMedia);
  *                   example:
  *                     count: 5
  */
-router.put('/:weddingId/media/:mediaId/cropped', upload.single('file'), mediaCotroller.replaceMedia);
+router.put('/:weddingId/media/:mediaId/cropped', upload.single('file'), asyncHandler(mediaController.croppedMedia));
 
 /**
  * @swagger
@@ -256,6 +257,43 @@ router.put('/:weddingId/media/:mediaId/cropped', upload.single('file'), mediaCot
  *                 data:
  *                   example: null
  */
-router.delete('/:weddingId/media/:mediaId', mediaCotroller.deleteMedia);
+router.delete('/:weddingId/media/:mediaId', asyncHandler(mediaController.deleteMedia));
+
+/**
+ * @swagger
+ * /v1/weddings/{weddingId}/media:
+ *   delete:
+ *     summary: 특정 이미지 타입의 미디어 모두 삭제
+ *     description: DB 삭제 및 파일 삭제까지 함께 수행됩니다.
+ *     tags: [Media]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: weddingId
+ *         in: path
+ *         required: true
+ *         schema: { type: integer }
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               imageType: { type: string, example: mainImage }
+ *     responses:
+ *       200:
+ *         description: 삭제 성공
+ *         content:
+ *           application/json:
+ *             schema:
+ *               properties:
+ *                 status: { type: integer, example: 200 }
+ *                 error: { type: string, nullable: true, example: null }
+ *                 messages: { type: string, nullable: true, example: "삭제 성공" }
+ *                 data:
+ *                   example: null
+ */
+router.delete('/:weddingId/media', asyncHandler(mediaController.deleteByTypeMedia));
 
 export default router;

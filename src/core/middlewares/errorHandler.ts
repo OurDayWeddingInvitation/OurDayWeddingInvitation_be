@@ -22,13 +22,23 @@ export function errorHandler(
 
   if (err instanceof AppError) {
     return res.status(err.statusCode).json({
-      success: false,
-      message: err.message
+      status: err.statusCode,
+      error: {
+        code: err.statusCode,
+        messages: err.message
+      },
+      messages: null,
+      data: null
     });
   }
 
   return res.status(500).json({
-    success: false,
-    message: '서버 오류가 발생했습니다.'
+    status: 500,
+    error: {
+      code: 500,
+      messages: '서버 오류가 발생했습니다.'
+    },
+    messages: null,
+    data: null
   });
 }

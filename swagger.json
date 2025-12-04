@@ -493,67 +493,67 @@
             "example": [
               {
                 "sectionKey": "main",
-                "displayYn": true,
+                "isVisible": true,
                 "displayOrder": 1
               },
               {
                 "sectionKey": "shareLink",
-                "displayYn": true,
+                "isVisible": true,
                 "displayOrder": 2
               },
               {
                 "sectionKey": "weddingInfo",
-                "displayYn": true,
+                "isVisible": true,
                 "displayOrder": 3
               },
               {
                 "sectionKey": "familyInfo",
-                "displayYn": true,
+                "isVisible": true,
                 "displayOrder": 4
               },
               {
                 "sectionKey": "invitationMessage",
-                "displayYn": true,
+                "isVisible": true,
                 "displayOrder": 5
               },
               {
                 "sectionKey": "coupleIntro",
-                "displayYn": true,
+                "isVisible": true,
                 "displayOrder": 6
               },
               {
                 "sectionKey": "parentsIntro",
-                "displayYn": true,
+                "isVisible": true,
                 "displayOrder": 7
               },
               {
                 "sectionKey": "accountInfo",
-                "displayYn": true,
+                "isVisible": true,
                 "displayOrder": 8
               },
               {
                 "sectionKey": "locationInfo",
-                "displayYn": true,
+                "isVisible": true,
                 "displayOrder": 9
               },
               {
                 "sectionKey": "themeFont",
-                "displayYn": true,
+                "isVisible": true,
                 "displayOrder": 10
               },
               {
                 "sectionKey": "loadingScreen",
-                "displayYn": true,
+                "isVisible": true,
                 "displayOrder": 11
               },
               {
                 "sectionKey": "gallery",
-                "displayYn": true,
+                "isVisible": true,
                 "displayOrder": 12
               },
               {
                 "sectionKey": "flipbook",
-                "displayYn": true,
+                "isVisible": true,
                 "displayOrder": 13
               }
             ]
@@ -578,67 +578,67 @@
             "example": [
               {
                 "sectionKey": "main",
-                "displayYn": true,
+                "isVisible": true,
                 "displayOrder": 1
               },
               {
                 "sectionKey": "shareLink",
-                "displayYn": true,
+                "isVisible": true,
                 "displayOrder": 2
               },
               {
                 "sectionKey": "weddingInfo",
-                "displayYn": true,
+                "isVisible": true,
                 "displayOrder": 3
               },
               {
                 "sectionKey": "familyInfo",
-                "displayYn": true,
+                "isVisible": true,
                 "displayOrder": 4
               },
               {
                 "sectionKey": "invitationMessage",
-                "displayYn": true,
+                "isVisible": true,
                 "displayOrder": 5
               },
               {
                 "sectionKey": "coupleIntro",
-                "displayYn": true,
+                "isVisible": true,
                 "displayOrder": 6
               },
               {
                 "sectionKey": "parentsIntro",
-                "displayYn": true,
+                "isVisible": true,
                 "displayOrder": 7
               },
               {
                 "sectionKey": "accountInfo",
-                "displayYn": true,
+                "isVisible": true,
                 "displayOrder": 8
               },
               {
                 "sectionKey": "locationInfo",
-                "displayYn": true,
+                "isVisible": true,
                 "displayOrder": 9
               },
               {
                 "sectionKey": "themeFont",
-                "displayYn": true,
+                "isVisible": true,
                 "displayOrder": 10
               },
               {
                 "sectionKey": "loadingScreen",
-                "displayYn": true,
+                "isVisible": true,
                 "displayOrder": 11
               },
               {
                 "sectionKey": "gallery",
-                "displayYn": true,
+                "isVisible": true,
                 "displayOrder": 12
               },
               {
                 "sectionKey": "flipbook",
-                "displayYn": true,
+                "isVisible": true,
                 "displayOrder": 13
               }
             ]
@@ -1042,6 +1042,74 @@
                         "imageType": "gallery",
                         "originalUrl": "/uploads/wedding/1/main.png"
                       }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "이미지 전체 삭제",
+        "description": "DB 삭제 및 파일 삭제까지 함께 수행됩니다.",
+        "tags": [
+          "Media"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "weddingId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "imageType": {
+                    "type": "string",
+                    "example": "mainImage"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "삭제 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "error": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "messages": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": "삭제 성공"
+                    },
+                    "data": {
+                      "example": null
                     }
                   }
                 }
@@ -1563,7 +1631,7 @@
     "/v1/weddings/{weddingId}/sections/settings": {
       "patch": {
         "summary": "섹션 표시 설정 및 순서 변경",
-        "description": "섹션의 표시 여부(displayYn)와 순서를 일괄 수정합니다.",
+        "description": "섹션의 표시 여부(isVisible)와 순서를 일괄 수정합니다.",
         "tags": [
           "Wedding"
         ],

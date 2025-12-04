@@ -7,6 +7,8 @@ import swaggerUi from 'swagger-ui-express';
 import fs from 'fs';
 import path from 'path';
 
+import { errorHandler } from './core/middlewares/errorHandler';
+
 // 라우터 import
 import modules from './modules';
 
@@ -24,10 +26,17 @@ app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.get('/health', (_req, res) => {
-  res.status(200).json({ ok: true, port: process.env.PORT });
+  res.status(200).json({ 
+    "status": 200,
+    "error": null,
+    "messages": "접속 성공",
+    "data": null
+  });
 });
 
 app.use('/v1', modules);
+
+app.use(errorHandler);
 
 
 export default app;

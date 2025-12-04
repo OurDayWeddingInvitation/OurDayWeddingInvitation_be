@@ -1,11 +1,14 @@
 import prisma from '../../config/prisma';
+import { AppError } from '../../core/errors/AppError';
 import { mapDbToSections, mapDbToSectionSettings, mapSectionsToDb } from './wedd.mapper';
 import { Sections, SectionSettings, SectionSettingsDb, SetttingSections, WeddingInfoRequest, WeddingInfoResponse } from './wedd.types';
 import { isSectionKey, SECTION_KEYS } from './wedd.constants';
 import { WeddSectSet } from '@prisma/client';
 
 /**
- * 사용자의 모든 wedd 조회
+ * 사용자의 모든 wedd를 조회합니다.
+ * @param userId - 조회할 사용자의 ID
+ * @returns weddingId, weddingTitle, mainImageUrl 정보를 담은 배열
  */
 export const getAllWedds = async (userId: string) => {
   return prisma.$queryRaw<Array<{ weddingId: number, weddingTitle: string, mainImageUrl: string}>>
@@ -26,7 +29,10 @@ export const getAllWedds = async (userId: string) => {
 };
 
 /**
- * 단일 wedd 조회
+ * 단일 wedd 정보를 조회합니다.
+ * DB의 weddDtl과 weddSectSet을 조회하여 sections 및 sectionSettings로 매핑하여 반환합니다.
+ * @param weddingId - 조회할 웨딩 ID
+ * @returns WeddingInfoResponse 형태의 객체
  */
 export const getWeddById = async (weddingId: number): Promise<WeddingInfoResponse> => {
   const wedd = await prisma.weddDtl.findUnique({ where: { weddingId } });
@@ -41,7 +47,11 @@ export const getWeddById = async (weddingId: number): Promise<WeddingInfoRespons
 
 
 /**
- * wedd 생성
+ * 새 wedd를 생성합니다.
+ * wedd, weddDtl을 생성하고 기본 섹션 설정을 createMany로 추가합니다.
+ * 트랜잭션 내에서 수행됩니다.
+ * @param userId - 생성할 웨딩의 소유자 userId
+ * @returns 생성된 웨딩 정보(WeddingInfoResponse)
  */
 export const createWedd = async (userId: string): Promise<WeddingInfoResponse> => {
   const result = await prisma.$transaction(async (tx) => {
@@ -70,7 +80,13 @@ export const createWedd = async (userId: string): Promise<WeddingInfoResponse> =
 };
 
 /**
- * wedd 교체
+ * 기존 wedd를 교체(업데이트)합니다.
+ * sections를 DB 스키마로 매핑하여 weddDtl을 업데이트하고,
+ * 전달된 sectionSettings를 기반으로 weddSectSet을 업데이트합니다.
+ * @param weddingId - 업데이트할 웨딩 ID
+ * @param data - 교체할 WeddingInfoRequest 데이터
+ * @returns 업데이트된 WeddingInfoResponse
+ * @throws 유효하지 않은 섹션키가 포함된 경우 에러 발생 가능
  */
 export const replaceWedd = async (weddingId: number, data: WeddingInfoRequest): Promise<WeddingInfoResponse> => {
   const { sections, sectionSettings } = data as { sections: Sections, sectionSettings: SectionSettings[] };
@@ -125,9 +141,18 @@ export const replaceWedd = async (weddingId: number, data: WeddingInfoRequest): 
   return result;
 };
 
+ /**
+  * 단일 섹션을 업데이트합니다.
+  * 섹션 키의 유효성을 검사하고 해당 섹션 필드만 weddDtl에 반영합니다.
+  * @param weddingId - 업데이트 대상 웨딩 ID
+  * @param sectionId - 업데이트할 섹션 키
+  * @param data - 섹션 데이터(Sections)
+  * @returns 업데이트된 sections 형태로 변환된 결과
+  * @throws 존재하지 않는 섹션 키인 경우 에러 발생
+  */
 export const updateWeddSection = async (weddingId: number, sectionId: string, data: Sections) => {
   if (!isSectionKey(sectionId)) {
-    throw new Error("존재하지 않는 섹션ID입니다.");
+    throw new AppError(400, "존재하지 않는 섹션ID입니다.");
   }
 
   const mappingData = mapSectionsToDb({[sectionId]: data});
@@ -141,7 +166,9 @@ return mapDbToSections(result);
 };
 
 /**
- * wedd 삭제
+ * wedd 및 연관된 상세/섹션/미디어를 삭제합니다.
+ * 트랜잭션으로 묶어 일관성을 보장합니다.
+ * @param weddingId - 삭제할 웨딩 ID
  */
 export const deleteWedd = async (weddingId: number) => {
   await prisma.$transaction(async (tx) => {
@@ -152,13 +179,20 @@ export const deleteWedd = async (weddingId: number) => {
   })
 };
 
+ /**
+  * 여러 섹션 설정을 일괄 업데이트합니다.
+  * 전달된 각 섹션의 키 유효성을 검사한 후 트랜잭션으로 displayOrder와 displayYn을 업데이트합니다.
+  * @param weddingId - 대상 웨딩 ID
+  * @param data - SetttingSections 객체(섹션 설정 배열 포함)
+  * @throws 유효하지 않은 섹션 키가 발견되면 에러 발생
+  */
 export const updateWeddSectsSet = async (weddingId: number, data: SetttingSections) => {
   const sections = data.sectionSettings;
   const invalidSection = sections.find((section: SectionSettings) => 
     !isSectionKey(section.sectionKey)
   );
   if (invalidSection) {
-    throw new Error(`${invalidSection.sectionKey}는 존재하지 않는 섹션입니다.`);
+    throw new AppError(400, '존재하지 않는 섹션ID입니다.');
   };
 
   await prisma.$transaction(
@@ -181,16 +215,13 @@ export const updateWeddSectsSet = async (weddingId: number, data: SetttingSectio
 
 
 
-
-
-
-
-
-
-
-
-
 // 임시 함수
+/**
+ * (임시) wedd 상세와 섹션 설정을 병합하여 정렬된 섹션 배열을 반환합니다.
+ * 개발/디버깅 목적의 임시 유틸로, 실제 사용/리팩토링이 필요할 수 있습니다.
+ * @param weddingId - 조회할 웨딩 ID
+ * @returns 정렬된 섹션 객체 배열
+ */
 export const getWeddById2 = async (weddingId: number) => {
   const wedd = await prisma.weddDtl.findUnique({ where: { weddingId } });
   const weddSectSet = await prisma.weddSectSet.findMany({ where: { weddingId }, orderBy: { displayOrder: 'asc' } });

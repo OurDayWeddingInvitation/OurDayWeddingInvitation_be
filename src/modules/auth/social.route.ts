@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import * as socialController from './social.controller';
+import { asyncHandler } from '@/core/http/asyncHandler';
 
 const router = Router();
 
@@ -106,6 +107,6 @@ const router = Router();
 
 
 
-router.post('/:provider', socialController.postSocialAuth);
+router.post('/:provider', asyncHandler(socialController.postSocialAuth));
 
 export default router;
