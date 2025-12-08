@@ -55,7 +55,7 @@ export async function uploadMediaBackup({
         // 기존 최대 mediaId를 조회해 다음 mediaId 계산
         const maxMedia = await tx.weddMedia.aggregate({
           _max: { mediaId: true },
-          where: { weddingId: 1 },
+          where: { weddingId },
         });
 
         const nextMediaId = (maxMedia._max.mediaId ?? 0) + 1;
