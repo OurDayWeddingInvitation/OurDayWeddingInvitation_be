@@ -1,9 +1,9 @@
 import prisma from '../../config/prisma';
 import { AppError } from '../../core/errors/AppError';
-import { MediaRequest, MediaResponse } from './media.types';
 import path, { join } from 'path';
 import fs from 'fs';
 import fsp from 'fs/promises';
+import { MediaRequest } from './media.schema';
 
 /**
  * 여러 파일과 메타데이터를 받아 백업용으로 weddMedia를 생성하거나 업데이트합니다.
@@ -18,7 +18,7 @@ export async function uploadMediaBackup({
   files,
   media,
 }: {
-  weddingId: number;
+  weddingId: string;
   files: Express.Multer.File[];
   media: any;
 }) {
@@ -62,12 +62,12 @@ export async function uploadMediaBackup({
 
         weddMedia[i] = await tx.weddMedia.create({
           data: {
-            weddingId,
+            weddingId: weddingId,
             mediaId: nextMediaId,
             imageType: mediaData.imageType,
             displayOrder: mediaData.displayOrder,
-            originalUrl: `/uploads/${file.filename}`,
-            editedUrl: `/uploads/${file.filename}`,
+            originalUrl: `/uploads/draft/${weddingId}/${file.filename}`,
+            editedUrl: `/uploads/draft/${weddingId}/${file.filename}`,
             fileExtension: path.extname(file.originalname).replace('.', ''),
             fileSize: file.size,
           },
@@ -84,7 +84,18 @@ export async function uploadMediaBackup({
  * @param weddingId - 조회할 웨딩 ID
  * @returns weddMedia 레코드 배열
  */
-export const getAllMedia = async (weddingId: number) => {
+export const getAllMediaEdit = async (weddingId: string) => {
+  return await prisma.weddDraftMedia.findMany({
+    where: { weddingId }
+  })
+}
+
+/**
+ * 특정 웨딩에 속한 모든 미디어를 조회합니다.
+ * @param weddingId - 조회할 웨딩 ID
+ * @returns weddMedia 레코드 배열
+ */
+export const getAllMedia = async (weddingId: string) => {
   return await prisma.weddMedia.findMany({
     where: { weddingId }
   })
@@ -99,30 +110,30 @@ export const getAllMedia = async (weddingId: number) => {
  * @returns 생성된 weddMedia 레코드
  */
 export const uploadMedia = async (
-  weddingId: number,
+  weddingId: string,
   metadata: MediaRequest,
   file: Express.Multer.File
 ) => {
   const tempPath = file.path;
   const ext = path.extname(file.originalname);
-  const newPath = `/uploads/${weddingId}/${Date.now()}-${Math.random().toString(36).substring(2, 9)}${ext}`
+  const newPath = `/uploads/draft/${weddingId}/${Date.now()}-${Math.random().toString(36).substring(2, 9)}${ext}`
   const absoluteNewPath = join(process.cwd(), newPath);
 
   // 업로드 디렉토리 생성 및 임시 파일을 대상 경로로 이동
-  fs.mkdirSync(join(process.cwd(), `/uploads/${weddingId}`), { recursive: true });
+  fs.mkdirSync(join(process.cwd(), `/uploads/draft/${weddingId}`), { recursive: true });
   await fsp.copyFile(tempPath, absoluteNewPath);
   await fsp.unlink(tempPath);
 
   return await prisma.$transaction(async (tx) => {
     // 현재 최대 mediaId를 조회하여 다음 mediaId 계산
-    const maxMedia = await tx.weddMedia.aggregate({
+    const maxMedia = await tx.weddDraftMedia.aggregate({
       _max: { mediaId: true },
       where: { weddingId },
     });
 
     const nextMediaId = (maxMedia._max.mediaId ?? 0) + 1;
 
-    const media = await tx.weddMedia.create({
+    const media = await tx.weddDraftMedia.create({
       data: {
         weddingId,
         mediaId: nextMediaId,
@@ -147,11 +158,11 @@ export const uploadMedia = async (
  * @returns 업데이트된 weddMedia 레코드
  */
 export const croppedMedia = async (
-  weddingId: number,
+  weddingId: string,
   mediaId: number,
   file: Express.Multer.File
 ) => {
-  const existing = await prisma.weddMedia.findUnique({
+  const existing = await prisma.weddDraftMedia.findUnique({
     where: {
       weddingId_mediaId: {
         weddingId: weddingId,
@@ -170,7 +181,7 @@ export const croppedMedia = async (
   // 기존 editedUrl이 있으면 덮어쓰고, 없으면 새로운 파일명을 만들어 저장
   if(!newPath) {
     const ext = path.extname(file.originalname);
-    absoluteNewPath = join(process.cwd(), `/uploads/${weddingId}/${Date.now()}-${Math.random().toString(36).substring(2, 9)}${ext}`);
+    absoluteNewPath = join(process.cwd(), `/uploads/draft/${weddingId}/${Date.now()}-${Math.random().toString(36).substring(2, 9)}${ext}`);
   } else {
     absoluteNewPath = join(process.cwd(), newPath);
   }
@@ -178,7 +189,7 @@ export const croppedMedia = async (
   await fsp.copyFile(tempPath, absoluteNewPath);
   await fsp.unlink(tempPath);
 
-  const media = await prisma.weddMedia.update({
+  const media = await prisma.weddDraftMedia.update({
     where: {
       weddingId_mediaId: {
         weddingId: weddingId,
@@ -196,11 +207,11 @@ export const croppedMedia = async (
  * @param weddingId - 대상 웨딩 ID
  * @param metadatas - mediaId와 새 displayOrder를 담은 배열
  */
-export const reorderMedia = async (weddingId: number, metadatas: MediaRequest[]) => {
+export const reorderMedia = async (weddingId: string, metadatas: MediaRequest[]) => {
   console.log(metadatas)
   await prisma.$transaction(async (tx) => {
     const result = metadatas.map((metadata: MediaRequest) => {
-      return tx.weddMedia.update({
+      return tx.weddDraftMedia.update({
         where: {
           weddingId_mediaId: {
             weddingId: weddingId,
@@ -221,8 +232,8 @@ export const reorderMedia = async (weddingId: number, metadatas: MediaRequest[])
  * @param mediaId - 삭제할 mediaId
  * @returns 삭제된 weddMedia 레코드
  */
-export const deleteMedia = async (weddingId: number, mediaId: number) => {
-  const media = await prisma.weddMedia.findUnique({
+export const deleteMedia = async (weddingId: string, mediaId: number) => {
+  const media = await prisma.weddDraftMedia.findUnique({
     where: {
       weddingId_mediaId: {
         weddingId: weddingId,
@@ -241,7 +252,7 @@ export const deleteMedia = async (weddingId: number, mediaId: number) => {
   if (fs.existsSync(originalPath)) fs.unlinkSync(originalPath);
   if (fs.existsSync(croppedPath)) fs.unlinkSync(croppedPath);
 
-  return await prisma.weddMedia.delete({
+  return await prisma.weddDraftMedia.delete({
     where: {
       weddingId_mediaId: {
         weddingId: weddingId,
@@ -257,8 +268,8 @@ export const deleteMedia = async (weddingId: number, mediaId: number) => {
  * @param imageType - 삭제할 이미지 타입
  * @returns 삭제된 weddMedia 레코드
  */
-export const deleteByTypeMedia = async (weddingId: number, imageType: string) => {
-  const media = await prisma.weddMedia.findMany({
+export const deleteByTypeMedia = async (weddingId: string, imageType: string) => {
+  const media = await prisma.weddDraftMedia.findMany({
     where: { weddingId, imageType },
   });
 
@@ -274,7 +285,12 @@ export const deleteByTypeMedia = async (weddingId: number, imageType: string) =>
     if (fs.existsSync(croppedPath)) fs.unlinkSync(croppedPath);
   }
 
-  return await prisma.weddMedia.deleteMany({
+  return await prisma.weddDraftMedia.deleteMany({
     where: { weddingId, imageType },
   });
+}
+
+export const getDraftMedia = async (weddingId: string, fileName: string) => {
+  const filePath = path.join(process.cwd(), 'uploads', 'draft', weddingId.toString(), fileName);
+  return filePath;
 }

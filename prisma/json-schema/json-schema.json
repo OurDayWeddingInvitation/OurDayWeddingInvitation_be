@@ -51,6 +51,12 @@
           "items": {
             "$ref": "#/definitions/Wedd"
           }
+        },
+        "weddDraft": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/WeddDraft"
+          }
         }
       }
     },
@@ -122,9 +128,6 @@
     "Wedd": {
       "type": "object",
       "properties": {
-        "weddingId": {
-          "type": "integer"
-        },
         "weddingTitle": {
           "type": [
             "string",
@@ -137,44 +140,6 @@
             "null"
           ]
         },
-        "createdAt": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "format": "date-time"
-        },
-        "updatedAt": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "format": "date-time"
-        },
-        "user": {
-          "$ref": "#/definitions/User"
-        },
-        "weddDtl": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/WeddDtl"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "WeddSectSet": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/WeddSectSet"
-          }
-        }
-      }
-    },
-    "WeddDtl": {
-      "type": "object",
-      "properties": {
         "mainPosterStyle": {
           "type": [
             "string",
@@ -217,7 +182,19 @@
             "null"
           ]
         },
-        "weddingInfoDate": {
+        "weddingInfoYear": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "weddingInfoMonth": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "weddingInfoDay": {
           "type": [
             "string",
             "null"
@@ -229,7 +206,13 @@
             "null"
           ]
         },
-        "weddingInfoTime": {
+        "weddingInfoHour": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "weddingInfoMinute": {
           "type": [
             "string",
             "null"
@@ -579,13 +562,489 @@
           ],
           "format": "date-time"
         },
-        "wedd": {
-          "$ref": "#/definitions/Wedd"
+        "user": {
+          "$ref": "#/definitions/User"
+        },
+        "weddDraft": {
+          "$ref": "#/definitions/WeddDraft"
         },
         "weddMedia": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/WeddMedia"
+          }
+        },
+        "WeddSectSet": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/WeddSectSet"
+          }
+        }
+      }
+    },
+    "WeddDraft": {
+      "type": "object",
+      "properties": {
+        "weddingId": {
+          "type": "string"
+        },
+        "weddingTitle": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "weddingSlug": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "mainPosterStyle": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "shareLinkTitle": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "weddingInfoGroomLastName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "weddingInfoGroomFirstName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "weddingInfoBrideLastName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "weddingInfoBrideFirstName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "weddingInfoNameOrderType": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "weddingInfoYear": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "weddingInfoMonth": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "weddingInfoDay": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "weddingInfoTimePeriod": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "weddingInfoHour": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "weddingInfoMinute": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "weddingInfoHallName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "weddingInfoHallFloor": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "familyInfoGroomFatherName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "familyInfoGroomFatherDeceased": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "familyInfoGroomMotherName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "familyInfoGroomMotherDeceased": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "familyInfoGroomRankName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "familyInfoBrideFatherName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "familyInfoBrideFatherDeceased": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "familyInfoBrideMotherName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "familyInfoBrideMotherDeceased": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "familyInfoBrideRankName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "invitationMessageTitle": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "invitationMessageContent": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "coupleIntroTitle": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "coupleIntroGroomMessage": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "coupleIntroBrideMessage": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "parentsIntroTitle": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "parentsIntroMessage": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "accountInfoTitle": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "accountInfoMessage": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "accountInfoGroomBankName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "accountInfoGroomNumber": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "accountInfoGroomHolder": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "accountInfoGroomFatherBankName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "accountInfoGroomFatherNumber": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "accountInfoGroomFatherHolder": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "accountInfoGroomMotherBankName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "accountInfoGroomMotherNumber": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "accountInfoGroomMotherHolder": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "accountInfoBrideBankName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "accountInfoBrideNumber": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "accountInfoBrideHolder": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "accountInfoBrideFatherBankName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "accountInfoBrideFatherNumber": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "accountInfoBrideFatherHolder": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "accountInfoBrideMotherBankName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "accountInfoBrideMotherNumber": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "accountInfoBrideMotherHolder": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "locationInfoAddress": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "locationInfoAddressDetail": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "locationInfoGuideMessage": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "locationInfoTransport1Title": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "locationInfoTransport1Message": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "locationInfoTransport2Title": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "locationInfoTransport2Message": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "locationInfoTransport3Title": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "locationInfoTransport3Message": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "themeFontName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "themeFontSize": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "themeFontBackgroundColor": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "themeFontAccentColor": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "themeFontZoomPreventYn": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "loadingScreenStyle": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "galleryTitle": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "createdAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "user": {
+          "$ref": "#/definitions/User"
+        },
+        "wedd": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Wedd"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "weddDraftMedia": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/WeddDraftMedia"
+          }
+        },
+        "WeddDraftSectSet": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/WeddDraftSectSet"
           }
         }
       }
@@ -646,8 +1105,69 @@
           ],
           "format": "date-time"
         },
-        "weddDtl": {
-          "$ref": "#/definitions/WeddDtl"
+        "wedd": {
+          "$ref": "#/definitions/Wedd"
+        }
+      }
+    },
+    "WeddDraftMedia": {
+      "type": "object",
+      "properties": {
+        "mediaId": {
+          "type": "integer"
+        },
+        "imageType": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "displayOrder": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "originalUrl": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "editedUrl": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "fileExtension": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "fileSize": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "createdAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "weddDraft": {
+          "$ref": "#/definitions/WeddDraft"
         }
       }
     },
@@ -687,6 +1207,43 @@
           "$ref": "#/definitions/Wedd"
         }
       }
+    },
+    "WeddDraftSectSet": {
+      "type": "object",
+      "properties": {
+        "sectionKey": {
+          "type": "string"
+        },
+        "displayYn": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "displayOrder": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "createdAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "weddDraft": {
+          "$ref": "#/definitions/WeddDraft"
+        }
+      }
     }
   },
   "type": "object",
@@ -700,14 +1257,20 @@
     "wedd": {
       "$ref": "#/definitions/Wedd"
     },
-    "weddDtl": {
-      "$ref": "#/definitions/WeddDtl"
+    "weddDraft": {
+      "$ref": "#/definitions/WeddDraft"
     },
     "weddMedia": {
       "$ref": "#/definitions/WeddMedia"
     },
+    "weddDraftMedia": {
+      "$ref": "#/definitions/WeddDraftMedia"
+    },
     "weddSectSet": {
       "$ref": "#/definitions/WeddSectSet"
+    },
+    "weddDraftSectSet": {
+      "$ref": "#/definitions/WeddDraftSectSet"
     }
   }
 }

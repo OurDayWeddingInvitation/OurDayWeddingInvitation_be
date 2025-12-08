@@ -2,6 +2,9 @@ import { Router } from 'express';
 import multer from 'multer';
 import path from 'path';
 import * as mediaController from './media.controller';
+import { validate } from "@/core/middlewares/validate.middleware";
+import { WeddingIdParam } from '../wedd/wedd.schema';
+import { FileNameParam, MediaIdParam, MediaRequestSchema } from './media.schema';
 import { asyncHandler } from '@/core/http/asyncHandler';
 
 const router = Router();
@@ -41,9 +44,9 @@ const uploads = multer({ storage }).any();
 
 /**
  * @swagger
- * /v1/weddings/{weddingId}/media:
+ * /api/v1/weddings/{weddingId}/media/edit:
  *   get:
- *     summary: 모든 이미지 조회
+ *     summary: 모든 이미지 조회(임시저장본)
  *     description: 청첩장의 모든 이미지정보를 가져옵니다.
  *     tags: [Media]
  *     security:
@@ -52,7 +55,7 @@ const uploads = multer({ storage }).any();
  *       - name: weddingId
  *         in: path
  *         required: true
- *         schema: { type: integer }
+ *         schema: { type: string }
  *     responses:
  *       200:
  *         description: 조회 성공
@@ -70,11 +73,44 @@ const uploads = multer({ storage }).any();
  *                   items:
  *                     $ref: '#/components/schemas/media'
  */
-router.get('/:weddingId/media', asyncHandler(mediaController.getAllMedia));
+router.get('/:weddingId/media/edit', validate({ params: WeddingIdParam }), asyncHandler(mediaController.getAllMediaEdit));
 
 /**
  * @swagger
- * /v1/weddings/{weddingId}/media:
+ * /api/v1/weddings/{weddingId}/media:
+ *   get:
+ *     summary: 모든 이미지 조회
+ *     description: 청첩장의 모든 이미지정보를 가져옵니다.
+ *     tags: [Media]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: weddingId
+ *         in: path
+ *         required: true
+ *         schema: { type: string }
+ *     responses:
+ *       200:
+ *         description: 조회 성공
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status: { type: integer, example: 200 }
+ *                 error: { type: string, nullable: true, example: null }
+ *                 messages: { type: string, nullable: true, example: null }
+ *                 data:
+ *                   type: array
+ *                   description: wedd 테이블 리스트 (간단 정보)
+ *                   items:
+ *                     $ref: '#/components/schemas/media'
+ */
+router.get('/:weddingId/media', validate({ params: WeddingIdParam }), asyncHandler(mediaController.getAllMedia));
+
+/**
+ * @swagger
+ * /api/v1/weddings/{weddingId}/media:
  *   post:
  *     summary: 새 이미지 업로드
  *     description: 단일 이미지를 업로드하고 DB에 저장합니다.
@@ -85,7 +121,7 @@ router.get('/:weddingId/media', asyncHandler(mediaController.getAllMedia));
  *       - in: path
  *         name: weddingId
  *         schema:
- *           type: integer
+ *           type: string
  *         required: true
  *         description: 청첩장 ID
  *     requestBody:
@@ -128,11 +164,11 @@ router.get('/:weddingId/media', asyncHandler(mediaController.getAllMedia));
  *                     imageType: "gallery"
  *                     originalUrl: "/uploads/wedding/1/main.png"
  */
-router.post('/:weddingId/media', upload.single('file'), asyncHandler(mediaController.postMedia));
+router.post('/:weddingId/media', upload.single('file'), validate({ params: WeddingIdParam, body: MediaRequestSchema }), asyncHandler(mediaController.postMedia));
 
 /**
  * @swagger
- * /v1/weddings/{weddingId}/media/reorder:
+ * /api/v1/weddings/{weddingId}/media/reorder:
  *   patch:
  *     summary: 이미지 순서 변경
  *     description: 파일 업로드 없이 이미지의 displayOrder만 수정합니다.
@@ -143,7 +179,7 @@ router.post('/:weddingId/media', upload.single('file'), asyncHandler(mediaContro
  *       - in: path
  *         name: weddingId
  *         schema:
- *           type: integer
+ *           type: string
  *         required: true
  *     requestBody:
  *       required: true
@@ -172,11 +208,11 @@ router.post('/:weddingId/media', upload.single('file'), asyncHandler(mediaContro
  *                 data:
  *                   example: null
  */
-router.patch('/:weddingId/media/reorder', asyncHandler(mediaController.reorderMedia));
+router.patch('/:weddingId/media/reorder', validate({ params: WeddingIdParam }), asyncHandler(mediaController.reorderMedia));
 
 /**
  * @swagger
- * /v1/weddings/{weddingId}/media/{mediaId}/cropped:
+ * /api/v1/weddings/{weddingId}/media/{mediaId}/cropped:
  *   put:
  *     summary: 수정된 이미지 저장
  *     description: 수정된 이미지를 저장합니다
@@ -187,7 +223,7 @@ router.patch('/:weddingId/media/reorder', asyncHandler(mediaController.reorderMe
  *       - in: path
  *         name: weddingId
  *         schema:
- *           type: integer
+ *           type: string
  *         required: true
  *         description: 청첩장 ID
  *       - in: path
@@ -224,11 +260,11 @@ router.patch('/:weddingId/media/reorder', asyncHandler(mediaController.reorderMe
  *                   example:
  *                     count: 5
  */
-router.put('/:weddingId/media/:mediaId/cropped', upload.single('file'), asyncHandler(mediaController.croppedMedia));
+router.put('/:weddingId/media/:mediaId/cropped', upload.single('file'), validate({ params: WeddingIdParam.extend(MediaIdParam.shape) }), asyncHandler(mediaController.croppedMedia));
 
 /**
  * @swagger
- * /v1/weddings/{weddingId}/media/{mediaId}:
+ * /api/v1/weddings/{weddingId}/media/{mediaId}:
  *   delete:
  *     summary: 이미지 삭제
  *     description: DB 삭제 및 파일 삭제까지 함께 수행됩니다.
@@ -239,7 +275,7 @@ router.put('/:weddingId/media/:mediaId/cropped', upload.single('file'), asyncHan
  *       - name: weddingId
  *         in: path
  *         required: true
- *         schema: { type: integer }
+ *         schema: { type: string }
  *       - name: mediaId
  *         in: path
  *         required: true
@@ -257,11 +293,11 @@ router.put('/:weddingId/media/:mediaId/cropped', upload.single('file'), asyncHan
  *                 data:
  *                   example: null
  */
-router.delete('/:weddingId/media/:mediaId', asyncHandler(mediaController.deleteMedia));
+router.delete('/:weddingId/media/:mediaId', validate({ params: WeddingIdParam.extend(MediaIdParam.shape) }), asyncHandler(mediaController.deleteMedia));
 
 /**
  * @swagger
- * /v1/weddings/{weddingId}/media:
+ * /api/v1/weddings/{weddingId}/media:
  *   delete:
  *     summary: 특정 이미지 타입의 미디어 모두 삭제
  *     description: DB 삭제 및 파일 삭제까지 함께 수행됩니다.
@@ -272,7 +308,7 @@ router.delete('/:weddingId/media/:mediaId', asyncHandler(mediaController.deleteM
  *       - name: weddingId
  *         in: path
  *         required: true
- *         schema: { type: integer }
+ *         schema: { type: string }
  *     requestBody:
  *       required: true
  *       content:
@@ -294,6 +330,53 @@ router.delete('/:weddingId/media/:mediaId', asyncHandler(mediaController.deleteM
  *                 data:
  *                   example: null
  */
-router.delete('/:weddingId/media', asyncHandler(mediaController.deleteByTypeMedia));
+router.delete('/:weddingId/media', validate({ params: WeddingIdParam }), asyncHandler(mediaController.deleteByTypeMedia));
+
+/**
+ * @swagger
+ * /uploads/draft/{weddingId}/{fileName}:
+ *   get:
+ *     summary: Draft 이미지 조회 (로그인 사용자 전용)
+ *     description: |
+ *       weddingId 소유자만 접근할 수 있는 임시 저장(draft) 이미지 조회 API입니다.  
+ *       정적 파일이 아니며, 백엔드 인증을 거쳐서 파일을 스트리밍 방식으로 제공합니다.
+ *     tags:
+ *       - Media
+ *     security:
+ *       - bearerAuth: []     # Authorization: Bearer 토큰 필요
+ *     parameters:
+ *       - in: path
+ *         name: weddingId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: 이미지가 속한 웨딩 ID
+ *       - in: path
+ *         name: fileName
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: 요청한 draft 이미지 바이너리 반환
+ *         content:
+ *           image/jpeg:
+ *             schema:
+ *               type: string
+ *               format: binary
+ *           image/png:
+ *             schema:
+ *               type: string
+ *               format: binary
+ *       401:
+ *         description: 로그인되지 않음
+ *       403:
+ *         description: 해당 weddingId에 대한 접근 권한 없음
+ *       404:
+ *         description: 요청한 파일을 찾을 수 없음
+ *       500:
+ *         description: 서버 내부 오류
+ */
+router.get('/draft/:weddingId/:fileName', validate({ params: WeddingIdParam.extend(FileNameParam.shape) }), asyncHandler(mediaController.getDraftMedia));
 
 export default router;

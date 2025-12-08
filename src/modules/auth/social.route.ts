@@ -13,7 +13,7 @@ const router = Router();
 
 /**
  * @swagger
- * /v1/auth/social/{provider}:
+ * /api/v1/auth/social/{provider}:
  *   post:
  *     summary: 소셜 로그인 요청
  *     description: 네이버 소셜 로그인 인증 후 Access / Refresh Token을 발급합니다.

@@ -24,6 +24,7 @@ model User {
 
   userSoc        UserSoc[]
   wedd           Wedd[]
+  weddDraft      WeddDraft[]
 
   @@map("user")
 }
@@ -48,41 +49,28 @@ model UserSoc {
   @@map("user_soc")
 }
 
-/// 청첩장 기본정보
+/// 청첩장 정보 (적용본)
 model Wedd {
-  weddingId       Int         @default(autoincrement()) @id @map("wedd_id")
+  weddingId       String      @id @map("wedd_id")
   userId          String      @map("user_id")
-  weddingTitle    String?     @db.VarChar(50) @map("wedd_ttl")
+  weddingTitle    String?     @db.Text @map("wedd_ttl")
   weddingSlug     String?     @db.VarChar(100) @map("wedd_slug")
-  createdAt       DateTime?   @default(now()) @db.DateTime(0) @map("creat_dt")
-  updatedAt       DateTime?   @updatedAt @db.DateTime(0) @map("updt_dt")
-
-  user            User        @relation(fields: [userId], references: [userId])
-  weddDtl         WeddDtl?
-  WeddSectSet     WeddSectSet[]
-
-  @@map("wedd")
-}
-
-/// 청첩장 상세정보
-model WeddDtl {
-  weddingId                        Int        @id @map("wedd_id")
 
   mainPosterStyle                  String?    @db.VarChar(50) @map("main_poster_styl")
-
-  shareLinkTitle                   String?    @db.VarChar(50) @map("shr_ttl")
-
+  shareLinkTitle                   String?    @db.Text @map("shr_ttl")
   weddingInfoGroomLastName        String?    @db.VarChar(50) @map("info_grm_last_nm")
   weddingInfoGroomFirstName       String?    @db.VarChar(50) @map("info_grm_first_nm")
   weddingInfoBrideLastName        String?    @db.VarChar(50) @map("info_brd_last_nm")
   weddingInfoBrideFirstName       String?    @db.VarChar(50) @map("info_brd_first_nm")
-  weddingInfoNameOrderType        String?    @db.VarChar(1)  @map("info_nm_ordr_se")
-  weddingInfoDate                 String?    @db.VarChar(8)  @map("info_wedd_de")
+  weddingInfoNameOrderType        String?    @db.VarChar(15)  @map("info_nm_ordr_se")
+  weddingInfoYear                 String?    @db.VarChar(4)  @map("info_wedd_year")
+  weddingInfoMonth                String?    @db.VarChar(2)  @map("info_wedd_month")
+  weddingInfoDay                  String?    @db.VarChar(2)  @map("info_wedd_day")
   weddingInfoTimePeriod           String?    @db.VarChar(10) @map("info_wedd_tm_pd")
-  weddingInfoTime                 String?    @db.VarChar(4)  @map("info_wedd_tm")
+  weddingInfoHour                 String?    @db.VarChar(4)  @map("info_wedd_hour")
+  weddingInfoMinute               String?    @db.VarChar(4)  @map("info_wedd_minute")
   weddingInfoHallName             String?    @db.VarChar(50) @map("info_hall_nm")
   weddingInfoHallFloor            String?    @db.VarChar(50) @map("info_hall_flr")
-
   familyInfoGroomFatherName       String?    @db.VarChar(50) @map("prnt_grm_fthr_nm")
   familyInfoGroomFatherDeceased   Boolean?                   @map("prnt_grm_fthr_deceased_yn")
   familyInfoGroomMotherName       String?    @db.VarChar(50) @map("prnt_grm_mthr_nm")
@@ -93,18 +81,14 @@ model WeddDtl {
   familyInfoBrideMotherName       String?    @db.VarChar(50) @map("prnt_brd_mthr_nm")
   familyInfoBrideMotherDeceased   Boolean?                   @map("prnt_brd_mthr_deceased_yn")
   familyInfoBrideRankName         String?    @db.VarChar(50) @map("prnt_brd_rank_nm")
-
-  invitationMessageTitle          String?    @db.VarChar(50) @map("inv_ttl")
+  invitationMessageTitle          String?    @db.Text @map("inv_ttl")
   invitationMessageContent        String?    @db.Text        @map("inv_msg")
-
-  coupleIntroTitle                String?    @db.VarChar(50) @map("intr_ttl")
+  coupleIntroTitle                String?    @db.Text @map("intr_ttl")
   coupleIntroGroomMessage         String?    @db.Text        @map("intr_grm_msg")
   coupleIntroBrideMessage         String?    @db.Text        @map("intr_brd_msg")
-
-  parentsIntroTitle               String?    @db.VarChar(50) @map("prnt_intr_ttl")
+  parentsIntroTitle               String?    @db.Text @map("prnt_intr_ttl")
   parentsIntroMessage             String?    @db.Text        @map("prnt_intr_msg")
-
-  accountInfoTitle                String?    @db.VarChar(50) @map("acnt_ttl")
+  accountInfoTitle                String?    @db.Text @map("acnt_ttl")
   accountInfoMessage              String?    @db.Text        @map("acnt_msg")
   accountInfoGroomBankName        String?    @db.VarChar(10) @map("acnt_grm_bnk_nm")
   accountInfoGroomNumber          String?    @db.VarChar(20) @map("acnt_grm_no")
@@ -124,7 +108,6 @@ model WeddDtl {
   accountInfoBrideMotherBankName  String?    @db.VarChar(10) @map("acnt_brd_mthr_bnk_nm")
   accountInfoBrideMotherNumber    String?    @db.VarChar(20) @map("acnt_brd_mthr_no")
   accountInfoBrideMotherHolder    String?    @db.VarChar(50) @map("acnt_brd_mthr_hldr_nm")
-
   locationInfoAddress             String?    @db.VarChar(100) @map("loc_addr")
   locationInfoAddressDetail       String?    @db.VarChar(100) @map("loc_addr_dtl")
   locationInfoGuideMessage        String?    @db.Text        @map("loc_guide_msg")
@@ -134,30 +117,115 @@ model WeddDtl {
   locationInfoTransport2Message   String?    @db.Text        @map("loc_trans_2_msg")
   locationInfoTransport3Title     String?    @db.VarChar(50) @map("loc_trans_3_ttl")
   locationInfoTransport3Message   String?    @db.Text        @map("loc_trans_3_msg")
-
   themeFontName                   String?    @db.VarChar(50) @map("theme_font_nm")
   themeFontSize                   Int?                       @map("theme_font_size")
   themeFontBackgroundColor        String?    @db.VarChar(20) @map("theme_bg_color")
   themeFontAccentColor            String?    @db.VarChar(20) @map("theme_accent_color")
   themeFontZoomPreventYn          Boolean?                   @map("theme_zoom_prevent_yn")
-
   loadingScreenStyle              String?    @db.VarChar(50) @map("load_styl")
-
   galleryTitle                    String?    @db.VarChar(50) @map("glly_ttl")
 
-  createdAt                       DateTime?  @default(now()) @db.DateTime(0) @map("creat_dt")
-  updatedAt                       DateTime?  @updatedAt @db.DateTime(0)      @map("updt_dt")
+  createdAt       DateTime?   @default(now()) @db.DateTime(0) @map("creat_dt")
+  updatedAt       DateTime?   @updatedAt @db.DateTime(0) @map("updt_dt")
 
-  wedd                            Wedd       @relation(fields: [weddingId], references: [weddingId])
-  weddMedia                       WeddMedia[]
+  user            User        @relation(fields: [userId], references: [userId])
+  weddDraft       WeddDraft   @relation(fields: [weddingId], references: [weddingId])
+  weddMedia       WeddMedia[]
+  WeddSectSet     WeddSectSet[]
 
-  @@map("wedd_dtl")
+  @@map("wedd")
 }
 
+/// 청첩장 정보 (임시저장본)
+model WeddDraft {
+  weddingId       String      @id @default(uuid()) @map("wedd_id")
+  userId          String      @map("user_id")
+  weddingTitle    String?     @db.Text @map("wedd_ttl")
+  weddingSlug     String?     @db.VarChar(100) @map("wedd_slug")
 
-/// 이미지 통합 테이블
+  mainPosterStyle                 String?    @db.VarChar(50) @map("main_poster_styl")
+  shareLinkTitle                  String?    @db.Text @map("shr_ttl")
+  weddingInfoGroomLastName        String?    @db.VarChar(50) @map("info_grm_last_nm")
+  weddingInfoGroomFirstName       String?    @db.VarChar(50) @map("info_grm_first_nm")
+  weddingInfoBrideLastName        String?    @db.VarChar(50) @map("info_brd_last_nm")
+  weddingInfoBrideFirstName       String?    @db.VarChar(50) @map("info_brd_first_nm")
+  weddingInfoNameOrderType        String?    @db.VarChar(15)  @map("info_nm_ordr_se")
+  weddingInfoYear                 String?    @db.VarChar(4)  @map("info_wedd_year")
+  weddingInfoMonth                String?    @db.VarChar(2)  @map("info_wedd_month")
+  weddingInfoDay                  String?    @db.VarChar(2)  @map("info_wedd_day")
+  weddingInfoTimePeriod           String?    @db.VarChar(10) @map("info_wedd_tm_pd")
+  weddingInfoHour                 String?    @db.VarChar(4)  @map("info_wedd_hour")
+  weddingInfoMinute               String?    @db.VarChar(4)  @map("info_wedd_minute")
+  weddingInfoHallName             String?    @db.VarChar(50) @map("info_hall_nm")
+  weddingInfoHallFloor            String?    @db.VarChar(50) @map("info_hall_flr")
+  familyInfoGroomFatherName       String?    @db.VarChar(50) @map("prnt_grm_fthr_nm")
+  familyInfoGroomFatherDeceased   Boolean?                   @map("prnt_grm_fthr_deceased_yn")
+  familyInfoGroomMotherName       String?    @db.VarChar(50) @map("prnt_grm_mthr_nm")
+  familyInfoGroomMotherDeceased   Boolean?                   @map("prnt_grm_mthr_deceased_yn")
+  familyInfoGroomRankName         String?    @db.VarChar(50) @map("prnt_grm_rank_nm")
+  familyInfoBrideFatherName       String?    @db.VarChar(50) @map("prnt_brd_fthr_nm")
+  familyInfoBrideFatherDeceased   Boolean?                   @map("prnt_brd_fthr_deceased_yn")
+  familyInfoBrideMotherName       String?    @db.VarChar(50) @map("prnt_brd_mthr_nm")
+  familyInfoBrideMotherDeceased   Boolean?                   @map("prnt_brd_mthr_deceased_yn")
+  familyInfoBrideRankName         String?    @db.VarChar(50) @map("prnt_brd_rank_nm")
+  invitationMessageTitle          String?    @db.Text @map("inv_ttl")
+  invitationMessageContent        String?    @db.Text        @map("inv_msg")
+  coupleIntroTitle                String?    @db.Text @map("intr_ttl")
+  coupleIntroGroomMessage         String?    @db.Text        @map("intr_grm_msg")
+  coupleIntroBrideMessage         String?    @db.Text        @map("intr_brd_msg")
+  parentsIntroTitle               String?    @db.Text @map("prnt_intr_ttl")
+  parentsIntroMessage             String?    @db.Text        @map("prnt_intr_msg")
+  accountInfoTitle                String?    @db.Text @map("acnt_ttl")
+  accountInfoMessage              String?    @db.Text        @map("acnt_msg")
+  accountInfoGroomBankName        String?    @db.VarChar(10) @map("acnt_grm_bnk_nm")
+  accountInfoGroomNumber          String?    @db.VarChar(20) @map("acnt_grm_no")
+  accountInfoGroomHolder          String?    @db.VarChar(50) @map("acnt_grm_hldr_nm")
+  accountInfoGroomFatherBankName  String?    @db.VarChar(10) @map("acnt_grm_fthr_bnk_nm")
+  accountInfoGroomFatherNumber    String?    @db.VarChar(20) @map("acnt_grm_fthr_no")
+  accountInfoGroomFatherHolder    String?    @db.VarChar(50) @map("acnt_grm_fthr_hldr_nm")
+  accountInfoGroomMotherBankName  String?    @db.VarChar(10) @map("acnt_grm_mthr_bnk_nm")
+  accountInfoGroomMotherNumber    String?    @db.VarChar(20) @map("acnt_grm_mthr_no")
+  accountInfoGroomMotherHolder    String?    @db.VarChar(50) @map("acnt_grm_mthr_hldr_nm")
+  accountInfoBrideBankName        String?    @db.VarChar(10) @map("acnt_brd_bnk_nm")
+  accountInfoBrideNumber          String?    @db.VarChar(20) @map("acnt_brd_no")
+  accountInfoBrideHolder          String?    @db.VarChar(50) @map("acnt_brd_hldr_nm")
+  accountInfoBrideFatherBankName  String?    @db.VarChar(10) @map("acnt_brd_fthr_bnk_nm")
+  accountInfoBrideFatherNumber    String?    @db.VarChar(20) @map("acnt_brd_fthr_no")
+  accountInfoBrideFatherHolder    String?    @db.VarChar(50) @map("acnt_brd_fthr_hldr_nm")
+  accountInfoBrideMotherBankName  String?    @db.VarChar(10) @map("acnt_brd_mthr_bnk_nm")
+  accountInfoBrideMotherNumber    String?    @db.VarChar(20) @map("acnt_brd_mthr_no")
+  accountInfoBrideMotherHolder    String?    @db.VarChar(50) @map("acnt_brd_mthr_hldr_nm")
+  locationInfoAddress             String?    @db.VarChar(100) @map("loc_addr")
+  locationInfoAddressDetail       String?    @db.VarChar(100) @map("loc_addr_dtl")
+  locationInfoGuideMessage        String?    @db.Text        @map("loc_guide_msg")
+  locationInfoTransport1Title     String?    @db.VarChar(50) @map("loc_trans_1_ttl")
+  locationInfoTransport1Message   String?    @db.Text        @map("loc_trans_1_msg")
+  locationInfoTransport2Title     String?    @db.VarChar(50) @map("loc_trans_2_ttl")
+  locationInfoTransport2Message   String?    @db.Text        @map("loc_trans_2_msg")
+  locationInfoTransport3Title     String?    @db.VarChar(50) @map("loc_trans_3_ttl")
+  locationInfoTransport3Message   String?    @db.Text        @map("loc_trans_3_msg")
+  themeFontName                   String?    @db.VarChar(50) @map("theme_font_nm")
+  themeFontSize                   Int?                       @map("theme_font_size")
+  themeFontBackgroundColor        String?    @db.VarChar(20) @map("theme_bg_color")
+  themeFontAccentColor            String?    @db.VarChar(20) @map("theme_accent_color")
+  themeFontZoomPreventYn          Boolean?                   @map("theme_zoom_prevent_yn")
+  loadingScreenStyle              String?    @db.VarChar(50) @map("load_styl")
+  galleryTitle                    String?    @db.VarChar(50) @map("glly_ttl")
+
+  createdAt       DateTime?   @default(now()) @db.DateTime(0) @map("creat_dt")
+  updatedAt       DateTime?   @updatedAt @db.DateTime(0) @map("updt_dt")
+
+  user              User        @relation(fields: [userId], references: [userId])
+  wedd              Wedd?
+  weddDraftMedia    WeddDraftMedia[]
+  WeddDraftSectSet  WeddDraftSectSet[]
+
+  @@map("wedd_draft")
+}
+
+/// 이미지 통합 테이블 (적용본)
 model WeddMedia {
-  weddingId     Int       @map("wedd_id")
+  weddingId     String    @map("wedd_id")
   mediaId       Int       @map("media_id")
   imageType     String?   @db.VarChar(50) @map("img_type")
   displayOrder  Int?      @map("display_ordr")
@@ -168,15 +236,34 @@ model WeddMedia {
   createdAt     DateTime? @default(now()) @db.DateTime(0) @map("creat_dt")
   updatedAt     DateTime? @updatedAt @db.DateTime(0) @map("updt_dt")
 
-  weddDtl       WeddDtl   @relation(fields: [weddingId], references: [weddingId])
+  wedd          Wedd      @relation(fields: [weddingId], references: [weddingId])
 
   @@id([weddingId, mediaId])
   @@map("wedd_media")
 }
 
-/// 섹션 순서 관리
+/// 이미지 통합 테이블 (임시저장본)
+model WeddDraftMedia {
+  weddingId     String    @map("wedd_id")
+  mediaId       Int       @map("media_id")
+  imageType     String?   @db.VarChar(50) @map("img_type")
+  displayOrder  Int?      @map("display_ordr")
+  originalUrl   String?   @db.VarChar(255) @map("org_url")
+  editedUrl     String?   @db.VarChar(255) @map("edit_url")
+  fileExtension String?   @db.VarChar(10) @map("file_extsn")
+  fileSize      Int?      @map("file_size")
+  createdAt     DateTime? @default(now()) @db.DateTime(0) @map("creat_dt")
+  updatedAt     DateTime? @updatedAt @db.DateTime(0) @map("updt_dt")
+
+  weddDraft     WeddDraft @relation(fields: [weddingId], references: [weddingId])
+
+  @@id([weddingId, mediaId])
+  @@map("wedd_draft_media")
+}
+
+/// 섹션 순서 관리 (적용본)
 model WeddSectSet {
-  weddingId     Int       @map("wedd_id")
+  weddingId     String    @map("wedd_id")
   sectionKey    String    @db.VarChar(50) @map("sect_key")
   displayYn     Boolean?  @map("display_yn")
   displayOrder  Int?      @map("display_ordr")
@@ -187,4 +274,19 @@ model WeddSectSet {
 
   @@id([weddingId, sectionKey])
   @@map("wedd_sect_set")
+}
+
+/// 섹션 순서 관리 (임시저장본)
+model WeddDraftSectSet {
+  weddingId     String    @map("wedd_id")
+  sectionKey    String    @db.VarChar(50) @map("sect_key")
+  displayYn     Boolean?  @map("display_yn")
+  displayOrder  Int?      @map("display_ordr")
+  createdAt     DateTime? @default(now()) @db.DateTime(0) @map("creat_dt")
+  updatedAt     DateTime? @updatedAt @db.DateTime(0) @map("updt_dt")
+
+  weddDraft     WeddDraft @relation(fields: [weddingId], references: [weddingId])
+
+  @@id([weddingId, sectionKey])
+  @@map("wedd_draft_sect_set")
 }

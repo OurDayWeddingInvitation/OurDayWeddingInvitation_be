@@ -1,5 +1,7 @@
 import { Router } from 'express';
 import * as weddController from './wedd.controller';
+import { validate } from "@/core/middlewares/validate.middleware";
+import { SectionIdParam, SettingSectionsSchema, WeddingIdParam, WeddingInfoRequestSchema } from './wedd.schema';
 import { asyncHandler } from '@/core/http/asyncHandler';
 
 const router = Router();
@@ -83,10 +85,10 @@ const router = Router();
  *           type: string
  *           description: 예식 분 (mm)
  *           example: "20"
- *         weddingInfoHallName:
+ *         weddingHallName:
  *           type: string
  *           example: "더베뉴지서울"
- *         weddingInfoHallFloor:
+ *         weddingHallFloor:
  *           type: string
  *           example: "1층"
  *
@@ -430,8 +432,8 @@ const router = Router();
  *       type: object
  *       properties:
  *         weddingId:
- *           type: integer
- *           example: 1
+ *           type: string
+ *           example: "1"
  *         sections:
  *           $ref: '#/components/schemas/WeddingSections'
  *         sectionSettings:
@@ -504,7 +506,7 @@ const router = Router();
 
 /**
  * @swagger
- * /v1/weddings:
+ * /api/v1/weddings:
  *   get:
  *     summary: 나의 모든 청첩장 목록 조회
  *     description: 로그인한 사용자의 모든 청첩장(wedd) 리스트를 조회합니다.
@@ -529,8 +531,8 @@ const router = Router();
  *                     type: object
  *                     properties:
  *                       weddingId:
- *                         type: integer
- *                         example: 1
+ *                         type: string
+ *                         example: "1"
  *                       weddingTitle:
  *                         type: string
  *                         example: "관나의 청첩장"
@@ -542,10 +544,10 @@ router.get('/', asyncHandler(weddController.getAllWedds));
 
 /**
  * @swagger
- * /v1/weddings/{weddingId}:
+ * /api/v1/weddings/{weddingId}/edit:
  *   get:
- *     summary: 청첩장 상세 조회
- *     description: 특정 청첩장에 대한 모든 섹션 데이터 및 섹션 설정을 조회합니다.
+ *     summary: 청첩장 상세 조회(임시저장본)
+ *     description: 특정 청첩장 임시저장본에 대한 모든 섹션 데이터 및 섹션 설정을 조회합니다.
  *     tags: [Wedding]
  *     security:
  *       - bearerAuth: []
@@ -554,7 +556,7 @@ router.get('/', asyncHandler(weddController.getAllWedds));
  *         name: weddingId
  *         required: true
  *         schema:
- *           type: integer
+ *           type: string
  *         description: 청첩장 ID
  *     responses:
  *       200:
@@ -570,13 +572,45 @@ router.get('/', asyncHandler(weddController.getAllWedds));
  *                 data:
  *                   $ref: '#/components/schemas/WeddingDetail'
  */
-router.get('/:weddingId', asyncHandler(weddController.getWeddById));
+router.get('/:weddingId/edit', validate({ params: WeddingIdParam }), asyncHandler(weddController.getWeddEditById));
 
 /**
  * @swagger
- * /v1/weddings:
+ * /api/v1/weddings/{weddingId}:
+ *   get:
+ *     summary: 청첩장 상세 조회
+ *     description: 특정 청첩장에 대한 모든 섹션 데이터 및 섹션 설정을 조회합니다.
+ *     tags: [Wedding]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: weddingId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: 청첩장 ID
+ *     responses:
+ *       200:
+ *         description: 상세 조회 성공
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status: { type: integer, example: 200 }
+ *                 error: { type: string, nullable: true, example: null }
+ *                 messages: { type: string, nullable: true, example: null }
+ *                 data:
+ *                   $ref: '#/components/schemas/WeddingDetail'
+ */
+router.get('/:weddingId', validate({ params: WeddingIdParam }), asyncHandler(weddController.getWeddById));
+
+/**
+ * @swagger
+ * /api/v1/weddings:
  *   post:
- *     summary: 신규 청첩장 생성
+ *     summary: 신규 청첩장 생성(임시저장본)
  *     description: 새로운 청첩장을 생성하고 초기 섹션 및 섹션 설정을 함께 반환합니다.
  *     tags: [Wedding]
  *     security:
@@ -609,9 +643,9 @@ router.post('/', asyncHandler(weddController.createWedd));
 
 /**
  * @swagger
- * /v1/weddings/{weddingId}:
+ * /api/v1/weddings/{weddingId}:
  *   put:
- *     summary: 청첩장 전체 교체(섹션 전체 저장)
+ *     summary: 청첩장(임시저장본) 전체 교체(섹션 전체 저장)
  *     description: 하나의 청첩장에 포함된 모든 섹션 데이터 및 섹션 설정을 한 번에 저장합니다.
  *     tags: [Wedding]
  *     security:
@@ -621,7 +655,7 @@ router.post('/', asyncHandler(weddController.createWedd));
  *         name: weddingId
  *         required: true
  *         schema:
- *           type: integer
+ *           type: string
  *     requestBody:
  *       required: true
  *       content:
@@ -642,13 +676,13 @@ router.post('/', asyncHandler(weddController.createWedd));
  *                 data:
  *                   $ref: '#/components/schemas/WeddingDetail'
  */
-router.put('/:weddingId', asyncHandler(weddController.replaceWedd));
+router.put('/:weddingId', validate({ params: WeddingIdParam, body: WeddingInfoRequestSchema }), asyncHandler(weddController.replaceWedd));
 
 /**
  * @swagger
- * /v1/weddings/{weddingId}/sections/settings:
+ * /api/v1/weddings/{weddingId}/sections/settings:
  *   patch:
- *     summary: 섹션 표시 설정 및 순서 변경
+ *     summary: 섹션 표시 설정 및 순서 변경(임시저장본)
  *     description: 섹션의 표시 여부(isVisible)와 순서를 일괄 수정합니다.
  *     tags: [Wedding]
  *     security:
@@ -658,7 +692,7 @@ router.put('/:weddingId', asyncHandler(weddController.replaceWedd));
  *         name: weddingId
  *         required: true
  *         schema:
- *           type: integer
+ *           type: string
  *     requestBody:
  *       required: true
  *       content:
@@ -679,13 +713,13 @@ router.put('/:weddingId', asyncHandler(weddController.replaceWedd));
  *                 data:
  *                   example: null
  */
-router.patch('/:weddingId/sections/settings', asyncHandler(weddController.updateWeddSectsSet));
+router.patch('/:weddingId/sections/settings', validate({ params: WeddingIdParam, body: SettingSectionsSchema }), asyncHandler(weddController.updateWeddSectsSet));
 
 /**
  * @swagger
- * /v1/weddings/{weddingId}/sections/{sectionId}:
+ * /api/v1/weddings/{weddingId}/sections/{sectionId}:
  *   patch:
- *     summary: 특정 섹션만 부분 수정
+ *     summary: 특정 섹션만 부분 수정(임시저장본)
  *     description: 섹션 ID에 해당하는 일부 필드만 부분 수정합니다. body는 해당 섹션 구조를 따릅니다.
  *     tags: [Wedding]
  *     security:
@@ -695,7 +729,7 @@ router.patch('/:weddingId/sections/settings', asyncHandler(weddController.update
  *         name: weddingId
  *         required: true
  *         schema:
- *           type: integer
+ *           type: string
  *       - in: path
  *         name: sectionId
  *         required: true
@@ -734,13 +768,13 @@ router.patch('/:weddingId/sections/settings', asyncHandler(weddController.update
  *                 data:
  *                   $ref: '#/components/schemas/WeddingDetail'
  */
-router.patch('/:weddingId/sections/:sectionId', asyncHandler(weddController.updateWeddSection));
+router.patch('/:weddingId/sections/:sectionId', validate({ params: WeddingIdParam.extend(SectionIdParam.shape) }), asyncHandler(weddController.updateWeddSection));
 
 /**
  * @swagger
- * /v1/weddings/{weddingId}:
+ * /api/v1/weddings/{weddingId}:
  *   delete:
- *     summary: 청첩장 삭제
+ *     summary: 청첩장 삭제(관련 임시저장, 적용본/섹션설정/미디어 모두 삭제)
  *     description: 해당 청첩장 및 관련 상세/섹션설정/미디어를 모두 삭제합니다.
  *     tags: [Wedding]
  *     security:
@@ -750,7 +784,7 @@ router.patch('/:weddingId/sections/:sectionId', asyncHandler(weddController.upda
  *         name: weddingId
  *         required: true
  *         schema:
- *           type: integer
+ *           type: string
  *     responses:
  *       200:
  *         description: 삭제 성공
@@ -765,7 +799,39 @@ router.patch('/:weddingId/sections/:sectionId', asyncHandler(weddController.upda
  *                 data:
  *                   example: null
  */
-router.delete('/:weddingId', asyncHandler(weddController.deleteWedd));
+router.delete('/:weddingId', validate({ params: WeddingIdParam }), asyncHandler(weddController.deleteWedd));
+
+/**
+ * @swagger
+ * /api/v1/weddings/{weddingId}/apply:
+ *   post:
+ *     summary: 청첩장 적용(임시저장본 → 적용본)
+ *     description: 특정 청첩장의 임시저장본을 적용본으로 저장합니다.
+ *     tags: [Wedding]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: weddingId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: 적용 성공
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status: { type: integer, example: 200 }
+ *                 error: { type: string, nullable: true, example: null }
+ *                 messages: { type: string, nullable: true, example: "청첩장이 적용되었습니다." }
+ *                 data:
+ *                   example: null
+ */
+
+router.post('/:weddingId/apply', validate({ params: WeddingIdParam }), asyncHandler(weddController.applyWedd));
 
 export default router;
 

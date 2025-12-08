@@ -8,7 +8,6 @@
     "dev": "npm run generate-swagger && tsx watch src/server.ts",
     "start": "node dist/server.js",
     "make": "node scripts/make-module.js",
-
     "generate-swagger": "tsx src/config/swagger.ts",
     "build": "npm run generate-swagger && tsup"
   },
@@ -26,7 +25,8 @@
     "jsonwebtoken": "^9.0.2",
     "multer": "^2.0.2",
     "swagger-ui-dist": "^5.30.2",
-    "swagger-ui-express": "^5.0.1"
+    "swagger-ui-express": "^5.0.1",
+    "zod": "^4.1.13"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",

@@ -1,16 +1,11 @@
-import { WeddDtl } from '@prisma/client';
+import { Wedd } from '@prisma/client';
 import {
-  Main, ShareLink, WeddingInfo, FamilyInfo, InvitationMessage,
-  CoupleIntro, ParentsIntro, AccountInfo, LocationInfo, ThemeFont,
-  LoadingScreen, Gallery, Flipbook, SectionSettings,
-  WeddingInfoRequest, WeddingInfoResponse,
-
   MainDb, ShareLinkDb, WeddingInfoDb, FamilyInfoDb, InvitationMessageDb,
   CoupleIntroDb, ParentsIntroDb, AccountInfoDb, LocationInfoDb, ThemeFontDb,
   LoadingScreenDb, GalleryDb, FlipbookDb, SectionSettingsDb,
-  WeddDtlDb,
-  Sections
+  WeddDb
  } from './wedd.types';
+import { AccountInfo, CoupleIntro, FamilyInfo, Flipbook, Gallery, InvitationMessage, LoadingScreen, LocationInfo, Main, ParentsIntro, Sections, SectionSettings, ShareLink, ThemeFont, WeddingInfo } from './wedd.schema';
  
 export function mapMainToDb(data?: Main): MainDb {
   if(!data) return {};
@@ -34,9 +29,12 @@ export function mapWeddingInfoToDb(data?: WeddingInfo): WeddingInfoDb {
     weddingInfoBrideLastName: data.brideLastName,
     weddingInfoBrideFirstName: data.brideFirstName,
     weddingInfoNameOrderType: data.nameOrderType,
-    weddingInfoDate: (data.weddingYear! + data.weddingMonth + data.weddingDay),
+    weddingInfoYear: data.weddingYear,
+    weddingInfoMonth: data.weddingMonth,
+    weddingInfoDay: data.weddingDay,
     weddingInfoTimePeriod: data.weddingTimePeriod,
-    weddingInfoTime: (data.weddingHour! + data.weddingMinute),
+    weddingInfoHour: data.weddingHour,
+    weddingInfoMinute: data.weddingMinute,
     weddingInfoHallName: data.weddingHallName,
     weddingInfoHallFloor: data.weddingHallFloor
   }
@@ -163,7 +161,7 @@ export function mapSectionSettingsToDb(data: SectionSettings[]): SectionSettings
   }));
 }
 
-export function mapSectionsToDb(data?: Sections): WeddDtlDb {
+export function mapSectionsToDb(data?: Sections): WeddDb {
   return {
     ...mapAccentInfoToDb(data?.accountInfo),
     ...mapCoupleIntroToDb(data?.coupleIntro),
@@ -186,7 +184,7 @@ export function mapSectionsToDb(data?: Sections): WeddDtlDb {
 // 역매퍼: DB → 프론트 Sections 구조로 변환
 
 // MAIN
-export function mapDbToMain(row: WeddDtl | null): Main {
+export function mapDbToMain(row: Wedd | null): Main {
   return {
     posterStyle: row?.mainPosterStyle ?? null
   };
@@ -194,7 +192,7 @@ export function mapDbToMain(row: WeddDtl | null): Main {
 
 
 // SHARE LINK
-export function mapDbToShareLink(row: WeddDtl | null): ShareLink {
+export function mapDbToShareLink(row: Wedd | null): ShareLink {
   return {
     shareTitle: row?.shareLinkTitle ?? null,
   };
@@ -202,19 +200,19 @@ export function mapDbToShareLink(row: WeddDtl | null): ShareLink {
 
 
 // WEDDING INFO
-export function mapDbToWeddingInfo(row: WeddDtl | null): WeddingInfo {
+export function mapDbToWeddingInfo(row: Wedd | null): WeddingInfo {
   return {
     groomLastName: row?.weddingInfoGroomLastName ?? null,
     groomFirstName: row?.weddingInfoGroomFirstName ?? null,
     brideLastName: row?.weddingInfoBrideLastName ?? null,
     brideFirstName: row?.weddingInfoBrideFirstName ?? null,
     nameOrderType: row?.weddingInfoNameOrderType ?? null,
-    weddingYear: row?.weddingInfoDate?.substr(0, 4) ?? null,
-    weddingMonth: row?.weddingInfoDate?.substr(5, 2) ?? null,
-    weddingDay: row?.weddingInfoDate?.substr(8, 2) ?? null,
+    weddingYear: row?.weddingInfoYear ?? null,
+    weddingMonth: row?.weddingInfoMonth ?? null,
+    weddingDay: row?.weddingInfoDay ?? null,
     weddingTimePeriod: row?.weddingInfoTimePeriod ?? null,
-    weddingHour: row?.weddingInfoTime?.substr(0, 2) ?? null,
-    weddingMinute: row?.weddingInfoTime?.substr(3, 2) ?? null,
+    weddingHour: row?.weddingInfoHour ?? null,
+    weddingMinute: row?.weddingInfoMinute ?? null,
     weddingHallName: row?.weddingInfoHallName ?? null,
     weddingHallFloor: row?.weddingInfoHallFloor ?? null,
   };
@@ -222,7 +220,7 @@ export function mapDbToWeddingInfo(row: WeddDtl | null): WeddingInfo {
 
 
 // FAMILY INFO
-export function mapDbToFamilyInfo(row: WeddDtl | null): FamilyInfo {
+export function mapDbToFamilyInfo(row: Wedd | null): FamilyInfo {
   return {
     groomFatherName: row?.familyInfoGroomFatherName ?? null,
     groomFatherDeceased: row?.familyInfoGroomFatherDeceased ?? null,
@@ -239,7 +237,7 @@ export function mapDbToFamilyInfo(row: WeddDtl | null): FamilyInfo {
 
 
 // INVITATION MESSAGE
-export function mapDbToInvitationMessage(row: WeddDtl | null): InvitationMessage {
+export function mapDbToInvitationMessage(row: Wedd | null): InvitationMessage {
   return {
     title: row?.invitationMessageTitle ?? null,
     message: row?.invitationMessageContent ?? null
@@ -248,7 +246,7 @@ export function mapDbToInvitationMessage(row: WeddDtl | null): InvitationMessage
 
 
 // COUPLE INTRO
-export function mapDbToCoupleIntro(row: WeddDtl | null): CoupleIntro {
+export function mapDbToCoupleIntro(row: Wedd | null): CoupleIntro {
   return {
     title: row?.coupleIntroTitle ?? null,
     groomIntro: row?.coupleIntroGroomMessage ?? null,
@@ -258,7 +256,7 @@ export function mapDbToCoupleIntro(row: WeddDtl | null): CoupleIntro {
 
 
 // PARENTS INTRO
-export function mapDbToParentsIntro(row: WeddDtl | null): ParentsIntro {
+export function mapDbToParentsIntro(row: Wedd | null): ParentsIntro {
   return {
     title: row?.parentsIntroTitle ?? null,
     message: row?.parentsIntroMessage ?? null
@@ -267,7 +265,7 @@ export function mapDbToParentsIntro(row: WeddDtl | null): ParentsIntro {
 
 
 // ACCOUNT INFO
-export function mapDbToAccountInfo(row: WeddDtl | null): AccountInfo {
+export function mapDbToAccountInfo(row: Wedd | null): AccountInfo {
   return {
     title: row?.accountInfoTitle ?? null,
     message: row?.accountInfoMessage ?? null,
@@ -294,7 +292,7 @@ export function mapDbToAccountInfo(row: WeddDtl | null): AccountInfo {
 
 
 // LOCATION INFO
-export function mapDbToLocationInfo(row: WeddDtl | null): LocationInfo {
+export function mapDbToLocationInfo(row: Wedd | null): LocationInfo {
   return {
     address: row?.locationInfoAddress ?? null,
     addressDetail: row?.locationInfoAddressDetail ?? null,
@@ -310,7 +308,7 @@ export function mapDbToLocationInfo(row: WeddDtl | null): LocationInfo {
 
 
 // THEME FONT
-export function mapDbToThemeFont(row: WeddDtl | null): ThemeFont {
+export function mapDbToThemeFont(row: Wedd | null): ThemeFont {
   return {
     fontName: row?.themeFontName ?? null,
     fontSize: row?.themeFontSize ?? null,
@@ -322,7 +320,7 @@ export function mapDbToThemeFont(row: WeddDtl | null): ThemeFont {
 
 
 // LOADING SCREEN
-export function mapDbToLoadingScreen(row: WeddDtl | null): LoadingScreen {
+export function mapDbToLoadingScreen(row: Wedd | null): LoadingScreen {
   return {
     design: row?.loadingScreenStyle ?? null
   };
@@ -330,7 +328,7 @@ export function mapDbToLoadingScreen(row: WeddDtl | null): LoadingScreen {
 
 
 // GALLERY
-export function mapDbToGallery(row: WeddDtl | null): Gallery {
+export function mapDbToGallery(row: Wedd | null): Gallery {
   return {
     title: row?.galleryTitle ?? null
   };
@@ -338,7 +336,7 @@ export function mapDbToGallery(row: WeddDtl | null): Gallery {
 
 
 // FLIPBOOK
-export function mapDbToFlipbook(row: WeddDtl | null): Flipbook {
+export function mapDbToFlipbook(row: Wedd | null): Flipbook {
   return {
     // ...row
   };
@@ -356,7 +354,7 @@ export function mapDbToSectionSettings(rows: SectionSettingsDb[] | null): Sectio
 
 
 // ▼ 최종 wrapper: DB row → sections 전체 변환
-export function mapDbToSections(row: WeddDtl | null): Sections {
+export function mapDbToSections(row: Wedd | null): Sections {
   return {
     main: mapDbToMain(row),
     shareLink: mapDbToShareLink(row),

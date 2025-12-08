@@ -13,7 +13,7 @@ const router = Router();
 
 /**
  * @swagger
- * /v1/auth/token/refresh:
+ * /api/v1/auth/token/refresh:
  *   post:
  *     summary: 리프레시 토큰을 이용하여 Access Token 재발급
  *     description: 저장된 Refresh Token을 이용해 새로운 Access Token을 발급합니다.
