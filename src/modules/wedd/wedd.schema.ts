@@ -108,7 +108,10 @@ export const LoadingScreenSchema = z.object({
 export const GallerySchema = z.object({
   title: z.string().nullable().optional(),
 });
-export const FlipbookSchema = z.object({});
+export const FlipbookSchema = z.object({
+  title: z.string().nullable().optional(),
+  message: z.string().nullable().optional(),
+});
 export const SectionSettingsSchema = z.object({
   sectionKey: z.string(),
   isVisible: z.boolean().nullable().optional(),
@@ -127,7 +130,7 @@ export const SectionsSchema = z.object({
   themeFont: ThemeFontSchema.optional(),
   loadingScreen: LoadingScreenSchema.optional(),
   gallery: GallerySchema.optional(),
-  flipBook: z.object({}).optional(),
+  flipBook: FlipbookSchema.optional(),
 });
 export const WeddingInfoRequestSchema = z.object({
   sections: SectionsSchema.optional(),

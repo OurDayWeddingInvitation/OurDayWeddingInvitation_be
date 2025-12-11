@@ -1,3 +1,4 @@
+import logger from '@/config/logger';
 import prisma from '../../config/prisma';
 
 /**
@@ -7,6 +8,7 @@ import prisma from '../../config/prisma';
  * @returns user 레코드 또는 null
  */
 export const getFreshToken = async (refreshToken: string) => {
+  logger.info("[auth.service.ts][getFreshToken] Start", { refreshToken })
   return await prisma.user.findFirst({
     where: { refreshToken },
     include: { userSoc: true }

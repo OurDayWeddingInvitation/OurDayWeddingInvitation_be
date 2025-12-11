@@ -7,6 +7,8 @@ import { isSectionKey, SECTION_KEYS } from './wedd.constants';
 import path, { join } from 'path';
 import fs from 'fs';
 import fsp from 'fs/promises';
+import { v4 as uuid } from "uuid";
+import logger from '@/config/logger';
 
 /**
  * 사용자의 모든 wedd를 조회합니다(임시저장본 기준).
@@ -14,7 +16,8 @@ import fsp from 'fs/promises';
  * @returns weddingId, weddingTitle, mainImageUrl 정보를 담은 배열
  */
 export const getAllWedds = async (userId: string) => {
-  return prisma.$queryRaw<Array<{ weddingId: string, weddingTitle: string, mainImageUrl: string}>>
+  logger.info("[wedd.service.ts][getAllWedds] Start", { userId });
+  const result = await prisma.$queryRaw<Array<{ weddingId: string, weddingTitle: string, mainImageUrl: string}>>
     `
       SELECT
         DRAFT.WEDD_ID AS weddingId,
@@ -28,7 +31,9 @@ export const getAllWedds = async (userId: string) => {
       WHERE
         DRAFT.USER_ID = ${userId}
       ;
-    `;
+      `;
+  logger.info("[wedd.service.ts][getAllWedds] Complete", { userId, weddingId: result.map(r => r.weddingId) });
+  return result;
 };
 
 /**
@@ -37,6 +42,7 @@ export const getAllWedds = async (userId: string) => {
  * @returns WeddingInfoResponse 형태의 객체
  */
 export const getWeddById = async (weddingId: string): Promise<WeddingInfoResponse> => {
+  logger.info("[wedd.service.ts][getWeddById] Start", { weddingId });
   const wedd = await prisma.wedd.findUnique({ where: { weddingId } });
   if(!wedd)
     throw new AppError(404, '청첩장을 찾을 수 없습니다.');
@@ -45,6 +51,7 @@ export const getWeddById = async (weddingId: string): Promise<WeddingInfoRespons
     sections: mapDbToSections(wedd),
     sectionSettings: mapDbToSectionSettings(weddSectSet)
   }
+  logger.info("[wedd.service.ts][getWeddById] Complete", { weddingId });
   return result
 };
 
@@ -54,6 +61,7 @@ export const getWeddById = async (weddingId: string): Promise<WeddingInfoRespons
  * @returns WeddingInfoResponse 형태의 객체
  */
 export const getWeddEditById = async (weddingId: string): Promise<WeddingInfoResponse> => {
+  logger.info("[wedd.service.ts][getWeddEditById] Start", { weddingId });
   const wedd = await prisma.weddDraft.findUnique({ where: { weddingId } });
   if(!wedd)
     throw new AppError(404, '청첩장을 찾을 수 없습니다.');
@@ -63,6 +71,7 @@ export const getWeddEditById = async (weddingId: string): Promise<WeddingInfoRes
     sections: mapDbToSections(wedd),
     sectionSettings: mapDbToSectionSettings(weddSectSet)
   }
+  logger.info("[wedd.service.ts][getWeddEditById] Complete", { weddingId });
   return result
 };
 
@@ -74,35 +83,63 @@ export const getWeddEditById = async (weddingId: string): Promise<WeddingInfoRes
  * @returns 생성된 청첩장(WeddingInfoResponse)
  */
 export const createWedd = async (userId: string): Promise<WeddingInfoResponse> => {
+  logger.info("[wedd.service.ts][createWedd] Start", { userId });
   const result = await prisma.$transaction(async (tx) => {
     const now = new Date();
     // 1) weddDraft 레코드 생성(userId만 삽입)
     const weddDraft = await tx.weddDraft.create({
       data: { 
         userId: userId,
-        weddingTitle: '나의 웨딩',
-        mainPosterStyle: 'A',
-        weddingInfoNameOrderType: 'groomFirst',
+        weddingTitle: '나의 청첩장',
+        themeFontName: '1',
+        themeFontSize: 14,
+        themeFontBackgroundColor: '#FFF6FB',
+        themeFontAccentColor: '#D28BB3',
+        themeFontZoomPreventYn: false,
+        familyInfoGroomRankName: '아들',
+        familyInfoGroomFatherDeceased: false,
+        familyInfoGroomMotherDeceased: false,
+        familyInfoBrideRankName: '딸',
+        familyInfoBrideFatherDeceased: false,
+        familyInfoBrideMotherDeceased: false,
+        weddingInfoNameOrderType: '1',
         weddingInfoYear: String(now.getFullYear()),
-        weddingInfoMonth: String(now.getMonth() + 1).padStart(2, '0'),
-        weddingInfoDay: String(now.getDate()).padStart(2, '0'),
+        weddingInfoMonth: String(now.getMonth() + 1),
+        weddingInfoDay: String(now.getDate()),
         weddingInfoTimePeriod: '오전(AM)',
         weddingInfoHour: '09',
         weddingInfoMinute: '00',
-        familyInfoGroomFatherDeceased: false,
-        familyInfoGroomMotherDeceased: false,
-        familyInfoGroomRankName: '장남',
-        familyInfoBrideFatherDeceased: false,
-        familyInfoBrideMotherDeceased: false,
-        familyInfoBrideRankName: '장녀',
-        themeFontName: 'gothicA',
-        themeFontSize: 16,
-        themeFontBackgroundColor: '#ffffff',
-        themeFontAccentColor: '#000000',
-        themeFontZoomPreventYn: false,
-        loadingScreenStyle: 'A'
+        loadingScreenStyle: '1',
+        mainPosterStyle: '1',
+        invitationMessageTitle: '소중한 분들을 초대합니다',
+        invitationMessageContent: `<p style="text-align:center;margin:0;">
+                                    소중한 분들을 모시고<br/>
+                                    저희 두 사람이 한마음으로<br/>
+                                    새로운 삶을 시작하려 합니다.<br/><br/>
+                                    서로를 깊이 존중하고 아끼는 마음으로<br/>
+                                    기쁨은 나누고 어려움은 함께 이겨내며<br/>
+                                    평생 사랑하겠습니다.<br/><br/>
+                                    뜻깊은 시작의 자리에<br/>
+                                    귀한 걸음으로 축복을 나눠주신다면<br/>
+                                    더없는 기쁨이겠습니다.
+                                    </p>`,
+        coupleIntroTitle: '신랑 & 신부를 소개합니다',
+        coupleIntroGroomMessage: '<p style="text-align:center;margin:0;">나무같은 남편이<br>되겠습니다</p>;',
+        coupleIntroBrideMessage: '<p style="text-align:center;margin:0;">햇살같은 아내가<br>되겠습니다</p>;',
+        parentsIntroTitle: '우리의 부모님',
+        parentsIntroMessage: '저희의 시작을 사랑으로 응원해주신\n양가 부모님을 소개합니다.',
+        galleryTitle: '우리의 소중한 순간',
+        flipbookTitle: 'Our Love Moment',
+        flipbookMessage: '스크롤을 내리면 우리 두 사람의\n특별한 이야기가 펼쳐져요',
+        accountInfoTitle: '마음 전하실 곳',
+        accountInfoMessage: '바쁜 일정으로 참석이 어려우신 분들을 위해\n'
+                          + '소중한 마음을 전달하실 수 있도록\n'
+                          + '계좌번호를 함께 안내드립니다.\n'
+                          + '따듯한 축복에 깊이 감사드립니다.',
+        locationInfoTransport1Title: '지하철'
       }
     });
+    logger.info("[wedd.service.ts][createWedd] weddDraft created", { weddingId: weddDraft.weddingId });
     // 2) 모든 섹션에 대해 기본 섹션 설정을 생성(createMany)
     await tx.weddDraftSectSet.createMany({
       data: Object.values(SECTION_KEYS).map((key, index) => ({
@@ -112,6 +149,7 @@ export const createWedd = async (userId: string): Promise<WeddingInfoResponse> =
         displayOrder: index + 1,
       })),
     });
+    logger.info("[wedd.service.ts][createWedd] weddDraftSectSet created", { weddingId: weddDraft.weddingId });
     // 3) 생성된 섹션 설정을 조회하여 반환 형식으로 매핑
     const weddSectSet = await tx.weddDraftSectSet.findMany({ where: { weddingId: weddDraft.weddingId }, orderBy: { displayOrder: 'asc' } });
     return {
@@ -120,6 +158,7 @@ export const createWedd = async (userId: string): Promise<WeddingInfoResponse> =
       sectionSettins: mapDbToSectionSettings(weddSectSet)
     }
   });
+  logger.info("[wedd.service.ts][createWedd] Complete", { weddingId: result.weddingId });
   return result;
 };
 
@@ -132,6 +171,7 @@ export const createWedd = async (userId: string): Promise<WeddingInfoResponse> =
  * @returns 업데이트된 WeddingInfoResponse
  */
 export const replaceWedd = async (weddingId: string, data: WeddingInfoRequest): Promise<WeddingInfoResponse> => {
+  logger.info("[wedd.service.ts][replaceWedd] Start", { weddingId });
   const { sections, sectionSettings } = data as { sections: Sections, sectionSettings: SectionSettings[] };
 
   // sections 객체를 테이블 컬럼명에 맞는 객체로 변환(매핑) — weddDraft 업데이트에 사용
@@ -159,6 +199,8 @@ export const replaceWedd = async (weddingId: string, data: WeddingInfoRequest): 
       where: { weddingId },
       data: weddDraftData
     });
+    logger.info("[wedd.service.ts][replaceWedd] weddDraft updated", { weddingId });
+    
     const WeddSectSet: any[] = [];
     for await (const WeddSectSetData of [...WeddSectSetDataListFromSection, ...WeddSectSetDataList ?? []]){
       
@@ -170,9 +212,10 @@ export const replaceWedd = async (weddingId: string, data: WeddingInfoRequest): 
         data: WeddSectSetData
       }));
     }
-    
+    logger.info("[wedd.service.ts][replaceWedd] weddDraftSectSet updated", { weddingId });
     return { weddingId, weddDraft, sectionSettings: WeddSectSet };
   });
+  logger.info("[wedd.service.ts][replaceWedd] Complete", { weddingId });
   return result;
 };
 
@@ -186,6 +229,7 @@ export const replaceWedd = async (weddingId: string, data: WeddingInfoRequest): 
  * @throws 존재하지 않는 섹션 키인 경우 에러 발생
  */
 export const updateWeddSection = async (weddingId: string, sectionId: string, data: Sections) => {
+  logger.info("[wedd.service.ts][updateWeddSection] Start", { weddingId, sectionId });
   if (!isSectionKey(sectionId)) {
     throw new AppError(400, "존재하지 않는 섹션ID입니다.");
   }
@@ -198,6 +242,7 @@ export const updateWeddSection = async (weddingId: string, sectionId: string, da
     where: { weddingId },
     data: mappingData
   });
+  logger.info("[wedd.service.ts][updateWeddSection] Complete", { weddingId, sectionId });
 
   // DB 행을 다시 서비스 레벨 섹션 구조로 매핑하여 반환
   return mapDbToSections(result);
@@ -210,6 +255,7 @@ export const updateWeddSection = async (weddingId: string, sectionId: string, da
  * @throws 유효하지 않은 섹션 키가 발견되면 에러 발생
  */
 export const updateWeddSectsSet = async (weddingId: string, data: SettingSections) => {
+  logger.info("[wedd.service.ts][updateWeddSectsSet] Start", { weddingId });
   const sections = data.sectionSettings;
   const invalidSection = sections.find((section: SectionSettings) => 
     !isSectionKey(section.sectionKey)
@@ -235,6 +281,7 @@ export const updateWeddSectsSet = async (weddingId: string, data: SettingSection
       })
     )
   );
+  logger.info("[wedd.service.ts][updateWeddSectsSet] Complete", { weddingId });
 };
 
 /**
@@ -244,8 +291,10 @@ export const updateWeddSectsSet = async (weddingId: string, data: SettingSection
  * @returns 생성된 청첩장(WeddingInfoResponse)
  */
 export const applyWedd = async (weddingId: string): Promise<WeddingInfoResponse> => {
+  logger.info("[wedd.service.ts][applyWedd] Start", { weddingId });
   const result = await prisma.$transaction(async (tx) => {
-    // 임시저장본 조회
+
+    // 1. 드래프트 조회
     const weddDraft = await tx.weddDraft.findUnique({ where: { weddingId } });
     const weddDraftSectSet = await tx.weddDraftSectSet.findMany({ where: { weddingId } });
     const weddDraftMedia = await tx.weddDraftMedia.findMany({ where: { weddingId } });
@@ -254,82 +303,118 @@ export const applyWedd = async (weddingId: string): Promise<WeddingInfoResponse>
       throw new AppError(404, '청첩장을 찾을 수 없습니다.');
     }
 
-    // 기존 적용본 확인
+    // 기존 apply 데이터 존재 여부 확인
     const existingWedd = await tx.wedd.findUnique({ where: { weddingId } });
-    
-    if(weddDraftMedia){
-      // 파일 시스템에서 draft 폴더의 파일들을 apply 폴더로 이동
-      const draftDir = join(process.cwd(), `uploads/draft/${weddingId}`);
-      const applyDir = join(process.cwd(), `uploads/apply/${weddingId}`);
 
-      // 기존 apply 삭제
-      if (fs.existsSync(applyDir)) {
-        await fsp.rm(applyDir, { recursive: true, force: true });
-      }
+    // 2. apply 폴더 준비
+    const draftDir = join(process.cwd(), `uploads/draft/${weddingId}`);
+    const applyDir = join(process.cwd(), `uploads/apply/${weddingId}`);
 
-      // draft → apply 로 폴더째 이동
-      if (fs.existsSync(draftDir)) {
-        await fsp.cp(draftDir, applyDir, { recursive: true });
-      }
+    // 기존 apply 폴더 삭제
+    if (fs.existsSync(applyDir)) {
+      await fsp.rm(applyDir, { recursive: true, force: true });
+      logger.info("[wedd.service.ts][applyWedd] Existing applyDir removed", { weddingId });
+    }
+    await fsp.mkdir(applyDir, { recursive: true });
+    logger.info("[wedd.service.ts][applyWedd] New applyDir made", { weddingId });
 
-      // 이후 DB 경로 업데이트 예시
-      for (const m of weddDraftMedia) {
-        m.originalUrl = m.originalUrl?.replace('/draft/', '/apply/') || null;
-        m.editedUrl = m.editedUrl?.replace('/draft/', '/apply/') || null;
+    // 3. draftMedia → applyMedia 변환
+    const newApplyMediaList = [];
 
-        await tx.weddMedia.deleteMany({
-          where: {
-            weddingId: weddingId,
-            mediaId: m.mediaId
-          }
-        });
+    for (const m of weddDraftMedia) {
+      const maxMedia = await tx.weddDraftMedia.aggregate({
+        _max: { mediaId: true },
+        where: { weddingId },
+      });
 
-        await tx.weddMedia.create({
-          data: m
-        });
-      }
+      const nextMediaId = (maxMedia._max.mediaId ?? 0) + 1;
+      logger.info("[wedd.service.ts][applyWedd] Read nextMediaId", { weddingId, nextMediaId });
+
+      // 파일 1개당 새 UUID 발급
+      const newUUID = uuid();
+      const ext = m.originalUrl?.split(".").pop() ?? "jpg";
+
+      // draft 파일 경로 계산
+      const draftFileName = m.originalUrl?.split("/").pop();
+      const draftFilePath = join(draftDir, draftFileName!);
+
+      // apply 파일명
+      const newFileName = `${newUUID}.${ext}`;
+      const newFilePath = join(applyDir, newFileName);
+
+      // draft → apply (파일명 변경하여 복사)
+      await fsp.copyFile(draftFilePath, newFilePath);
+      logger.info("[wedd.service.ts][applyWedd] File copied", { weddingId, draftPath: draftFilePath, applyPath: newFilePath });
+
+      // DB용 데이터 구성
+      newApplyMediaList.push({
+        weddingId,
+        mediaId: nextMediaId,
+        imageType: m.imageType,
+        originalUrl: `/uploads/apply/${weddingId}/${newFileName}`,
+        editedUrl: m.editedUrl
+          ? `/uploads/apply/${weddingId}/${newFileName}`
+          : null
+      });
     }
 
+    logger.info("[wedd.service.ts][applyWedd] Media Data for DB", { mediaDataList: newApplyMediaList });
+
+    // 4. 기존 apply media 삭제
+    await tx.weddMedia.deleteMany({ where: { weddingId } });
+    logger.info("[wedd.service.ts][applyWedd] weddMedia deleted", { weddingId });
+
+    // 5. wedd 적용
     let wedd;
     if (existingWedd) {
-      // 섹션 설정도 삭제 후 재생성
+      // 기존 weddSectSet 삭제
       await tx.weddSectSet.deleteMany({ where: { weddingId } });
-      await tx.weddSectSet.createMany({
-        data: weddDraftSectSet.map(sect => ({
-          weddingId: sect.weddingId,
-          sectionKey: sect.sectionKey,
-          displayYn: sect.displayYn,
-          displayOrder: sect.displayOrder
-        }))
-      });
-
-      // 적용본이 있으면 삭제 후 재생성
+      logger.info("[wedd.service.ts][applyWedd] weddSectSet deleted", { weddingId });
+      // 기존 wedd 삭제 후 재생성
       await tx.wedd.delete({ where: { weddingId } });
-      wedd = await tx.wedd.create({
-        data: weddDraft
-      });
-    } else {
-      // 적용본이 없으면 생성
-      wedd = await tx.wedd.create({
-        data: weddDraft
-      });
+      logger.info("[wedd.service.ts][applyWedd] wedd deleted", { weddingId });
 
-      // 섹션 설정도 생성
+      // wedd, weddSectSet 재생성
+      wedd = await tx.wedd.create({ data: weddDraft });
+      logger.info("[wedd.service.ts][applyWedd] wedd create", { weddingId });
       await tx.weddSectSet.createMany({
-        data: weddDraftSectSet.map(sect => ({
+        data: weddDraftSectSet.map((sect) => ({
           weddingId: sect.weddingId,
           sectionKey: sect.sectionKey,
           displayYn: sect.displayYn,
-          displayOrder: sect.displayOrder
-        }))
+          displayOrder: sect.displayOrder,
+        })),
       });
+      logger.info("[wedd.service.ts][applyWedd] weddSectSet created", { weddingId });
+    } else {
+      // wedd, weddSectSet 생성
+      wedd = await tx.wedd.create({
+        data: weddDraft,
+      });
+      logger.info("[wedd.service.ts][applyWedd] wedd create", { weddingId });
+      await tx.weddSectSet.createMany({
+        data: weddDraftSectSet.map((sect) => ({
+          weddingId: sect.weddingId,
+          sectionKey: sect.sectionKey,
+          displayYn: sect.displayYn,
+          displayOrder: sect.displayOrder,
+        })),
+      });
+      logger.info("[wedd.service.ts][applyWedd] weddSectSet create", { weddingId });
     }
 
+    // 6. apply media 생성
+    await tx.weddMedia.createMany({
+      data: newApplyMediaList,
+    });
+    logger.info("[wedd.service.ts][applyWedd] weddMedia created", { weddingId });
+    logger.info("[wedd.service.ts][applyWedd] Complete", { weddingId });
     return { weddingId, wedd, sectionSettings: weddDraftSectSet };
   });
 
   return result;
 };
+
 
 /**
  * wedd 및 연관된 임시저장본/적용본/섹션/미디어를 삭제합니다.
@@ -337,14 +422,21 @@ export const applyWedd = async (weddingId: string): Promise<WeddingInfoResponse>
  * @param weddingId - 삭제할 웨딩 ID
  */
 export const deleteWedd = async (weddingId: string) => {
+  logger.info("[wedd.service.ts][deleteWedd] Start", { weddingId });
   // 주석: 트랜잭션 안에서 관련된 레코드들을 모두 삭제하여 참조 무결성을 보장합니다.
   await prisma.$transaction(async (tx) => {
     await tx.wedd.delete({ where: { weddingId } }).catch(() => null);
+    logger.info("[wedd.service.ts][deleteWedd] wedd deleted", { weddingId });
     await tx.weddDraft.delete({ where: { weddingId } }).catch(() => null);
+    logger.info("[wedd.service.ts][deleteWedd] weddDraft deleted", { weddingId });
     await tx.weddSectSet.deleteMany({ where: { weddingId } });
+    logger.info("[wedd.service.ts][deleteWedd] weddSectSet deleted", { weddingId });
     await tx.weddDraftSectSet.deleteMany({ where: { weddingId } });
+    logger.info("[wedd.service.ts][deleteWedd] weddDraftSectSet deleted", { weddingId });
     await tx.weddMedia.deleteMany({ where: { weddingId } });
+    logger.info("[wedd.service.ts][deleteWedd] weddMedia deleted", { weddingId });
     await tx.weddDraftMedia.deleteMany({ where: { weddingId } });
+    logger.info("[wedd.service.ts][deleteWedd] weddDraftMedia deleted", { weddingId });
 
     // 파일 시스템에서 관련 폴더들을 삭제
     const draftDir = join(process.cwd(), `uploads/draft/${weddingId}`);
@@ -352,11 +444,14 @@ export const deleteWedd = async (weddingId: string) => {
 
     if (fs.existsSync(draftDir)) {
       await fsp.rm(draftDir, { recursive: true, force: true });
+      logger.info("[wedd.service.ts][deleteWedd] draftDir removed", { weddingId });
     }
     if (fs.existsSync(applyDir)) {
       await fsp.rm(applyDir, { recursive: true, force: true });
+      logger.info("[wedd.service.ts][deleteWedd] applyDir removed", { weddingId });
     }
   })
+  logger.info("[wedd.service.ts][deleteWedd] Complete", { weddingId });
 };
 
 /**

@@ -2,9 +2,11 @@ import { Request, Response } from 'express';
 import * as authService from './auth.service';
 import { generateAccessToken, verifyToken } from '../../core/utils/token';
 import { AppError } from '@/core/errors/AppError';
+import logger from '@/config/logger';
 
 export async function postAuthTokenRefresh(req: Request, res: Response) {
   const { refreshToken } = req.body;
+  logger.info("[auth.controller.ts][postAuthTokenRefresh] Start", { refreshToken })
 
   if (!refreshToken)
     throw new AppError(400, '리프레시 토큰이 없습니다.');

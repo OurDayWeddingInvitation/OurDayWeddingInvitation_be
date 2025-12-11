@@ -548,6 +548,18 @@
             "null"
           ]
         },
+        "flipbookTitle": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "flipbookMessage": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "createdAt": {
           "type": [
             "string",
@@ -1003,6 +1015,18 @@
           ]
         },
         "galleryTitle": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "flipbookTitle": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "flipbookMessage": {
           "type": [
             "string",
             "null"

@@ -149,7 +149,10 @@ export function mapGalleryToDb(data?: Gallery): GalleryDb {
 
 export function mapFlipboockToDb(data?: Flipbook): FlipbookDb {
   if(!data) return {};
-  return data
+  return{
+    flipbookTitle: data.title,
+    flipbookMessage: data.message
+  } 
 }
 
 export function mapSectionSettingsToDb(data: SectionSettings[]): SectionSettingsDb[] {
@@ -338,7 +341,8 @@ export function mapDbToGallery(row: Wedd | null): Gallery {
 // FLIPBOOK
 export function mapDbToFlipbook(row: Wedd | null): Flipbook {
   return {
-    // ...row
+    title: row?.flipbookTitle ?? null,
+    message: row?.flipbookMessage ?? null
   };
 }
 

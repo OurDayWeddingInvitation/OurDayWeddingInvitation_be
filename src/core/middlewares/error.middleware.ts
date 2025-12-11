@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { AppError } from '../errors/AppError';
+import logger from '@/config/logger';
+import { level } from 'winston';
 
 /**
  * 전역 에러 핸들러 미들웨어
@@ -18,9 +20,27 @@ export function errorHandler(
   res: Response,
   next: NextFunction
 ) {
-  console.error(err);
+  const error = err instanceof Error ? err : new Error(typeof err === "string" ? err : "Unknown error");
 
+  // 공통 로그 데이터
+  const logPayload = {
+    method: req.method,
+    url: req.originalUrl,
+    ip: req.ip,
+    body: req.body,
+    query: req.query,
+    params: req.params,
+    message: error.message,
+    stack: error.stack,
+  };
+
+  // 1) AppError 처리 (클라이언트가 예측 가능)
   if (err instanceof AppError) {
+    logger.warn('[AppError]', {
+      ...logPayload,
+      statusCode: err.statusCode,
+    });
+
     return res.status(err.statusCode).json({
       status: err.statusCode,
       error: {
@@ -31,6 +51,9 @@ export function errorHandler(
       data: null
     });
   }
+
+  // 2) 그 외 예기치 못한 에러 처리 (서버 문제)
+  logger.error('[UnhandledError]', logPayload);
 
   return res.status(500).json({
     status: 500,

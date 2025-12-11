@@ -106,7 +106,10 @@ export interface LoadingScreenDb {
 export interface GalleryDb {
   galleryTitle?: string | null;
 }
-export interface FlipbookDb {}
+export interface FlipbookDb {
+  flipbookTitle?: string | null;
+  flipbookMessage?: string | null;
+}
 
 // 전체 Wedd 기반 DB 타이핑 (통합)
 export interface WeddDb

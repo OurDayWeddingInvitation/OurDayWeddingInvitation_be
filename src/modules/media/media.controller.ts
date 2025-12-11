@@ -1,8 +1,11 @@
 import { Request, Response } from 'express';
 import * as mediaService from './media.service';
 import { AppError } from '../../core/errors/AppError';
+import logger from '@/config/logger';
 
 export const getAllMediaEdit = async (req: Request, res: Response) => {
+  const { userId } = req.user;
+  logger.info("[wedd.media.ts][getAllMediaEdit] Start", { userId })
   const weddingId = req.params.weddingId;
   const mediaArray = await mediaService.getAllMediaEdit(weddingId);
   res.status(200).json({
@@ -14,6 +17,8 @@ export const getAllMediaEdit = async (req: Request, res: Response) => {
 }
 
 export const getAllMedia = async (req: Request, res: Response) => {
+  const { userId } = req.user;
+  logger.info("[wedd.media.ts][getAllMedia] Start", { userId })
   const weddingId = req.params.weddingId;
   const mediaArray = await mediaService.getAllMedia(weddingId);
 
@@ -26,6 +31,8 @@ export const getAllMedia = async (req: Request, res: Response) => {
 }
 
 export const postMedia = async (req: Request, res: Response) => {
+  const { userId } = req.user;
+  logger.info("[wedd.media.ts][postMedia] Start", { userId })
   const weddingId = req.params.weddingId;
   const metadata = req.body;
 
@@ -45,6 +52,8 @@ export const postMedia = async (req: Request, res: Response) => {
 }
 
 export const croppedMedia = async (req: Request, res: Response) => {
+  const { userId } = req.user;
+  logger.info("[wedd.media.ts][croppedMedia] Start", { userId })
   const weddingId = req.params.weddingId;
   const mediaId = Number(req.params.mediaId);
   // const metadata = JSON.parse(req.body);
@@ -65,6 +74,8 @@ export const croppedMedia = async (req: Request, res: Response) => {
 }
 
 export const reorderMedia = async (req: Request, res: Response) => {
+  const { userId } = req.user;
+  logger.info("[wedd.media.ts][reorderMedia] Start", { userId })
   const weddingId = req.params.weddingId;
   await mediaService.reorderMedia(weddingId, req.body.media);
   res.status(200).json({
@@ -76,6 +87,8 @@ export const reorderMedia = async (req: Request, res: Response) => {
 }
 
 export const deleteMedia = async (req: Request, res: Response) => {
+  const { userId } = req.user;
+  logger.info("[wedd.media.ts][deleteMedia] Start", { userId })
   const weddingId = req.params.weddingId;
   const mediaId = Number(req.params.mediaId);
 
@@ -90,6 +103,8 @@ export const deleteMedia = async (req: Request, res: Response) => {
 }
 
 export const deleteByTypeMedia = async (req: Request, res: Response) => {
+  const { userId } = req.user;
+  logger.info("[wedd.media.ts][deleteByTypeMedia] Start", { userId })
   const weddingId = req.params.weddingId;
   const imageType = req.body.imageType;
 
@@ -101,14 +116,4 @@ export const deleteByTypeMedia = async (req: Request, res: Response) => {
     messages: '이미지 타입 전체 삭제 완료',
     data: null,
   });
-}
-
-export const getDraftMedia = async (req: Request, res: Response) => {
-  console.log('hi');
-  const weddingId = req.params.weddingId;
-  const fileName = req.params.fileName;
-
-  const filePath = await mediaService.getDraftMedia(weddingId, fileName);
-
-  res.sendFile(filePath);
 }

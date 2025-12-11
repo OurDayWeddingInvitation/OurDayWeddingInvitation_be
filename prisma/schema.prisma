@@ -56,8 +56,8 @@ model Wedd {
   weddingTitle    String?     @db.Text @map("wedd_ttl")
   weddingSlug     String?     @db.VarChar(100) @map("wedd_slug")
 
-  mainPosterStyle                  String?    @db.VarChar(50) @map("main_poster_styl")
-  shareLinkTitle                   String?    @db.Text @map("shr_ttl")
+  mainPosterStyle                 String?    @db.VarChar(50) @map("main_poster_styl")
+  shareLinkTitle                  String?    @db.Text @map("shr_ttl")
   weddingInfoGroomLastName        String?    @db.VarChar(50) @map("info_grm_last_nm")
   weddingInfoGroomFirstName       String?    @db.VarChar(50) @map("info_grm_first_nm")
   weddingInfoBrideLastName        String?    @db.VarChar(50) @map("info_brd_last_nm")
@@ -124,6 +124,8 @@ model Wedd {
   themeFontZoomPreventYn          Boolean?                   @map("theme_zoom_prevent_yn")
   loadingScreenStyle              String?    @db.VarChar(50) @map("load_styl")
   galleryTitle                    String?    @db.VarChar(50) @map("glly_ttl")
+  flipbookTitle                   String?    @db.VarChar(50) @map("flipbook_ttl")
+  flipbookMessage                 String?    @db.Text        @map("flipbook_message")
 
   createdAt       DateTime?   @default(now()) @db.DateTime(0) @map("creat_dt")
   updatedAt       DateTime?   @updatedAt @db.DateTime(0) @map("updt_dt")
@@ -211,6 +213,8 @@ model WeddDraft {
   themeFontZoomPreventYn          Boolean?                   @map("theme_zoom_prevent_yn")
   loadingScreenStyle              String?    @db.VarChar(50) @map("load_styl")
   galleryTitle                    String?    @db.VarChar(50) @map("glly_ttl")
+  flipbookTitle                   String?    @db.VarChar(50) @map("flipbook_ttl")
+  flipbookMessage                 String?    @db.Text        @map("flipbook_message")
 
   createdAt       DateTime?   @default(now()) @db.DateTime(0) @map("creat_dt")
   updatedAt       DateTime?   @updatedAt @db.DateTime(0) @map("updt_dt")
