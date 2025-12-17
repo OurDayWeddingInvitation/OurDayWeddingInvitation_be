@@ -94,6 +94,10 @@ export const LocationInfoSchema = z.object({
   transport2Message: z.string().nullable().optional(),
   transport3Title: z.string().nullable().optional(),
   transport3Message: z.string().nullable().optional(),
+  transport4Title: z.string().nullable().optional(),
+  transport4Message: z.string().nullable().optional(),
+  transport5Title: z.string().nullable().optional(),
+  transport5Message: z.string().nullable().optional(),
 });
 export const ThemeFontSchema = z.object({
   fontName: z.string().nullable().optional(),

@@ -7,6 +7,12 @@
         "userId": {
           "type": "string"
         },
+        "userName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "refreshToken": {
           "type": [
             "string",
@@ -506,6 +512,30 @@
             "null"
           ]
         },
+        "locationInfoTransport4Title": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "locationInfoTransport4Message": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "locationInfoTransport5Title": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "locationInfoTransport5Message": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "themeFontName": {
           "type": [
             "string",
@@ -973,6 +1003,30 @@
           ]
         },
         "locationInfoTransport3Message": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "locationInfoTransport4Title": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "locationInfoTransport4Message": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "locationInfoTransport5Title": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "locationInfoTransport5Message": {
           "type": [
             "string",
             "null"

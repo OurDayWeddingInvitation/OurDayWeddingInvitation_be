@@ -118,7 +118,11 @@ export function mapLocationInfoToDb(data?: LocationInfo): LocationInfoDb {
     locationInfoTransport2Title: data.transport2Title,
     locationInfoTransport2Message: data.transport2Message,
     locationInfoTransport3Title: data.transport3Title,
-    locationInfoTransport3Message: data.transport3Message
+    locationInfoTransport3Message: data.transport3Message,
+    locationInfoTransport4Title: data.transport4Title,
+    locationInfoTransport4Message: data.transport4Message,
+    locationInfoTransport5Title: data.transport5Title,
+    locationInfoTransport5Message: data.transport5Message
   }
 }
 
@@ -305,7 +309,11 @@ export function mapDbToLocationInfo(row: Wedd | null): LocationInfo {
     transport2Title: row?.locationInfoTransport2Title ?? null,
     transport2Message: row?.locationInfoTransport2Message ?? null,
     transport3Title: row?.locationInfoTransport3Title ?? null,
-    transport3Message: row?.locationInfoTransport3Message ?? null
+    transport3Message: row?.locationInfoTransport3Message ?? null,
+    transport4Title: row?.locationInfoTransport4Title ?? null,
+    transport4Message: row?.locationInfoTransport4Message ?? null,
+    transport5Title: row?.locationInfoTransport5Title ?? null,
+    transport5Message: row?.locationInfoTransport5Message ?? null
   };
 }
 

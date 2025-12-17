@@ -15,7 +15,7 @@ const options: Options = {
     security: [{ bearerAuth: [] }],
     servers: [
       {
-        url: 'http://www.ourday.kr',
+        url: 'https://www.ourday.kr',
         description: 'Local Server',
       },
       {

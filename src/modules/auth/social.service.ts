@@ -64,8 +64,9 @@ export async function socialLogin(providerName: string, code: string, state?: st
     await prisma.user.update({
       where: { userId: user.userId},
       data: {
+        userName: userInfo.name,
         lastProviderName: providerName,
-        refreshToken: refreshToken
+        refreshToken
       }
     })
     logger.info("[social.service.ts][socialLogin] user lastProviderName and refreshToken updated", { userId: user.userId, lastProviderName: providerName, refreshToken })
@@ -78,6 +79,7 @@ export async function socialLogin(providerName: string, code: string, state?: st
     user = await prisma.user.update({
       where: { userId: userSoc.userId },
       data: {
+        userName: userInfo.name,
         lastProviderName: providerName,
         refreshToken
       },

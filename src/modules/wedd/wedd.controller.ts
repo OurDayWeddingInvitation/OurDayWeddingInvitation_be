@@ -3,7 +3,7 @@ import * as weddService from './wedd.service';
 import logger from '@/config/logger';
 
 /**
- * 사용자의 wedd 전체 조회
+ * 사용자의 청첩장 전체 조회
  */
 export const getAllWedds = async (req: Request, res: Response) => {
   const { userId } = req.user;
@@ -18,13 +18,13 @@ export const getAllWedds = async (req: Request, res: Response) => {
 }
 
 /**
- * Wedd 단건 조회
+ * 청첩장 적용본 단건 조회
  */
 export const getWeddById = async (req: Request, res: Response) => {
   const { userId } = req.user;
   logger.info("[wedd.controller.ts][getWeddById] Start", { userId })
   const weddingId = req.params.weddingId;
-  const wedd = await weddService.getWeddById(weddingId);
+  const wedd = await weddService.getWeddById(userId, weddingId);
   res.status(200).json({
     status: 200,
     error: null,
@@ -34,13 +34,13 @@ export const getWeddById = async (req: Request, res: Response) => {
 };
 
 /**
- * Wedd 임시저장본 단건 조회
+ * 청첩장 단건 조회
  */
 export const getWeddEditById = async (req: Request, res: Response) => {
   const { userId } = req.user;
   logger.info("[wedd.controller.ts][getWeddEditById] Start", { userId })
   const weddingId = req.params.weddingId;
-  const wedd = await weddService.getWeddEditById(weddingId);
+  const wedd = await weddService.getWeddEditById(userId, weddingId);
   res.status(200).json({
     status: 200,
     error: null,
@@ -50,23 +50,7 @@ export const getWeddEditById = async (req: Request, res: Response) => {
 };
 
 /**
- * Wedd 단건 조회
- */
-export const getWeddById2= async (req: Request, res: Response) => {
-  const { userId } = req.user;
-  logger.info("[wedd.controller.ts][getWeddById2] Start", { userId })
-  const weddingId = req.params.weddingId;
-  const wedd = await weddService.getWeddById2(weddingId);
-  res.status(200).json({
-    status: 200,
-    error: null,
-    messages: "청첩장 조회 성공",
-    data: wedd,
-  });
-};
-
-/**
- * Wedd 생성
+ * 청첩장 생성
  */
 export const createWedd = async (req: Request, res: Response) => {
   const { userId } = req.user;
@@ -81,13 +65,13 @@ export const createWedd = async (req: Request, res: Response) => {
 };
 
 /**
- * Wedd 교체
+ * 청첩장 전체 교체
  */
 export const replaceWedd = async (req: Request, res: Response) => {
   const { userId } = req.user;
   logger.info("[wedd.controller.ts][replaceWedd] Start", { userId })
   const weddingId = req.params.weddingId;
-  const wedd = await weddService.replaceWedd(weddingId, req.body);
+  const wedd = await weddService.replaceWedd(userId, weddingId, req.body);
   res.status(200).json({
     status: 200,
     error: null,
@@ -97,14 +81,14 @@ export const replaceWedd = async (req: Request, res: Response) => {
 };
 
 /**
- * Wedd 수정
+ * 청첩장 섹션 단위 수정
  */
 export const updateWeddSection = async (req: Request, res: Response) => {
   const { userId } = req.user;
   logger.info("[wedd.controller.ts][updateWeddSection] Start", { userId })
   const weddingId = req.params.weddingId;
   const sectionId = req.params.sectionId;
-  const wedd = await weddService.updateWeddSection(weddingId, sectionId, req.body);
+  const wedd = await weddService.updateWeddSection(userId, weddingId, sectionId, req.body);
   res.status(200).json({
     status: 200,
     error: null,
@@ -114,13 +98,13 @@ export const updateWeddSection = async (req: Request, res: Response) => {
 };
 
 /**
- * Wedd 삭제
+ * 청첩장 삭제
  */
 export const deleteWedd = async (req: Request, res: Response) => {
   const { userId } = req.user;
   logger.info("[wedd.controller.ts][deleteWedd] Start", { userId })
   const weddingId = req.params.weddingId;
-  await weddService.deleteWedd(weddingId);
+  await weddService.deleteWedd(userId, weddingId);
   res.status(200).json({
     status: 200,
     error: null,
@@ -130,13 +114,13 @@ export const deleteWedd = async (req: Request, res: Response) => {
 };
 
 /**
- * 청첩장 섹션 순서 변경
+ * 청첩장 섹션 순서 및 표시여부 변경
  */
 export const updateWeddSectsSet = async (req: Request, res: Response) => {
   const { userId } = req.user;
   logger.info("[wedd.controller.ts][updateWeddSectsSet] Start", { userId })
   const weddingId = req.params.weddingId;
-  const wedd = await weddService.updateWeddSectsSet(weddingId, req.body);
+  const wedd = await weddService.updateWeddSectsSet(userId, weddingId, req.body);
   res.status(200).json({
     status: 200,
     error: null,
@@ -146,17 +130,38 @@ export const updateWeddSectsSet = async (req: Request, res: Response) => {
 };
 
 /**
- * 청첩장 섹션 순서 변경
+ * 청첩장 적용
  */
 export const applyWedd = async (req: Request, res: Response) => {
   const { userId } = req.user;
   logger.info("[wedd.controller.ts][applyWedd] Start", { userId })
   const weddingId = req.params.weddingId;
-  const wedd = await weddService.applyWedd(weddingId);
+  const wedd = await weddService.applyWedd(userId, weddingId);
   res.status(200).json({
     status: 200,
     error: null,
     messages: "청첩장 적용 성공",
+    data: wedd,
+  });
+};
+
+
+
+
+
+
+/**
+ * 청첩장 단건 조회(테스트)
+ */
+export const getWeddById2= async (req: Request, res: Response) => {
+  const { userId } = req.user;
+  logger.info("[wedd.controller.ts][getWeddById2] Start", { userId })
+  const weddingId = req.params.weddingId;
+  const wedd = await weddService.getWeddById2(weddingId);
+  res.status(200).json({
+    status: 200,
+    error: null,
+    messages: "청첩장 조회 성공",
     data: wedd,
   });
 };

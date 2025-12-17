@@ -104,9 +104,6 @@ const router = Router();
  *                   type: object
  *                   example: null
  */
-
-
-
 router.post('/:provider', asyncHandler(socialController.postSocialAuth));
 
 export default router;

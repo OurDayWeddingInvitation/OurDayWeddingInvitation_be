@@ -18,8 +18,8 @@ export async function naverAuth({ code, state }: { code: string; state?: string 
   const userRes = await axios.get('https://openapi.naver.com/v1/nid/me', {
     headers: { Authorization: `Bearer ${access_token}` },
   });
-  logger.info("[naver.service.ts][naverAuth] Complete get naver login", { access_token, userRes })
-  logger.info("[naver.service.ts][naverAuth] Complete ", { userRes })
+  logger.info("[naver.service.ts][naverAuth] Complete get naver login", { access_token, userInfo: userRes.data.response })
+  logger.info("[naver.service.ts][naverAuth] Complete ", { userInfo: userRes.data.response })
   return {
     tokens: { access_token, refresh_token, expires_in },
     userInfo: userRes.data.response,

@@ -278,6 +278,12 @@ const router = Router();
  *         transport3Message:
  *           type: string
  *           example: null
+ *         transport4Title:
+ *           type: string
+ *           example: null
+ *         transport4Message:
+ *           type: string
+ *           example: null
  *
  *     # ==========================
  *     # Section: themeFont

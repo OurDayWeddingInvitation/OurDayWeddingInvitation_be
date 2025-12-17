@@ -86,12 +86,15 @@ export async function uploadMediaBackup({
  * @param weddingId - 조회할 웨딩 ID
  * @returns weddMedia 레코드 배열
  */
-export const getAllMediaEdit = async (weddingId: string) => {
-  logger.info("[media.service.ts][getAllMediaEdit] Start", { weddingId });
+export const getAllMediaEdit = async (userId: string, weddingId: string) => {
+  logger.info("[media.service.ts][getAllMediaEdit] Start", { userId, weddingId });
+  const wedd = await prisma.wedd.findUnique({ where: { userId, weddingId } });
+  if(!wedd)
+    throw new AppError(404, '청첩장을 찾을 수 없습니다.');
   const result = await prisma.weddDraftMedia.findMany({
     where: { weddingId }
   })
-  logger.info("[media.service.ts][getAllMediaEdit] Complete", { weddingId });
+  logger.info("[media.service.ts][getAllMediaEdit] Complete", { userId, weddingId });
   return result;
 }
 
@@ -100,12 +103,15 @@ export const getAllMediaEdit = async (weddingId: string) => {
  * @param weddingId - 조회할 웨딩 ID
  * @returns weddMedia 레코드 배열
  */
-export const getAllMedia = async (weddingId: string) => {
-  logger.info("[media.service.ts][getAllMedia] Start", { weddingId });
+export const getAllMedia = async (userId: string, weddingId: string) => {
+  logger.info("[media.service.ts][getAllMedia] Start", { userId, weddingId });
+  const wedd = await prisma.wedd.findUnique({ where: { userId, weddingId } });
+  if(!wedd)
+    throw new AppError(404, '청첩장을 찾을 수 없습니다.');
   const result = await prisma.weddMedia.findMany({
     where: { weddingId }
   })
-  logger.info("[media.service.ts][getAllMedia] Complete", { weddingId });
+  logger.info("[media.service.ts][getAllMedia] Complete", { userId, weddingId });
   return result;
 }
 
@@ -118,11 +124,15 @@ export const getAllMedia = async (weddingId: string) => {
  * @returns 생성된 weddMedia 레코드
  */
 export const uploadMedia = async (
+  userId: string,
   weddingId: string,
   metadata: MediaRequest,
   file: Express.Multer.File
 ) => {
-  logger.info("[media.service.ts][uploadMedia] Start", { weddingId });
+  logger.info("[media.service.ts][uploadMedia] Start", { userId, weddingId });
+  const wedd = await prisma.wedd.findUnique({ where: { userId, weddingId } });
+  if(!wedd)
+    throw new AppError(404, '청첩장을 찾을 수 없습니다.');
   const tempPath = file.path;
   const newUUID = uuid();
   const ext = path.extname(file.originalname);
@@ -131,12 +141,12 @@ export const uploadMedia = async (
 
   // 업로드 디렉토리 생성 및 임시 파일을 대상 경로로 이동
   fs.mkdirSync(join(process.cwd(), `/uploads/draft/${weddingId}`), { recursive: true });
-  logger.info("[media.service.ts][uploadMedia] Directory made", { weddingId });
+  logger.info("[media.service.ts][uploadMedia] Directory made", { userId, weddingId });
 
   await fsp.copyFile(tempPath, absoluteNewPath);
-  logger.info("[media.service.ts][uploadMedia] File copied", { weddingId, tempPath, uploadPath: absoluteNewPath });
+  logger.info("[media.service.ts][uploadMedia] File copied", { userId, weddingId, tempPath, uploadPath: absoluteNewPath });
   await fsp.unlink(tempPath);
-  logger.info("[media.service.ts][uploadMedia] Temp file remove", { weddingId });
+  logger.info("[media.service.ts][uploadMedia] Temp file remove", { userId, weddingId });
 
   return await prisma.$transaction(async (tx) => {
     // 현재 최대 mediaId를 조회하여 다음 mediaId 계산
@@ -146,7 +156,7 @@ export const uploadMedia = async (
     });
 
     const nextMediaId = (maxMedia._max.mediaId ?? 0) + 1;
-    logger.info("[media.service.ts][uploadMedia] Read nextMediaId", { weddingId, nextMediaId, uploadPath: absoluteNewPath });
+    logger.info("[media.service.ts][uploadMedia] Read nextMediaId", { userId, weddingId, nextMediaId, uploadPath: absoluteNewPath });
 
     const media = await tx.weddDraftMedia.create({
       data: {
@@ -159,8 +169,8 @@ export const uploadMedia = async (
         fileSize: file.size,
       },
     });
-    logger.info("[media.service.ts][uploadMedia] weddDraftMedia created", { weddingId, mediaId: nextMediaId });
-    logger.info("[media.service.ts][uploadMedia] Complete", { weddingId, mediaId: nextMediaId, uploadPath: absoluteNewPath });
+    logger.info("[media.service.ts][uploadMedia] weddDraftMedia created", { userId, weddingId, mediaId: nextMediaId });
+    logger.info("[media.service.ts][uploadMedia] Complete", { userId, weddingId, mediaId: nextMediaId, uploadPath: absoluteNewPath });
     return media;
   });
 }
@@ -174,11 +184,15 @@ export const uploadMedia = async (
  * @returns 업데이트된 weddMedia 레코드
  */
 export const croppedMedia = async (
+  userId: string,
   weddingId: string,
   mediaId: number,
   file: Express.Multer.File
 ) => {
-  logger.info("[media.service.ts][croppedMedia] Start", { weddingId, mediaId });
+  logger.info("[media.service.ts][croppedMedia] Start", { userId, weddingId, mediaId });
+  const wedd = await prisma.wedd.findUnique({ where: { userId, weddingId } });
+  if(!wedd)
+    throw new AppError(404, '청첩장을 찾을 수 없습니다.');
   const existing = await prisma.weddDraftMedia.findUnique({
     where: {
       weddingId_mediaId: {
@@ -205,9 +219,9 @@ export const croppedMedia = async (
   }
 
   await fsp.copyFile(tempPath, absoluteNewPath);
-  logger.info("[media.service.ts][croppedMedia] File copied", { weddingId, mediaId, tempPath, uploadPath: absoluteNewPath });
+  logger.info("[media.service.ts][croppedMedia] File copied", { userId, weddingId, mediaId, tempPath, uploadPath: absoluteNewPath });
   await fsp.unlink(tempPath);
-  logger.info("[media.service.ts][croppedMedia] Temp flie removed", { weddingId, mediaId, tempPath });
+  logger.info("[media.service.ts][croppedMedia] Temp flie removed", { userId, weddingId, mediaId, tempPath });
 
   const media = await prisma.weddDraftMedia.update({
     where: {
@@ -218,8 +232,8 @@ export const croppedMedia = async (
     },
     data: { editedUrl: newPath }
   })
-  logger.info("[media.service.ts][croppedMedia] weddDraftMedia updated", { weddingId, mediaId });
-  logger.info("[media.service.ts][croppedMedia] Complete", { weddingId, mediaId });
+  logger.info("[media.service.ts][croppedMedia] weddDraftMedia updated", { userId, weddingId, mediaId });
+  logger.info("[media.service.ts][croppedMedia] Complete", { userId, weddingId, mediaId });
   return media;
 }
 
@@ -228,8 +242,11 @@ export const croppedMedia = async (
  * @param weddingId - 대상 웨딩 ID
  * @param metadatas - mediaId와 새 displayOrder를 담은 배열
  */
-export const reorderMedia = async (weddingId: string, metadatas: MediaReorderRequest[]) => {
-  logger.info("[media.service.ts][reorderMedia] Start", { weddingId, metadatas });
+export const reorderMedia = async (userId: string,weddingId: string, metadatas: MediaReorderRequest[]) => {
+  logger.info("[media.service.ts][reorderMedia] Start", { userId, weddingId, metadatas });
+  const wedd = await prisma.wedd.findUnique({ where: { userId, weddingId } });
+  if(!wedd)
+    throw new AppError(404, '청첩장을 찾을 수 없습니다.');
   console.log(metadatas)
   const result = await prisma.$transaction(async (tx) => {
     const result = metadatas.map((metadata: MediaReorderRequest) => {
@@ -245,8 +262,8 @@ export const reorderMedia = async (weddingId: string, metadatas: MediaReorderReq
     });
     await Promise.all(result);
   });
-  logger.info("[media.service.ts][reorderMedia] weddDraftMedia updated", { weddingId });
-  logger.info("[media.service.ts][reorderMedia] Complete", { weddingId });
+  logger.info("[media.service.ts][reorderMedia] weddDraftMedia updated", { userId, weddingId });
+  logger.info("[media.service.ts][reorderMedia] Complete", { userId, weddingId });
 
   return result;
 }
@@ -257,8 +274,11 @@ export const reorderMedia = async (weddingId: string, metadatas: MediaReorderReq
  * @param mediaId - 삭제할 mediaId
  * @returns 삭제된 weddMedia 레코드
  */
-export const deleteMedia = async (weddingId: string, mediaId: number) => {
-  logger.info("[media.service.ts][deleteMedia] Start", { weddingId, mediaId });
+export const deleteMedia = async (userId: string, weddingId: string, mediaId: number) => {
+  logger.info("[media.service.ts][deleteMedia] Start", { userId, weddingId, mediaId });
+  const wedd = await prisma.wedd.findUnique({ where: { userId, weddingId } });
+  if(!wedd)
+    throw new AppError(404, '청첩장을 찾을 수 없습니다.');
   const media = await prisma.weddDraftMedia.findUnique({
     where: {
       weddingId_mediaId: {
@@ -276,9 +296,9 @@ export const deleteMedia = async (weddingId: string, mediaId: number) => {
   const croppedPath = media.editedUrl ? join(process.cwd(), media.editedUrl) : '';
 
   if (fs.existsSync(originalPath)) fs.unlinkSync(originalPath);
-  logger.info("[media.service.ts][deleteMedia] orginal media removed", { weddingId, mediaId, originalPath });
+  logger.info("[media.service.ts][deleteMedia] orginal media removed", { userId, weddingId, mediaId, originalPath });
   if (fs.existsSync(croppedPath)) fs.unlinkSync(croppedPath);
-  logger.info("[media.service.ts][deleteMedia] cropped media removed", { weddingId, mediaId, croppedPath });
+  logger.info("[media.service.ts][deleteMedia] cropped media removed", { userId, weddingId, mediaId, croppedPath });
 
   const result = await prisma.weddDraftMedia.delete({
     where: {
@@ -288,8 +308,8 @@ export const deleteMedia = async (weddingId: string, mediaId: number) => {
       }
     },
   });
-  logger.info("[media.service.ts][deleteMedia] weddDraftMedia deleted", { weddingId, mediaId });
-  logger.info("[media.service.ts][deleteMedia] Complete", { weddingId, mediaId });
+  logger.info("[media.service.ts][deleteMedia] weddDraftMedia deleted", { userId, weddingId, mediaId });
+  logger.info("[media.service.ts][deleteMedia] Complete", { userId, weddingId, mediaId });
   return result;
 }
 
@@ -299,8 +319,11 @@ export const deleteMedia = async (weddingId: string, mediaId: number) => {
  * @param imageType - 삭제할 이미지 타입
  * @returns 삭제된 weddMedia 레코드
  */
-export const deleteByTypeMedia = async (weddingId: string, imageType: string) => {
-  logger.info("[media.service.ts][deleteByTypeMedia] Start", { weddingId, imageType });
+export const deleteByTypeMedia = async (userId: string, weddingId: string, imageType: string) => {
+  logger.info("[media.service.ts][deleteByTypeMedia] Start", { userId, weddingId, imageType });
+  const wedd = await prisma.wedd.findUnique({ where: { userId, weddingId } });
+  if(!wedd)
+    throw new AppError(404, '청첩장을 찾을 수 없습니다.');
   const media = await prisma.weddDraftMedia.findMany({
     where: { weddingId, imageType },
   });
@@ -314,15 +337,15 @@ export const deleteByTypeMedia = async (weddingId: string, imageType: string) =>
     const croppedPath = m.editedUrl ? join(process.cwd(), m.editedUrl) : '';
 
     if (fs.existsSync(originalPath)) fs.unlinkSync(originalPath);
-  logger.info("[media.service.ts][deleteByTypeMedia] orginal media removed", { weddingId, imageType, originalPath });
+  logger.info("[media.service.ts][deleteByTypeMedia] orginal media removed", { userId, weddingId, imageType, originalPath });
     if (fs.existsSync(croppedPath)) fs.unlinkSync(croppedPath);
-  logger.info("[media.service.ts][deleteByTypeMedia] cropped media removed", { weddingId, imageType, croppedPath });
+  logger.info("[media.service.ts][deleteByTypeMedia] cropped media removed", { userId, weddingId, imageType, croppedPath });
   }
 
   const result = await prisma.weddDraftMedia.deleteMany({
     where: { weddingId, imageType },
   });
-  logger.info("[media.service.ts][deleteMedia] weddDraftMedia deleted", { weddingId, imageType });
-  logger.info("[media.service.ts][deleteMedia] Complete", { weddingId, imageType });
+  logger.info("[media.service.ts][deleteMedia] weddDraftMedia deleted", { userId, weddingId, imageType });
+  logger.info("[media.service.ts][deleteMedia] Complete", { userId, weddingId, imageType });
   return result;
 }

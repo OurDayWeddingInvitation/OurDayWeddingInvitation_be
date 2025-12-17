@@ -164,7 +164,7 @@ router.get('/:weddingId/media', validate({ params: WeddingIdParam }), asyncHandl
  *                     imageType: "gallery"
  *                     originalUrl: "/uploads/wedding/1/main.png"
  */
-router.post('/:weddingId/media', upload.single('file'), validate({ params: WeddingIdParam, body: MediaRequestSchema }), asyncHandler(mediaController.postMedia));
+router.post('/:weddingId/media', upload.single('file'), validate({ params: WeddingIdParam, body: MediaRequestSchema }), asyncHandler(mediaController.uploadMedia));
 
 /**
  * @swagger

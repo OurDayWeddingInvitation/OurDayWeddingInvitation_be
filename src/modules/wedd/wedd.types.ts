@@ -92,6 +92,10 @@ export interface LocationInfoDb {
   locationInfoTransport2Message?: string | null;
   locationInfoTransport3Title?: string | null;
   locationInfoTransport3Message?: string | null;
+  locationInfoTransport4Title?: string | null;
+  locationInfoTransport4Message?: string | null;
+  locationInfoTransport5Title?: string | null;
+  locationInfoTransport5Message?: string | null;
 }
 export interface ThemeFontDb {
   themeFontName?: string | null;

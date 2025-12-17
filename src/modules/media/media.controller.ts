@@ -7,7 +7,7 @@ export const getAllMediaEdit = async (req: Request, res: Response) => {
   const { userId } = req.user;
   logger.info("[wedd.media.ts][getAllMediaEdit] Start", { userId })
   const weddingId = req.params.weddingId;
-  const mediaArray = await mediaService.getAllMediaEdit(weddingId);
+  const mediaArray = await mediaService.getAllMediaEdit(userId, weddingId);
   res.status(200).json({
     status: 200,
     error: null,
@@ -20,7 +20,7 @@ export const getAllMedia = async (req: Request, res: Response) => {
   const { userId } = req.user;
   logger.info("[wedd.media.ts][getAllMedia] Start", { userId })
   const weddingId = req.params.weddingId;
-  const mediaArray = await mediaService.getAllMedia(weddingId);
+  const mediaArray = await mediaService.getAllMedia(userId, weddingId);
 
   res.status(200).json({
     status: 200,
@@ -30,7 +30,7 @@ export const getAllMedia = async (req: Request, res: Response) => {
   });
 }
 
-export const postMedia = async (req: Request, res: Response) => {
+export const uploadMedia = async (req: Request, res: Response) => {
   const { userId } = req.user;
   logger.info("[wedd.media.ts][postMedia] Start", { userId })
   const weddingId = req.params.weddingId;
@@ -41,7 +41,7 @@ export const postMedia = async (req: Request, res: Response) => {
   if (!file)
     throw new AppError(400, '파일이 없습니다.');
 
-  const media = await mediaService.uploadMedia(weddingId, metadata, file);
+  const media = await mediaService.uploadMedia(userId, weddingId, metadata, file);
 
   res.status(200).json({
     status: 200,
@@ -63,7 +63,7 @@ export const croppedMedia = async (req: Request, res: Response) => {
   if (!file)
     throw new AppError(400, '파일이 없습니다.');
 
-  const result = await mediaService.croppedMedia(weddingId, mediaId, file);
+  const result = await mediaService.croppedMedia(userId, weddingId, mediaId, file);
 
   res.status(200).json({
     status: 200,
@@ -77,7 +77,7 @@ export const reorderMedia = async (req: Request, res: Response) => {
   const { userId } = req.user;
   logger.info("[wedd.media.ts][reorderMedia] Start", { userId })
   const weddingId = req.params.weddingId;
-  await mediaService.reorderMedia(weddingId, req.body.media);
+  await mediaService.reorderMedia(userId, weddingId, req.body.media);
   res.status(200).json({
     status: 200,
     error: null,
@@ -92,7 +92,7 @@ export const deleteMedia = async (req: Request, res: Response) => {
   const weddingId = req.params.weddingId;
   const mediaId = Number(req.params.mediaId);
 
-  await mediaService.deleteMedia(weddingId, mediaId);
+  await mediaService.deleteMedia(userId, weddingId, mediaId);
 
   res.status(200).json({
     status: 200,
@@ -108,7 +108,7 @@ export const deleteByTypeMedia = async (req: Request, res: Response) => {
   const weddingId = req.params.weddingId;
   const imageType = req.body.imageType;
 
-  await mediaService.deleteByTypeMedia(weddingId, imageType);
+  await mediaService.deleteByTypeMedia(userId, weddingId, imageType);
 
   res.status(200).json({
     status: 200,

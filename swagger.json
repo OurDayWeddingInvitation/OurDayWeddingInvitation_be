@@ -12,7 +12,7 @@
   ],
   "servers": [
     {
-      "url": "http://www.ourday.kr",
+      "url": "https://www.ourday.kr",
       "description": "Local Server"
     },
     {
@@ -369,6 +369,14 @@
             "example": null
           },
           "transport3Message": {
+            "type": "string",
+            "example": null
+          },
+          "transport4Title": {
+            "type": "string",
+            "example": null
+          },
+          "transport4Message": {
             "type": "string",
             "example": null
           }
