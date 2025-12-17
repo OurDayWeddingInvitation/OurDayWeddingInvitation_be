@@ -88,7 +88,7 @@ export async function uploadMediaBackup({
  */
 export const getAllMediaEdit = async (userId: string, weddingId: string) => {
   logger.info("[media.service.ts][getAllMediaEdit] Start", { userId, weddingId });
-  const wedd = await prisma.wedd.findUnique({ where: { userId, weddingId } });
+  const wedd = await prisma.weddDraft.findUnique({ where: { userId, weddingId } });
   if(!wedd)
     throw new AppError(404, '청첩장을 찾을 수 없습니다.');
   const result = await prisma.weddDraftMedia.findMany({
