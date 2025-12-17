@@ -130,7 +130,7 @@ export const uploadMedia = async (
   file: Express.Multer.File
 ) => {
   logger.info("[media.service.ts][uploadMedia] Start", { userId, weddingId });
-  const wedd = await prisma.wedd.findUnique({ where: { userId, weddingId } });
+  const wedd = await prisma.weddDraft.findUnique({ where: { userId, weddingId } });
   if(!wedd)
     throw new AppError(404, '청첩장을 찾을 수 없습니다.');
   const tempPath = file.path;
@@ -190,7 +190,7 @@ export const croppedMedia = async (
   file: Express.Multer.File
 ) => {
   logger.info("[media.service.ts][croppedMedia] Start", { userId, weddingId, mediaId });
-  const wedd = await prisma.wedd.findUnique({ where: { userId, weddingId } });
+  const wedd = await prisma.weddDraft.findUnique({ where: { userId, weddingId } });
   if(!wedd)
     throw new AppError(404, '청첩장을 찾을 수 없습니다.');
   const existing = await prisma.weddDraftMedia.findUnique({
@@ -244,7 +244,7 @@ export const croppedMedia = async (
  */
 export const reorderMedia = async (userId: string,weddingId: string, metadatas: MediaReorderRequest[]) => {
   logger.info("[media.service.ts][reorderMedia] Start", { userId, weddingId, metadatas });
-  const wedd = await prisma.wedd.findUnique({ where: { userId, weddingId } });
+  const wedd = await prisma.weddDraft.findUnique({ where: { userId, weddingId } });
   if(!wedd)
     throw new AppError(404, '청첩장을 찾을 수 없습니다.');
   console.log(metadatas)
@@ -276,7 +276,7 @@ export const reorderMedia = async (userId: string,weddingId: string, metadatas: 
  */
 export const deleteMedia = async (userId: string, weddingId: string, mediaId: number) => {
   logger.info("[media.service.ts][deleteMedia] Start", { userId, weddingId, mediaId });
-  const wedd = await prisma.wedd.findUnique({ where: { userId, weddingId } });
+  const wedd = await prisma.weddDraft.findUnique({ where: { userId, weddingId } });
   if(!wedd)
     throw new AppError(404, '청첩장을 찾을 수 없습니다.');
   const media = await prisma.weddDraftMedia.findUnique({
@@ -321,7 +321,7 @@ export const deleteMedia = async (userId: string, weddingId: string, mediaId: nu
  */
 export const deleteByTypeMedia = async (userId: string, weddingId: string, imageType: string) => {
   logger.info("[media.service.ts][deleteByTypeMedia] Start", { userId, weddingId, imageType });
-  const wedd = await prisma.wedd.findUnique({ where: { userId, weddingId } });
+  const wedd = await prisma.weddDraft.findUnique({ where: { userId, weddingId } });
   if(!wedd)
     throw new AppError(404, '청첩장을 찾을 수 없습니다.');
   const media = await prisma.weddDraftMedia.findMany({
