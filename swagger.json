@@ -1029,7 +1029,7 @@
       },
       "post": {
         "summary": "새 이미지 업로드",
-        "description": "단일 이미지를 업로드하고 DB에 저장합니다.",
+        "description": "단일 이미지 또는 여러 이미지를 업로드합니다.\n- 단일 업로드: file + displayOrder 필수\n- 다중 업로드: files[] 사용, displayOrder는 서버에서 자동 계산\n",
         "tags": [
           "Media"
         ],
@@ -1055,24 +1055,27 @@
             "multipart/form-data": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "file",
-                  "imageType",
-                  "displayOrder"
-                ],
                 "properties": {
                   "file": {
                     "type": "string",
-                    "format": "binary"
+                    "format": "binary",
+                    "description": "단일 이미지 파일"
+                  },
+                  "files": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    },
+                    "description": "다중 이미지 파일"
                   },
                   "imageType": {
                     "type": "string",
-                    "description": "이미지 타입(mainImage, kakaoThumbnailImage, linkThumbnailImage, groomImage, brideImage, groomParentsImage, brideParentsImage, galleryImage, flipbookImage)",
                     "example": "gallery"
                   },
                   "displayOrder": {
                     "type": "integer",
-                    "description": "노출 순서",
+                    "description": "단일 업로드 시에만 사용",
                     "example": 1
                   }
                 }

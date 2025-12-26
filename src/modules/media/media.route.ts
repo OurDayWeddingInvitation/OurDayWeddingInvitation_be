@@ -19,7 +19,6 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage });
-const uploads = multer({ storage }).any();
 
 /**
  * @swagger
@@ -113,7 +112,10 @@ router.get('/:weddingId/media', validate({ params: WeddingIdParam }), asyncHandl
  * /api/v1/weddings/{weddingId}/media:
  *   post:
  *     summary: 새 이미지 업로드
- *     description: 단일 이미지를 업로드하고 DB에 저장합니다.
+ *     description: |
+ *       단일 이미지 또는 여러 이미지를 업로드합니다.
+ *       - 단일 업로드: file + displayOrder 필수
+ *       - 다중 업로드: files[] 사용, displayOrder는 서버에서 자동 계산
  *     tags: [Media]
  *     security:
  *       - bearerAuth: []
@@ -130,21 +132,23 @@ router.get('/:weddingId/media', validate({ params: WeddingIdParam }), asyncHandl
  *         multipart/form-data:
  *           schema:
  *             type: object
- *             required:
- *               - file
- *               - imageType
- *               - displayOrder
  *             properties:
  *               file:
  *                 type: string
  *                 format: binary
+ *                 description: 단일 이미지 파일
+ *               files:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: binary
+ *                 description: 다중 이미지 파일
  *               imageType:
  *                 type: string
- *                 description: 이미지 타입(mainImage, kakaoThumbnailImage, linkThumbnailImage, groomImage, brideImage, groomParentsImage, brideParentsImage, galleryImage, flipbookImage)
  *                 example: "gallery"
  *               displayOrder:
  *                 type: integer
- *                 description: 노출 순서
+ *                 description: 단일 업로드 시에만 사용
  *                 example: 1
  *     responses:
  *       200:
@@ -164,7 +168,14 @@ router.get('/:weddingId/media', validate({ params: WeddingIdParam }), asyncHandl
  *                     imageType: "gallery"
  *                     originalUrl: "/uploads/wedding/1/main.png"
  */
-router.post('/:weddingId/media', upload.single('file'), validate({ params: WeddingIdParam, body: MediaRequestSchema }), asyncHandler(mediaController.uploadMedia));
+router.post('/:weddingId/media',
+  upload.fields([
+    { name: 'file', maxCount: 1 },
+    { name: 'files', maxCount: 10 }
+  ]),
+  validate({ params: WeddingIdParam, body: MediaRequestSchema }),
+  asyncHandler(mediaController.uploadMedia)
+);
 
 /**
  * @swagger

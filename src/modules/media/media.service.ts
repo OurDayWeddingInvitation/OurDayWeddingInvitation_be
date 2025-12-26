@@ -123,13 +123,13 @@ export const getAllMedia = async (userId: string, weddingId: string) => {
  * @param file - multer로 받은 파일 객체
  * @returns 생성된 weddMedia 레코드
  */
-export const uploadMedia = async (
+export const uploadSingleMedia = async (
   userId: string,
   weddingId: string,
   metadata: MediaRequest,
   file: Express.Multer.File
 ) => {
-  logger.info("[media.service.ts][uploadMedia] Start", { userId, weddingId });
+  logger.info("[media.service.ts][uploadSingleMedia] Start", { userId, weddingId });
   const wedd = await prisma.weddDraft.findUnique({ where: { userId, weddingId } });
   if(!wedd)
     throw new AppError(404, '청첩장을 찾을 수 없습니다.');
@@ -141,12 +141,12 @@ export const uploadMedia = async (
 
   // 업로드 디렉토리 생성 및 임시 파일을 대상 경로로 이동
   fs.mkdirSync(join(process.cwd(), `/uploads/draft/${weddingId}`), { recursive: true });
-  logger.info("[media.service.ts][uploadMedia] Directory made", { userId, weddingId });
+  logger.info("[media.service.ts][uploadSingleMedia] Directory made", { userId, weddingId });
 
   await fsp.copyFile(tempPath, absoluteNewPath);
-  logger.info("[media.service.ts][uploadMedia] File copied", { userId, weddingId, tempPath, uploadPath: absoluteNewPath });
+  logger.info("[media.service.ts][uploadSingleMedia] File copied", { userId, weddingId, tempPath, uploadPath: absoluteNewPath });
   await fsp.unlink(tempPath);
-  logger.info("[media.service.ts][uploadMedia] Temp file remove", { userId, weddingId });
+  logger.info("[media.service.ts][uploadSingleMedia] Temp file remove", { userId, weddingId });
 
   return await prisma.$transaction(async (tx) => {
     // 현재 최대 mediaId를 조회하여 다음 mediaId 계산
@@ -156,7 +156,7 @@ export const uploadMedia = async (
     });
 
     const nextMediaId = (maxMedia._max.mediaId ?? 0) + 1;
-    logger.info("[media.service.ts][uploadMedia] Read nextMediaId", { userId, weddingId, nextMediaId, uploadPath: absoluteNewPath });
+    logger.info("[media.service.ts][uploadSingleMedia] Read nextMediaId", { userId, weddingId, nextMediaId, uploadPath: absoluteNewPath });
 
     const media = await tx.weddDraftMedia.create({
       data: {
@@ -165,14 +165,90 @@ export const uploadMedia = async (
         imageType: metadata.imageType,
         displayOrder: Number(metadata.displayOrder),
         originalUrl: newPath,
-        fileExtension: path.extname(file.originalname).replace('.', ''),
+        fileExtension: ext,
         fileSize: file.size,
       },
     });
-    logger.info("[media.service.ts][uploadMedia] weddDraftMedia created", { userId, weddingId, mediaId: nextMediaId });
-    logger.info("[media.service.ts][uploadMedia] Complete", { userId, weddingId, mediaId: nextMediaId, uploadPath: absoluteNewPath });
+    logger.info("[media.service.ts][uploadSingleMedia] weddDraftMedia created", { userId, weddingId, mediaId: nextMediaId });
+    logger.info("[media.service.ts][uploadSingleMedia] Complete", { userId, weddingId, mediaId: nextMediaId, uploadPath: absoluteNewPath });
     return media;
   });
+}
+
+/**
+ * 단일 파일을 업로드하고 weddMedia 레코드를 생성합니다.
+ * 파일을 업로드 폴더로 이동하고 mediaId를 계산하여 DB에 저장합니다.
+ * @param weddingId - 대상 웨딩 ID
+ * @param metadata - 업로드 메타데이터 (imageType, displayOrder 등)
+ * @param file - multer로 받은 파일 객체
+ * @returns 생성된 weddMedia 레코드
+ */
+export const uploadMultipleMedia = async (
+  userId: string,
+  weddingId: string,
+  metadata: MediaRequest,
+  fileList: Express.Multer.File[]
+) => {
+  logger.info("[media.service.ts][uploadMultipleMedia] Start", { userId, weddingId });
+  const wedd = await prisma.weddDraft.findUnique({ where: { userId, weddingId } });
+  if(!wedd)
+    throw new AppError(404, '청첩장을 찾을 수 없습니다.');
+  const uploadedFiles: { file: Express.Multer.File; newPath: string; ext: string; size: number; absoluteNewPath: string; }[] = [];
+  for (const file of fileList) {
+    const tempPath = file.path;
+    const newUUID = uuid();
+    const ext = path.extname(file.originalname);
+    const newPath = `/uploads/draft/${weddingId}/${newUUID}${ext}`
+    const absoluteNewPath = join(process.cwd(), newPath);
+
+    // 업로드 디렉토리 생성 및 임시 파일을 대상 경로로 이동
+    fs.mkdirSync(join(process.cwd(), `/uploads/draft/${weddingId}`), { recursive: true });
+    logger.info("[media.service.ts][uploadMultipleMedia] Directory made", { userId, weddingId });
+
+    await fsp.copyFile(tempPath, absoluteNewPath);
+    logger.info("[media.service.ts][uploadMultipleMedia] File copied", { userId, weddingId, tempPath, uploadPath: absoluteNewPath });
+    await fsp.unlink(tempPath);
+    logger.info("[media.service.ts][uploadMultipleMedia] Temp file remove", { userId, weddingId });
+
+    uploadedFiles.push({ file, newPath, ext, size: file.size, absoluteNewPath });
+  }
+
+  const result = await prisma.$transaction(async (tx) => {
+    // 기존 동일 imageType의 미디어들의 displayOrder를 업로드된 파일 수만큼 증가
+    await tx.weddDraftMedia.updateMany({
+      where: { weddingId, imageType: metadata.imageType },
+      data: { displayOrder: { increment: fileList.length } },
+    })
+    const resultList = [];
+    for (let i = 0; i < uploadedFiles.length; i++) {
+      const uploaded = uploadedFiles[i];
+      // 현재 최대 mediaId를 조회하여 다음 mediaId 계산
+      const maxMedia = await tx.weddDraftMedia.aggregate({
+        _max: { mediaId: true },
+        where: { weddingId },
+      });
+  
+      const nextMediaId = (maxMedia._max.mediaId ?? 0) + 1;
+      logger.info("[media.service.ts][uploadMultipleMedia] Read nextMediaId", { userId, weddingId, nextMediaId, uploadPath: uploaded.absoluteNewPath });
+  
+      const media = await tx.weddDraftMedia.create({
+        data: {
+          weddingId,
+          mediaId: nextMediaId,
+          imageType: metadata.imageType,
+          displayOrder: i + 1,
+          originalUrl: uploaded.newPath,
+          fileExtension: uploaded.ext,
+          fileSize: uploaded.size,
+        },
+      });
+      logger.info("[media.service.ts][uploadMultipleMedia] weddDraftMedia created", { userId, weddingId, mediaId: nextMediaId });
+      logger.info("[media.service.ts][uploadMultipleMedia] Complete", { userId, weddingId, mediaId: nextMediaId, uploadPath: uploaded.absoluteNewPath });
+      resultList.push(media);
+    }
+    return resultList;
+  });
+  return result;
 }
 
 /**
@@ -206,17 +282,10 @@ export const croppedMedia = async (
     throw new AppError(400, '이미지가 존재하지 않습니다.');
   
   const tempPath = file.path;
-  const newPath = existing.editedUrl;
-  let absoluteNewPath;
-
+  
   // 기존 editedUrl이 있으면 덮어쓰고, 없으면 새로운 파일명을 만들어 저장
-  if(!newPath) {
-    const UUID = uuid();
-    const ext = path.extname(file.originalname);
-    absoluteNewPath = join(process.cwd(), `/uploads/draft/${weddingId}/${UUID}${ext}`);
-  } else {
-    absoluteNewPath = join(process.cwd(), newPath);
-  }
+  const newPath = !existing.editedUrl ? `/uploads/draft/${weddingId}/${uuid()}${path.extname(file.originalname)}` : existing.editedUrl;
+  const absoluteNewPath = join(process.cwd(), newPath);
 
   await fsp.copyFile(tempPath, absoluteNewPath);
   logger.info("[media.service.ts][croppedMedia] File copied", { userId, weddingId, mediaId, tempPath, uploadPath: absoluteNewPath });

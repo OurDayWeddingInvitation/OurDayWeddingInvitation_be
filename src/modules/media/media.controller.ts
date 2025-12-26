@@ -36,12 +36,19 @@ export const uploadMedia = async (req: Request, res: Response) => {
   const weddingId = req.params.weddingId;
   const metadata = req.body;
 
-  const file = req.file as Express.Multer.File;
+  const reqFiles = req.files as { [fieldname: string]: Express.Multer.File[] };
+  const file = reqFiles?.file?.[0];
+  const fileList = reqFiles?.files ?? [];
 
-  if (!file)
+  if (!file && fileList.length === 0)
     throw new AppError(400, '파일이 없습니다.');
 
-  const media = await mediaService.uploadMedia(userId, weddingId, metadata, file);
+  let media;;
+  if(file){
+    media = await mediaService.uploadSingleMedia(userId, weddingId, metadata, file);
+  }else if(fileList.length > 0){
+    media = await mediaService.uploadMultipleMedia(userId, weddingId, metadata, fileList);
+  }
 
   res.status(200).json({
     status: 200,
