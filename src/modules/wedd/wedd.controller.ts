@@ -81,6 +81,22 @@ export const replaceWedd = async (req: Request, res: Response) => {
 };
 
 /**
+ * 청첩장 제목 수정
+ */
+export const updateWeddTitle = async (req: Request, res: Response) => {
+  const { userId } = req.user;
+  logger.info("[wedd.controller.ts][updateWeddTitle] Start", { userId })
+  const weddingId = req.params.weddingId;
+  const wedd = await weddService.updateWeddTitle(userId, weddingId, req.body);
+  res.status(200).json({
+    status: 200,
+    error: null,
+    messages: "청첩장 제목 수정 성공",
+    data: wedd,
+  });
+};
+
+/**
  * 청첩장 섹션 단위 수정
  */
 export const updateWeddSection = async (req: Request, res: Response) => {

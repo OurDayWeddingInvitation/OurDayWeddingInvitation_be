@@ -6,6 +6,9 @@ export const WeddingIdParam = z.object({
 export const SectionIdParam = z.object({
   sectionId: z.string(),
 });
+export const WeddingTitleSchema = z.object({
+  title : z.string(),
+});
 export const MainSchema = z.object({
   posterStyle: z.string().nullable().optional(),
 });
@@ -145,6 +148,7 @@ export const SettingSectionsSchema = z.object({
 });
 
 // 프론트/요청 타입들을 zod로부터 유도해 export
+export type WeddingTitle = z.infer<typeof WeddingTitleSchema>;
 export type Main = z.infer<typeof MainSchema>;
 export type ShareLink = z.infer<typeof ShareLinkSchema>;
 export type WeddingInfo = z.infer<typeof WeddingInfoSchema>;

@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import * as weddController from './wedd.controller';
 import { validate } from "@/core/middlewares/validate.middleware";
-import { SectionIdParam, SettingSectionsSchema, WeddingIdParam, WeddingInfoRequestSchema } from './wedd.schema';
+import { SectionIdParam, SettingSectionsSchema, WeddingIdParam, WeddingInfoRequestSchema, WeddingTitleSchema } from './wedd.schema';
 import { asyncHandler } from '@/core/http/asyncHandler';
 
 const router = Router();
@@ -17,6 +17,17 @@ const router = Router();
  * @swagger
  * components:
  *   schemas:
+ *     # ==========================
+ *     # Section: title
+ *     # ==========================
+ *     WeddingTitleUpdateRequest:
+ *       type: object
+ *       properties:
+ *         title:
+ *           type: string
+ *           description: 청첩장 제목
+ *           example: "우리의 특별한 날"
+ *
  *     # ==========================
  *     # Section: main
  *     # ==========================
@@ -683,6 +694,43 @@ router.post('/', asyncHandler(weddController.createWedd));
  *                   $ref: '#/components/schemas/WeddingDetail'
  */
 router.put('/:weddingId', validate({ params: WeddingIdParam, body: WeddingInfoRequestSchema }), asyncHandler(weddController.replaceWedd));
+
+/**
+ * @swagger
+ * /api/v1/weddings/{weddingId}/title:
+ *   patch:
+ *     summary: 청첩장 제목 변경
+ *     description: 청첩장의 제목을 변경합니다.
+ *     tags: [Wedding]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: weddingId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/WeddingTitleUpdateRequest'
+ *     responses:
+ *       200:
+ *         description: 제목 변경 성공
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status: { type: integer, example: 200 }
+ *                 error: { type: string, nullable: true, example: null }
+ *                 messages: { type: string, nullable: true, example: "설정이 변경되었습니다." }
+ *                 data:
+ *                   example: null
+ */
+router.patch('/:weddingId/title', validate({ params: WeddingIdParam, body: WeddingTitleSchema }), asyncHandler(weddController.updateWeddTitle));
 
 /**
  * @swagger

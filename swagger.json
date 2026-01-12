@@ -75,6 +75,16 @@
           }
         }
       },
+      "WeddingTitleUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "청첩장 제목",
+            "example": "우리의 특별한 날"
+          }
+        }
+      },
       "WeddingMainSection": {
         "type": "object",
         "properties": {
@@ -1067,7 +1077,7 @@
                       "type": "string",
                       "format": "binary"
                     },
-                    "description": "다중 이미지 파일"
+                    "description": "다중 이미지 파일(최대 50장)"
                   },
                   "imageType": {
                     "type": "string",
@@ -1742,6 +1752,71 @@
                       "type": "string",
                       "nullable": true,
                       "example": null
+                    },
+                    "data": {
+                      "example": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/weddings/{weddingId}/title": {
+      "patch": {
+        "summary": "청첩장 제목 변경",
+        "description": "청첩장의 제목을 변경합니다.",
+        "tags": [
+          "Wedding"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "weddingId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WeddingTitleUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "제목 변경 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "error": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "messages": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": "설정이 변경되었습니다."
                     },
                     "data": {
                       "example": null

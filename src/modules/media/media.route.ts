@@ -142,7 +142,7 @@ router.get('/:weddingId/media', validate({ params: WeddingIdParam }), asyncHandl
  *                 items:
  *                   type: string
  *                   format: binary
- *                 description: 다중 이미지 파일
+ *                 description: 다중 이미지 파일(최대 50장)
  *               imageType:
  *                 type: string
  *                 example: "gallery"
@@ -171,7 +171,7 @@ router.get('/:weddingId/media', validate({ params: WeddingIdParam }), asyncHandl
 router.post('/:weddingId/media',
   upload.fields([
     { name: 'file', maxCount: 1 },
-    { name: 'files', maxCount: 10 }
+    { name: 'files', maxCount: 50 }
   ]),
   validate({ params: WeddingIdParam, body: MediaRequestSchema }),
   asyncHandler(mediaController.uploadMedia)

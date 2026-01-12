@@ -1,7 +1,7 @@
 import prisma from '../../config/prisma';
 import { AppError } from '../../core/errors/AppError';
 import { SectionSettingsDb } from './wedd.types';
-import { Sections, SectionSettings, SettingSections, WeddingInfoRequest, WeddingInfoResponse } from './wedd.schema';
+import { Sections, SectionSettings, SettingSections, WeddingInfoRequest, WeddingInfoResponse, WeddingTitle } from './wedd.schema';
 import { mapDbToSections, mapDbToSectionSettings, mapSectionSettingsToDb, mapSectionsToDb } from './wedd.mapper';
 import { isSectionKey, SECTION_KEYS } from './wedd.constants';
 import path, { join } from 'path';
@@ -222,6 +222,29 @@ export const replaceWedd = async (userId: string, weddingId: string, data: Weddi
   });
   logger.info("[wedd.service.ts][replaceWedd] Complete", { weddingId });
   return result;
+};
+
+/**
+ * 제목을 수정합니다.(임시저장본).
+ * @param weddingId - 업데이트 대상 웨딩 ID
+ * @param data - 청첩장 제목 데이터(WeddingTitle)
+ * @returns 업데이트된 제목을 반환
+ */
+export const updateWeddTitle = async (userId: string, weddingId: string, data: WeddingTitle): Promise<WeddingTitle> => {
+  logger.info("[wedd.service.ts][updateWeddTitle] Start", { userId, weddingId });
+  const wedd = await prisma.weddDraft.findUnique({ where: { userId, weddingId } });
+  if(!wedd)
+    throw new AppError(404, '청첩장을 찾을 수 없습니다.');
+
+  const result = await prisma.weddDraft.update({
+    where: { weddingId },
+    data: { weddingTitle: data.title }
+  });
+  logger.info("[wedd.service.ts][updateWeddTitle] Complete", { userId, weddingId });
+
+  return {
+    title: result.weddingTitle? result.weddingTitle : '',
+  };
 };
 
 /**
