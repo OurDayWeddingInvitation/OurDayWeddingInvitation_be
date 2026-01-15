@@ -125,8 +125,8 @@ export const createWedd = async (userId: string): Promise<WeddingInfoResponse> =
                                     더없는 기쁨이겠습니다.
                                     </p>`,
         coupleIntroTitle: '신랑 & 신부를 소개합니다',
-        coupleIntroGroomMessage: '<p style="text-align:center;margin:0;">나무같은 남편이<br>되겠습니다</p>;',
-        coupleIntroBrideMessage: '<p style="text-align:center;margin:0;">햇살같은 아내가<br>되겠습니다</p>;',
+        coupleIntroGroomMessage: '<p style="text-align:center;margin:0;">나무같은 남편이<br>되겠습니다</p>',
+        coupleIntroBrideMessage: '<p style="text-align:center;margin:0;">햇살같은 아내가<br>되겠습니다</p>',
         parentsIntroTitle: '우리의 부모님',
         parentsIntroMessage: '저희의 시작을 사랑으로 응원해주신\n양가 부모님을 소개합니다.',
         galleryTitle: '우리의 소중한 순간',
