@@ -31,8 +31,7 @@ export const WeddingInfoSchema = z.object({
 
   weddingHallName: z.string().nullable().optional(),
   weddingHallFloor: z.string().nullable().optional(),
-});
-export const FamilyInfoSchema = z.object({
+
   groomFatherName: z.string().nullable().optional(),
   groomFatherDeceased: z.boolean().nullable().optional(),
   groomMotherName: z.string().nullable().optional(),
@@ -128,7 +127,6 @@ export const SectionsSchema = z.object({
   main: MainSchema.optional(),
   shareLink: ShareLinkSchema.optional(),
   weddingInfo: WeddingInfoSchema.optional(),
-  familyInfo: FamilyInfoSchema.optional(),
   invitationMessage: InvitationMessageSchema.optional(),
   coupleIntro: CoupleIntroSchema.optional(),
   parentsIntro: ParentsIntroSchema.optional(),
@@ -152,7 +150,6 @@ export type WeddingTitle = z.infer<typeof WeddingTitleSchema>;
 export type Main = z.infer<typeof MainSchema>;
 export type ShareLink = z.infer<typeof ShareLinkSchema>;
 export type WeddingInfo = z.infer<typeof WeddingInfoSchema>;
-export type FamilyInfo = z.infer<typeof FamilyInfoSchema>;
 export type InvitationMessage = z.infer<typeof InvitationMessageSchema>;
 export type CoupleIntro = z.infer<typeof CoupleIntroSchema>;
 export type ParentsIntro = z.infer<typeof ParentsIntroSchema>;

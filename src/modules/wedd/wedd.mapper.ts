@@ -1,11 +1,11 @@
 import { Wedd } from '@prisma/client';
 import {
-  MainDb, ShareLinkDb, WeddingInfoDb, FamilyInfoDb, InvitationMessageDb,
+  MainDb, ShareLinkDb, WeddingInfoDb, InvitationMessageDb,
   CoupleIntroDb, ParentsIntroDb, AccountInfoDb, LocationInfoDb, ThemeFontDb,
   LoadingScreenDb, GalleryDb, FlipbookDb, SectionSettingsDb,
   WeddDb
  } from './wedd.types';
-import { AccountInfo, CoupleIntro, FamilyInfo, Flipbook, Gallery, InvitationMessage, LoadingScreen, LocationInfo, Main, ParentsIntro, Sections, SectionSettings, ShareLink, ThemeFont, WeddingInfo } from './wedd.schema';
+import { AccountInfo, CoupleIntro, Flipbook, Gallery, InvitationMessage, LoadingScreen, LocationInfo, Main, ParentsIntro, Sections, SectionSettings, ShareLink, ThemeFont, WeddingInfo } from './wedd.schema';
  
 export function mapMainToDb(data?: Main): MainDb {
   if(!data) return {};
@@ -36,13 +36,8 @@ export function mapWeddingInfoToDb(data?: WeddingInfo): WeddingInfoDb {
     weddingInfoHour: data.weddingHour,
     weddingInfoMinute: data.weddingMinute,
     weddingInfoHallName: data.weddingHallName,
-    weddingInfoHallFloor: data.weddingHallFloor
-  }
-}
+    weddingInfoHallFloor: data.weddingHallFloor,
 
-export function mapFamilyInfoToDb(data?: FamilyInfo): FamilyInfoDb {
-  if(!data) return {};
-  return {
     familyInfoGroomFatherName: data.groomFatherName,
     familyInfoGroomFatherDeceased: data.groomFatherDeceased,
     familyInfoGroomMotherName: data.groomMotherName,
@@ -172,7 +167,6 @@ export function mapSectionsToDb(data?: Sections): WeddDb {
   return {
     ...mapAccentInfoToDb(data?.accountInfo),
     ...mapCoupleIntroToDb(data?.coupleIntro),
-    ...mapFamilyInfoToDb(data?.familyInfo),
     ...mapFlipboockToDb(data?.flipBook),
     ...mapGalleryToDb(data?.gallery),
     ...mapInvitationMessageToDb(data?.invitationMessage),
@@ -222,13 +216,7 @@ export function mapDbToWeddingInfo(row: Wedd | null): WeddingInfo {
     weddingMinute: row?.weddingInfoMinute ?? null,
     weddingHallName: row?.weddingInfoHallName ?? null,
     weddingHallFloor: row?.weddingInfoHallFloor ?? null,
-  };
-}
 
-
-// FAMILY INFO
-export function mapDbToFamilyInfo(row: Wedd | null): FamilyInfo {
-  return {
     groomFatherName: row?.familyInfoGroomFatherName ?? null,
     groomFatherDeceased: row?.familyInfoGroomFatherDeceased ?? null,
     groomMotherName: row?.familyInfoGroomMotherName ?? null,
@@ -371,7 +359,6 @@ export function mapDbToSections(row: Wedd | null): Sections {
     main: mapDbToMain(row),
     shareLink: mapDbToShareLink(row),
     weddingInfo: mapDbToWeddingInfo(row),
-    familyInfo: mapDbToFamilyInfo(row),
     invitationMessage: mapDbToInvitationMessage(row),
     coupleIntro: mapDbToCoupleIntro(row),
     parentsIntro: mapDbToParentsIntro(row),

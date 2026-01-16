@@ -27,8 +27,7 @@ export interface WeddingInfoDb {
   weddingInfoMinute?: string | null;
   weddingInfoHallName?: string | null;
   weddingInfoHallFloor?: string | null;
-}
-export interface FamilyInfoDb {
+
   familyInfoGroomFatherName?: string | null;
   familyInfoGroomFatherDeceased?: boolean | null;
   familyInfoGroomMotherName?: string | null;
@@ -120,7 +119,6 @@ export interface WeddDb
   extends MainDb,
     ShareLinkDb,
     WeddingInfoDb,
-    FamilyInfoDb,
     InvitationMessageDb,
     CoupleIntroDb,
     ParentsIntroDb,

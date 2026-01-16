@@ -1,17 +1,16 @@
 export const SECTION_KEYS = {
-  MAIN: "main",
-  SHARE_LINK: "shareLink",
+  THEME_FONT: "themeFont",
   WEDDING_INFO: "weddingInfo",
-  FAMILY_INFO: "familyInfo",
+  LOADING_SCREEN: "loadingScreen",
+  MAIN: "main",
   INVITATION_MESSAGE: "invitationMessage",
   COUPLE_INTRO: "coupleIntro",
   PARENTS_INTRO: "parentsIntro",
-  ACCOUNT_INFO: "accountInfo",
-  LOCATION_INFO: "locationInfo",
-  THEME_FONT: "themeFont",
-  LOADING_SCREEN: "loadingScreen",
   GALLERY: "gallery",
   FLIPBOOK: "flipbook",
+  ACCOUNT_INFO: "accountInfo",
+  LOCATION_INFO: "locationInfo",
+  SHARE_LINK: "shareLink",
 } as const;
 
 export type SectionKey = typeof SECTION_KEYS[keyof typeof SECTION_KEYS];

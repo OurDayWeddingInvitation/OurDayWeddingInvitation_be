@@ -102,13 +102,6 @@ const router = Router();
  *         weddingHallFloor:
  *           type: string
  *           example: "1층"
- *
- *     # ==========================
- *     # Section: familyInfo
- *     # ==========================
- *     WeddingFamilyInfoSection:
- *       type: object
- *       properties:
  *         groomFatherName:
  *           type: string
  *           example: "김아버지"
