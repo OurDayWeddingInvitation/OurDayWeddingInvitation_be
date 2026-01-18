@@ -48,6 +48,7 @@ export const getWeddById = async (weddingId: string): Promise<WeddingInfoRespons
     throw new AppError(404, '청첩장을 찾을 수 없습니다.');
   const weddSectSet = await prisma.weddSectSet.findMany({ where: { weddingId }, orderBy: { displayOrder: 'asc' } });
   const result = {
+    weddingTitle: wedd.weddingTitle ?? '',
     sections: mapDbToSections(wedd),
     sectionSettings: mapDbToSectionSettings(weddSectSet)
   }
@@ -68,6 +69,7 @@ export const getWeddEditById = async (userId: string, weddingId: string): Promis
   const weddSectSet = await prisma.weddDraftSectSet.findMany({ where: { weddingId }, orderBy: { displayOrder: 'asc' } });
   
   const result = {
+    weddingTitle: wedd.weddingTitle ?? '',
     sections: mapDbToSections(wedd),
     sectionSettings: mapDbToSectionSettings(weddSectSet)
   }
@@ -155,6 +157,7 @@ export const createWedd = async (userId: string): Promise<WeddingInfoResponse> =
     // 3) 생성된 섹션 설정을 조회하여 반환 형식으로 매핑
     const weddSectSet = await tx.weddDraftSectSet.findMany({ where: { weddingId: weddDraft.weddingId }, orderBy: { displayOrder: 'asc' } });
     return {
+      weddingTitle: weddDraft.weddingTitle ?? '',
       weddingId: weddDraft.weddingId,
       sections: mapDbToSections(weddDraft),
       sectionSettins: mapDbToSectionSettings(weddSectSet)
@@ -218,7 +221,11 @@ export const replaceWedd = async (userId: string, weddingId: string, data: Weddi
       }));
     }
     logger.info("[wedd.service.ts][replaceWedd] weddDraftSectSet updated", { userId, weddingId });
-    return { weddingId, weddDraft, sectionSettings: WeddSectSet };
+    return {
+      weddingId,
+      weddingTitle: weddDraft.weddingTitle ?? '',
+      sections: mapDbToSections(weddDraft),
+      sectionSettings: mapDbToSectionSettings(WeddSectSet) };
   });
   logger.info("[wedd.service.ts][replaceWedd] Complete", { weddingId });
   return result;
@@ -435,6 +442,7 @@ export const applyWedd = async (userId: string, weddingId: string): Promise<Wedd
       });
       logger.info("[wedd.service.ts][applyWedd] weddSectSet create", { userId, weddingId });
     }
+    const weddSectSet = await tx.weddSectSet.findMany({ where: { weddingId } });
 
     // 6. apply media 생성
     await tx.weddMedia.createMany({
@@ -442,7 +450,12 @@ export const applyWedd = async (userId: string, weddingId: string): Promise<Wedd
     });
     logger.info("[wedd.service.ts][applyWedd] weddMedia created", { userId, weddingId });
     logger.info("[wedd.service.ts][applyWedd] Complete", { userId, weddingId });
-    return { weddingId, wedd, sectionSettings: weddDraftSectSet };
+    return {
+      weddingId,
+      weddingTitle: wedd.weddingTitle ?? '',
+      sections: mapDbToSections(wedd),
+      sectionSettings: mapDbToSectionSettings(weddSectSet)
+    };
   });
 
   return result;

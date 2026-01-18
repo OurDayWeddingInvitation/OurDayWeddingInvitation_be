@@ -165,6 +165,7 @@ export type SettingSections = z.infer<typeof SettingSectionsSchema>;
 export type WeddingInfoRequest = z.infer<typeof WeddingInfoRequestSchema>;
 export type WeddingInfoResponse = {
   weddingId?: string;
+  weddingTitle: string;
   sections?: Sections;
   sectionSettings?: SectionSettings[];
 };
