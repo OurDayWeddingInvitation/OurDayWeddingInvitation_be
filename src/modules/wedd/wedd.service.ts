@@ -41,9 +41,9 @@ export const getAllWedds = async (userId: string) => {
  * @param weddingId - 조회할 웨딩 ID
  * @returns WeddingInfoResponse 형태의 객체
  */
-export const getWeddById = async (userId: string, weddingId: string): Promise<WeddingInfoResponse> => {
-  logger.info("[wedd.service.ts][getWeddById] Start", { userId, weddingId });
-  const wedd = await prisma.wedd.findUnique({ where: { userId, weddingId } });
+export const getWeddById = async (weddingId: string): Promise<WeddingInfoResponse> => {
+  logger.info("[wedd.service.ts][getWeddById] Start", { weddingId });
+  const wedd = await prisma.wedd.findUnique({ where: { weddingId } });
   if(!wedd)
     throw new AppError(404, '청첩장을 찾을 수 없습니다.');
   const weddSectSet = await prisma.weddSectSet.findMany({ where: { weddingId }, orderBy: { displayOrder: 'asc' } });
@@ -51,7 +51,7 @@ export const getWeddById = async (userId: string, weddingId: string): Promise<We
     sections: mapDbToSections(wedd),
     sectionSettings: mapDbToSectionSettings(weddSectSet)
   }
-  logger.info("[wedd.service.ts][getWeddById] Complete", { userId, weddingId });
+  logger.info("[wedd.service.ts][getWeddById] Complete", { weddingId });
   return result
 };
 

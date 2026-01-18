@@ -21,10 +21,9 @@ export const getAllWedds = async (req: Request, res: Response) => {
  * 청첩장 적용본 단건 조회
  */
 export const getWeddById = async (req: Request, res: Response) => {
-  const { userId } = req.user;
-  logger.info("[wedd.controller.ts][getWeddById] Start", { userId })
+  logger.info("[wedd.controller.ts][getWeddById] Start")
   const weddingId = req.params.weddingId;
-  const wedd = await weddService.getWeddById(userId, weddingId);
+  const wedd = await weddService.getWeddById(weddingId);
   res.status(200).json({
     status: 200,
     error: null,

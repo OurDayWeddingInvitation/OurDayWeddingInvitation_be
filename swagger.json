@@ -166,12 +166,7 @@
           "weddingHallFloor": {
             "type": "string",
             "example": "1층"
-          }
-        }
-      },
-      "WeddingFamilyInfoSection": {
-        "type": "object",
-        "properties": {
+          },
           "groomFatherName": {
             "type": "string",
             "example": "김아버지"
@@ -1430,6 +1425,173 @@
         }
       }
     },
+    "/api/v1/weddings/{weddingId}": {
+      "get": {
+        "summary": "청첩장 상세 조회",
+        "description": "특정 청첩장에 대한 모든 섹션 데이터 및 섹션 설정을 조회합니다.",
+        "tags": [
+          "Wedding"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "weddingId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "청첩장 ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "상세 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "error": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "messages": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/WeddingDetail"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "청첩장(임시저장본) 전체 교체(섹션 전체 저장)",
+        "description": "하나의 청첩장에 포함된 모든 섹션 데이터 및 섹션 설정을 한 번에 저장합니다.",
+        "tags": [
+          "Wedding"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "weddingId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WeddingDetail"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "교체 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "error": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "messages": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": "저장되었습니다."
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/WeddingDetail"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "청첩장 삭제(관련 임시저장, 적용본/섹션설정/미디어 모두 삭제)",
+        "description": "해당 청첩장 및 관련 상세/섹션설정/미디어를 모두 삭제합니다.",
+        "tags": [
+          "Wedding"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "weddingId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "삭제 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "error": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "messages": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "data": {
+                      "example": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/weddings": {
       "get": {
         "summary": "나의 모든 청첩장 목록 조회",
@@ -1583,178 +1745,6 @@
                     },
                     "data": {
                       "$ref": "#/components/schemas/WeddingDetail"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/weddings/{weddingId}": {
-      "get": {
-        "summary": "청첩장 상세 조회",
-        "description": "특정 청첩장에 대한 모든 섹션 데이터 및 섹션 설정을 조회합니다.",
-        "tags": [
-          "Wedding"
-        ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "weddingId",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "청첩장 ID"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "상세 조회 성공",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "example": 200
-                    },
-                    "error": {
-                      "type": "string",
-                      "nullable": true,
-                      "example": null
-                    },
-                    "messages": {
-                      "type": "string",
-                      "nullable": true,
-                      "example": null
-                    },
-                    "data": {
-                      "$ref": "#/components/schemas/WeddingDetail"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "put": {
-        "summary": "청첩장(임시저장본) 전체 교체(섹션 전체 저장)",
-        "description": "하나의 청첩장에 포함된 모든 섹션 데이터 및 섹션 설정을 한 번에 저장합니다.",
-        "tags": [
-          "Wedding"
-        ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "weddingId",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/WeddingDetail"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "교체 성공",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "example": 200
-                    },
-                    "error": {
-                      "type": "string",
-                      "nullable": true,
-                      "example": null
-                    },
-                    "messages": {
-                      "type": "string",
-                      "nullable": true,
-                      "example": "저장되었습니다."
-                    },
-                    "data": {
-                      "$ref": "#/components/schemas/WeddingDetail"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "summary": "청첩장 삭제(관련 임시저장, 적용본/섹션설정/미디어 모두 삭제)",
-        "description": "해당 청첩장 및 관련 상세/섹션설정/미디어를 모두 삭제합니다.",
-        "tags": [
-          "Wedding"
-        ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "weddingId",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "삭제 성공",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "example": 200
-                    },
-                    "error": {
-                      "type": "string",
-                      "nullable": true,
-                      "example": null
-                    },
-                    "messages": {
-                      "type": "string",
-                      "nullable": true,
-                      "example": null
-                    },
-                    "data": {
-                      "example": null
                     }
                   }
                 }

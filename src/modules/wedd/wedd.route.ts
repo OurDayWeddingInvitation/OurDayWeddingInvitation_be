@@ -3,6 +3,7 @@ import * as weddController from './wedd.controller';
 import { validate } from "@/core/middlewares/validate.middleware";
 import { SectionIdParam, SettingSectionsSchema, WeddingIdParam, WeddingInfoRequestSchema, WeddingTitleSchema } from './wedd.schema';
 import { asyncHandler } from '@/core/http/asyncHandler';
+import { authenticateJWT } from 'core/middlewares/auth.middleware';
 
 const router = Router();
 
@@ -516,6 +517,38 @@ const router = Router();
 
 /**
  * @swagger
+ * /api/v1/weddings/{weddingId}:
+ *   get:
+ *     summary: 청첩장 상세 조회
+ *     description: 특정 청첩장에 대한 모든 섹션 데이터 및 섹션 설정을 조회합니다.
+ *     tags: [Wedding]
+ *     parameters:
+ *       - in: path
+ *         name: weddingId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: 청첩장 ID
+ *     responses:
+ *       200:
+ *         description: 상세 조회 성공
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status: { type: integer, example: 200 }
+ *                 error: { type: string, nullable: true, example: null }
+ *                 messages: { type: string, nullable: true, example: null }
+ *                 data:
+ *                   $ref: '#/components/schemas/WeddingDetail'
+ */
+router.get('/:weddingId', validate({ params: WeddingIdParam }), asyncHandler(weddController.getWeddById));
+
+router.use(authenticateJWT);
+
+/**
+ * @swagger
  * /api/v1/weddings:
  *   get:
  *     summary: 나의 모든 청첩장 목록 조회
@@ -583,38 +616,6 @@ router.get('/', asyncHandler(weddController.getAllWedds));
  *                   $ref: '#/components/schemas/WeddingDetail'
  */
 router.get('/:weddingId/edit', validate({ params: WeddingIdParam }), asyncHandler(weddController.getWeddEditById));
-
-/**
- * @swagger
- * /api/v1/weddings/{weddingId}:
- *   get:
- *     summary: 청첩장 상세 조회
- *     description: 특정 청첩장에 대한 모든 섹션 데이터 및 섹션 설정을 조회합니다.
- *     tags: [Wedding]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: weddingId
- *         required: true
- *         schema:
- *           type: string
- *         description: 청첩장 ID
- *     responses:
- *       200:
- *         description: 상세 조회 성공
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 status: { type: integer, example: 200 }
- *                 error: { type: string, nullable: true, example: null }
- *                 messages: { type: string, nullable: true, example: null }
- *                 data:
- *                   $ref: '#/components/schemas/WeddingDetail'
- */
-router.get('/:weddingId', validate({ params: WeddingIdParam }), asyncHandler(weddController.getWeddById));
 
 /**
  * @swagger
