@@ -545,8 +545,6 @@ const router = Router();
  */
 router.get('/:weddingId', validate({ params: WeddingIdParam }), asyncHandler(weddController.getWeddById));
 
-router.use(authenticateJWT);
-
 /**
  * @swagger
  * /api/v1/weddings:
@@ -583,7 +581,7 @@ router.use(authenticateJWT);
  *                         type: string
  *                         example: "/upload/weddingId/image.jpg"
  */
-router.get('/', asyncHandler(weddController.getAllWedds));
+router.get('/', authenticateJWT, asyncHandler(weddController.getAllWedds));
 
 /**
  * @swagger
@@ -615,7 +613,7 @@ router.get('/', asyncHandler(weddController.getAllWedds));
  *                 data:
  *                   $ref: '#/components/schemas/WeddingDetail'
  */
-router.get('/:weddingId/edit', validate({ params: WeddingIdParam }), asyncHandler(weddController.getWeddEditById));
+router.get('/:weddingId/edit', authenticateJWT, validate({ params: WeddingIdParam }), asyncHandler(weddController.getWeddEditById));
 
 /**
  * @swagger
@@ -650,7 +648,7 @@ router.get('/:weddingId/edit', validate({ params: WeddingIdParam }), asyncHandle
  *                   $ref: '#/components/schemas/WeddingDetailWithId'
  */
 
-router.post('/', asyncHandler(weddController.createWedd));
+router.post('/', authenticateJWT, asyncHandler(weddController.createWedd));
 
 /**
  * @swagger
@@ -687,7 +685,7 @@ router.post('/', asyncHandler(weddController.createWedd));
  *                 data:
  *                   $ref: '#/components/schemas/WeddingDetail'
  */
-router.put('/:weddingId', validate({ params: WeddingIdParam, body: WeddingInfoRequestSchema }), asyncHandler(weddController.replaceWedd));
+router.put('/:weddingId', authenticateJWT, validate({ params: WeddingIdParam, body: WeddingInfoRequestSchema }), asyncHandler(weddController.replaceWedd));
 
 /**
  * @swagger
@@ -724,7 +722,7 @@ router.put('/:weddingId', validate({ params: WeddingIdParam, body: WeddingInfoRe
  *                 data:
  *                   example: null
  */
-router.patch('/:weddingId/title', validate({ params: WeddingIdParam, body: WeddingTitleSchema }), asyncHandler(weddController.updateWeddTitle));
+router.patch('/:weddingId/title', authenticateJWT, validate({ params: WeddingIdParam, body: WeddingTitleSchema }), asyncHandler(weddController.updateWeddTitle));
 
 /**
  * @swagger
@@ -761,7 +759,7 @@ router.patch('/:weddingId/title', validate({ params: WeddingIdParam, body: Weddi
  *                 data:
  *                   example: null
  */
-router.patch('/:weddingId/sections/settings', validate({ params: WeddingIdParam, body: SettingSectionsSchema }), asyncHandler(weddController.updateWeddSectsSet));
+router.patch('/:weddingId/sections/settings', authenticateJWT, validate({ params: WeddingIdParam, body: SettingSectionsSchema }), asyncHandler(weddController.updateWeddSectsSet));
 
 /**
  * @swagger
@@ -816,7 +814,7 @@ router.patch('/:weddingId/sections/settings', validate({ params: WeddingIdParam,
  *                 data:
  *                   $ref: '#/components/schemas/WeddingDetail'
  */
-router.patch('/:weddingId/sections/:sectionId', validate({ params: WeddingIdParam.extend(SectionIdParam.shape) }), asyncHandler(weddController.updateWeddSection));
+router.patch('/:weddingId/sections/:sectionId', authenticateJWT, validate({ params: WeddingIdParam.extend(SectionIdParam.shape) }), asyncHandler(weddController.updateWeddSection));
 
 /**
  * @swagger
@@ -847,7 +845,7 @@ router.patch('/:weddingId/sections/:sectionId', validate({ params: WeddingIdPara
  *                 data:
  *                   example: null
  */
-router.delete('/:weddingId', validate({ params: WeddingIdParam }), asyncHandler(weddController.deleteWedd));
+router.delete('/:weddingId', authenticateJWT, validate({ params: WeddingIdParam }), asyncHandler(weddController.deleteWedd));
 
 /**
  * @swagger
@@ -879,7 +877,7 @@ router.delete('/:weddingId', validate({ params: WeddingIdParam }), asyncHandler(
  *                   example: null
  */
 
-router.post('/:weddingId/apply', validate({ params: WeddingIdParam }), asyncHandler(weddController.applyWedd));
+router.post('/:weddingId/apply', authenticateJWT, validate({ params: WeddingIdParam }), asyncHandler(weddController.applyWedd));
 
 export default router;
 

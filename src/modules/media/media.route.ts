@@ -49,8 +49,6 @@ const upload = multer({ storage });
  *     summary: 모든 이미지 조회
  *     description: 청첩장의 모든 이미지정보를 가져옵니다.
  *     tags: [Media]
- *     security:
- *       - bearerAuth: []
  *     parameters:
  *       - name: weddingId
  *         in: path
@@ -74,8 +72,6 @@ const upload = multer({ storage });
  *                     $ref: '#/components/schemas/media'
  */
 router.get('/:weddingId/media', validate({ params: WeddingIdParam }), asyncHandler(mediaController.getAllMedia));
-
-router.use(authenticateJWT);
 
 /**
  * @swagger
@@ -108,7 +104,7 @@ router.use(authenticateJWT);
  *                   items:
  *                     $ref: '#/components/schemas/media'
  */
-router.get('/:weddingId/media/edit', validate({ params: WeddingIdParam }), asyncHandler(mediaController.getAllMediaEdit));
+router.get('/:weddingId/media/edit', authenticateJWT, validate({ params: WeddingIdParam }), asyncHandler(mediaController.getAllMediaEdit));
 
 /**
  * @swagger
@@ -172,6 +168,7 @@ router.get('/:weddingId/media/edit', validate({ params: WeddingIdParam }), async
  *                     originalUrl: "/uploads/wedding/1/main.png"
  */
 router.post('/:weddingId/media',
+  authenticateJWT,
   upload.fields([
     { name: 'file', maxCount: 1 },
     { name: 'files', maxCount: 50 }
@@ -222,7 +219,7 @@ router.post('/:weddingId/media',
  *                 data:
  *                   example: null
  */
-router.patch('/:weddingId/media/reorder', validate({ params: WeddingIdParam }), asyncHandler(mediaController.reorderMedia));
+router.patch('/:weddingId/media/reorder', authenticateJWT, validate({ params: WeddingIdParam }), asyncHandler(mediaController.reorderMedia));
 
 /**
  * @swagger
@@ -274,7 +271,7 @@ router.patch('/:weddingId/media/reorder', validate({ params: WeddingIdParam }), 
  *                   example:
  *                     count: 5
  */
-router.put('/:weddingId/media/:mediaId/cropped', upload.single('file'), validate({ params: WeddingIdParam.extend(MediaIdParam.shape) }), asyncHandler(mediaController.croppedMedia));
+router.put('/:weddingId/media/:mediaId/cropped', authenticateJWT, upload.single('file'), validate({ params: WeddingIdParam.extend(MediaIdParam.shape) }), asyncHandler(mediaController.croppedMedia));
 
 /**
  * @swagger
@@ -307,7 +304,7 @@ router.put('/:weddingId/media/:mediaId/cropped', upload.single('file'), validate
  *                 data:
  *                   example: null
  */
-router.delete('/:weddingId/media/:mediaId', validate({ params: WeddingIdParam.extend(MediaIdParam.shape) }), asyncHandler(mediaController.deleteMedia));
+router.delete('/:weddingId/media/:mediaId', authenticateJWT, validate({ params: WeddingIdParam.extend(MediaIdParam.shape) }), asyncHandler(mediaController.deleteMedia));
 
 /**
  * @swagger
@@ -344,6 +341,6 @@ router.delete('/:weddingId/media/:mediaId', validate({ params: WeddingIdParam.ex
  *                 data:
  *                   example: null
  */
-router.delete('/:weddingId/media', validate({ params: WeddingIdParam }), asyncHandler(mediaController.deleteByTypeMedia));
+router.delete('/:weddingId/media', authenticateJWT, validate({ params: WeddingIdParam }), asyncHandler(mediaController.deleteByTypeMedia));
 
 export default router;

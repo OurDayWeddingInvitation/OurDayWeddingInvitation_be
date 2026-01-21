@@ -915,65 +915,6 @@
         }
       }
     },
-    "/api/v1/weddings/{weddingId}/media/edit": {
-      "get": {
-        "summary": "모든 이미지 조회(임시저장본)",
-        "description": "청첩장의 모든 이미지정보를 가져옵니다.",
-        "tags": [
-          "Media"
-        ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "weddingId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "조회 성공",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "example": 200
-                    },
-                    "error": {
-                      "type": "string",
-                      "nullable": true,
-                      "example": null
-                    },
-                    "messages": {
-                      "type": "string",
-                      "nullable": true,
-                      "example": null
-                    },
-                    "data": {
-                      "type": "array",
-                      "description": "wedd 테이블 리스트 (간단 정보)",
-                      "items": {
-                        "$ref": "#/components/schemas/media"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/v1/weddings/{weddingId}/media": {
       "get": {
         "summary": "모든 이미지 조회",
@@ -1185,6 +1126,65 @@
                     },
                     "data": {
                       "example": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/weddings/{weddingId}/media/edit": {
+      "get": {
+        "summary": "모든 이미지 조회(임시저장본)",
+        "description": "청첩장의 모든 이미지정보를 가져옵니다.",
+        "tags": [
+          "Media"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "weddingId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "error": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "messages": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": null
+                    },
+                    "data": {
+                      "type": "array",
+                      "description": "wedd 테이블 리스트 (간단 정보)",
+                      "items": {
+                        "$ref": "#/components/schemas/media"
+                      }
                     }
                   }
                 }
