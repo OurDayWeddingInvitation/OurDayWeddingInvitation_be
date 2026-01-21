@@ -103,15 +103,15 @@ export const getAllMediaEdit = async (userId: string, weddingId: string) => {
  * @param weddingId - 조회할 웨딩 ID
  * @returns weddMedia 레코드 배열
  */
-export const getAllMedia = async (userId: string, weddingId: string) => {
-  logger.info("[media.service.ts][getAllMedia] Start", { userId, weddingId });
-  const wedd = await prisma.wedd.findUnique({ where: { userId, weddingId } });
+export const getAllMedia = async (weddingId: string) => {
+  logger.info("[media.service.ts][getAllMedia] Start", { weddingId });
+  const wedd = await prisma.wedd.findUnique({ where: { weddingId } });
   if(!wedd)
     throw new AppError(404, '청첩장을 찾을 수 없습니다.');
   const result = await prisma.weddMedia.findMany({
     where: { weddingId }
   })
-  logger.info("[media.service.ts][getAllMedia] Complete", { userId, weddingId });
+  logger.info("[media.service.ts][getAllMedia] Complete", { weddingId });
   return result;
 }
 
