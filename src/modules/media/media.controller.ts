@@ -17,10 +17,9 @@ export const getAllMediaEdit = async (req: Request, res: Response) => {
 }
 
 export const getAllMedia = async (req: Request, res: Response) => {
-  const { userId } = req.user;
-  logger.info("[wedd.media.ts][getAllMedia] Start", { userId })
+  logger.info("[wedd.media.ts][getAllMedia] Start")
   const weddingId = req.params.weddingId;
-  const mediaArray = await mediaService.getAllMedia(userId, weddingId);
+  const mediaArray = await mediaService.getAllMedia(weddingId);
 
   res.status(200).json({
     status: 200,

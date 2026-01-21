@@ -6,6 +6,7 @@ import { validate } from "@/core/middlewares/validate.middleware";
 import { WeddingIdParam } from '../wedd/wedd.schema';
 import { FileNameParam, MediaIdParam, MediaRequestSchema } from './media.schema';
 import { asyncHandler } from '@/core/http/asyncHandler';
+import { authenticateJWT } from '@/core/middlewares/auth.middleware';
 
 const router = Router();
 
@@ -43,39 +44,6 @@ const upload = multer({ storage });
 
 /**
  * @swagger
- * /api/v1/weddings/{weddingId}/media/edit:
- *   get:
- *     summary: 모든 이미지 조회(임시저장본)
- *     description: 청첩장의 모든 이미지정보를 가져옵니다.
- *     tags: [Media]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - name: weddingId
- *         in: path
- *         required: true
- *         schema: { type: string }
- *     responses:
- *       200:
- *         description: 조회 성공
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 status: { type: integer, example: 200 }
- *                 error: { type: string, nullable: true, example: null }
- *                 messages: { type: string, nullable: true, example: null }
- *                 data:
- *                   type: array
- *                   description: wedd 테이블 리스트 (간단 정보)
- *                   items:
- *                     $ref: '#/components/schemas/media'
- */
-router.get('/:weddingId/media/edit', validate({ params: WeddingIdParam }), asyncHandler(mediaController.getAllMediaEdit));
-
-/**
- * @swagger
  * /api/v1/weddings/{weddingId}/media:
  *   get:
  *     summary: 모든 이미지 조회
@@ -106,6 +74,41 @@ router.get('/:weddingId/media/edit', validate({ params: WeddingIdParam }), async
  *                     $ref: '#/components/schemas/media'
  */
 router.get('/:weddingId/media', validate({ params: WeddingIdParam }), asyncHandler(mediaController.getAllMedia));
+
+router.use(authenticateJWT);
+
+/**
+ * @swagger
+ * /api/v1/weddings/{weddingId}/media/edit:
+ *   get:
+ *     summary: 모든 이미지 조회(임시저장본)
+ *     description: 청첩장의 모든 이미지정보를 가져옵니다.
+ *     tags: [Media]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: weddingId
+ *         in: path
+ *         required: true
+ *         schema: { type: string }
+ *     responses:
+ *       200:
+ *         description: 조회 성공
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status: { type: integer, example: 200 }
+ *                 error: { type: string, nullable: true, example: null }
+ *                 messages: { type: string, nullable: true, example: null }
+ *                 data:
+ *                   type: array
+ *                   description: wedd 테이블 리스트 (간단 정보)
+ *                   items:
+ *                     $ref: '#/components/schemas/media'
+ */
+router.get('/:weddingId/media/edit', validate({ params: WeddingIdParam }), asyncHandler(mediaController.getAllMediaEdit));
 
 /**
  * @swagger

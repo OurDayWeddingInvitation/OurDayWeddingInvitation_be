@@ -3,7 +3,7 @@ import * as weddController from './wedd.controller';
 import { validate } from "@/core/middlewares/validate.middleware";
 import { SectionIdParam, SettingSectionsSchema, WeddingIdParam, WeddingInfoRequestSchema, WeddingTitleSchema } from './wedd.schema';
 import { asyncHandler } from '@/core/http/asyncHandler';
-import { authenticateJWT } from 'core/middlewares/auth.middleware';
+import { authenticateJWT } from '@/core/middlewares/auth.middleware';
 
 const router = Router();
 
