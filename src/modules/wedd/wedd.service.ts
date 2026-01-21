@@ -362,13 +362,9 @@ export const applyWedd = async (userId: string, weddingId: string): Promise<Wedd
     // 3. draftMedia → applyMedia 변환
     const newApplyMediaList = [];
 
-    for (const m of weddDraftMedia) {
-      const maxMedia = await tx.weddDraftMedia.aggregate({
-        _max: { mediaId: true },
-        where: { weddingId },
-      });
+    let nextMediaId = 1;
 
-      const nextMediaId = (maxMedia._max.mediaId ?? 0) + 1;
+    for (const m of weddDraftMedia) {
       logger.info("[wedd.service.ts][applyWedd] Read nextMediaId", { userId, weddingId, nextMediaId });
 
       // 파일 1개당 새 UUID 발급
@@ -390,7 +386,7 @@ export const applyWedd = async (userId: string, weddingId: string): Promise<Wedd
       // DB용 데이터 구성
       newApplyMediaList.push({
         weddingId,
-        mediaId: nextMediaId,
+        mediaId: nextMediaId++,
         imageType: m.imageType,
         originalUrl: `/uploads/apply/${weddingId}/${newFileName}`,
         editedUrl: m.editedUrl
