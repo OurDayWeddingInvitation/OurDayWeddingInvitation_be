@@ -3,7 +3,7 @@
 <!-- logo -->
 <!-- <img src="https://your-image-url/logo.png" width="120"/> -->
 
-# 💍 OurDayWedding
+# [💍 OurDayWedding](https://oruday.kr)
 
 청첩장 제작 웹 서비스를 위한 백엔드 프로젝트
 
