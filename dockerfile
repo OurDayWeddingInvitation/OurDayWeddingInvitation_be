@@ -31,6 +31,10 @@ FROM node:20-alpine
 
 WORKDIR /app
 
+# 타임존 설정 (추가)
+RUN apk add --no-cache tzdata
+ENV TZ=Asia/Seoul
+
 # package.json만 복사 → 프로덕션용만 설치
 COPY package*.json ./
 
