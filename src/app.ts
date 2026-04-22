@@ -19,36 +19,51 @@ const swaggerDocument = JSON.parse(fs.readFileSync(swaggerPath, 'utf8'));
 
 const app = express();
 
-app.use(cors());
+// CORS 설정
+const whitelist = ['https://www.ourday.kr', 'http://localhost:3000'];
+
+const corsOptions = {
+  origin(origin: any, callback: any) {
+    if (!origin || whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+
 app.use(express.json());
 
 app.use(accessLogger);
 
 // 파일 업로드된 이미지 접근을 위한 정적 파일 서비스 설정
-app.use('/uploads',
+app.use(
+  '/uploads',
   express.static(path.join(process.cwd(), 'uploads'), {
     setHeaders: (res, filePath) => {
       if (filePath.endsWith('.svg')) {
         res.setHeader('Content-Type', 'image/svg+xml');
       }
     },
-  })
+  }),
 );
 
 app.use('/api/v1/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.get('/api/v1/health', (_req, res) => {
-  res.status(200).json({ 
-    "status": 200,
-    "error": null,
-    "messages": "접속 성공",
-    "data": null
+  res.status(200).json({
+    status: 200,
+    error: null,
+    messages: '접속 성공',
+    data: null,
   });
 });
 
 app.use('/api/v1', modules);
 
 app.use(errorHandler);
-
 
 export default app;
