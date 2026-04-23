@@ -19,21 +19,7 @@ const swaggerDocument = JSON.parse(fs.readFileSync(swaggerPath, 'utf8'));
 
 const app = express();
 
-// CORS 설정
-const whitelist = ['https://www.ourday.kr', 'http://localhost:3000'];
-
-const corsOptions = {
-  origin(origin: any, callback: any) {
-    if (!origin || whitelist.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true,
-};
-
-app.use(cors(corsOptions));
+app.use(cors());
 
 app.use(express.json());
 
